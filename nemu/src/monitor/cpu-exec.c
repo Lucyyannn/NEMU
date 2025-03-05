@@ -6,6 +6,9 @@
  * This is useful when you use the `si' command.
  * You can modify this value as you want.
  */
+ /*
+ nemu_state: END/RUNNING/STOP
+  */
 #define MAX_INSTR_TO_PRINT 10
 
 int nemu_state = NEMU_STOP;

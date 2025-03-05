@@ -114,7 +114,7 @@ int init_monitor(int argc, char *argv[]) {
   init_log();
 
   /* Test the implementation of the `CPU_state' structure. */
-  reg_test();
+  reg_test();//test the regs
 
 #ifdef DIFF_TEST
   /* Fork a child process to perform differential testing. */

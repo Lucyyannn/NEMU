@@ -38,6 +38,8 @@ static int cmd_q(char *args) {
 
 static int cmd_help(char *args);
 
+static int cmd_si(char *args);
+
 static struct {
   char *name;
   char *description;
@@ -46,6 +48,7 @@ static struct {
   { "help", "Display informations about all supported commands", cmd_help },
   { "c", "Continue the execution of the program", cmd_c },
   { "q", "Exit NEMU", cmd_q },
+  { "si", "Execute N instructions, the default number is 1", cmd_si},
 
   /* TODO: Add more commands */
 
@@ -72,6 +75,22 @@ static int cmd_help(char *args) {
       }
     }
     printf("Unknown command '%s'\n", arg);
+  }
+  return 0;
+}
+
+static int cmd_si(char *args){
+  //default number=1
+  if(args==NULL){
+    cpu_exec(1);
+    return 0;
+  }
+  //get the valid number
+  int n;
+  if(sscanf(args, "%d", &n)==EOF){
+    printf("Please input a number for si\n");
+  }else{
+    cpu_exec(n);//execute n steps
   }
   return 0;
 }
