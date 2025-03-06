@@ -41,3 +41,16 @@ void reg_test() {
 
   assert(eip_sample == cpu.eip);
 }
+
+void print_reg_info(){
+  for(int i=0;i<8;i++){
+    printf("| %s  ",reg_name(i,4));
+    printf("%X     ",reg_l(i));
+    printf("| %s  ",reg_name(i,2));
+    printf("%X     ",reg_w(i));
+    printf("| %s  ",reg_name(i,1));
+    printf("%X      |\n",reg_b(i));
+  }
+  printf("pc     %X\n",cpu.eip);
+  return ;
+}

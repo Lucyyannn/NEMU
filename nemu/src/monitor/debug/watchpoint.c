@@ -19,5 +19,14 @@ void init_wp_pool() {
 }
 
 /* TODO: Implement the functionality of watchpoint */
+//print the information of all the watchpoints, to debug
+void print_wp_pool_info(){
+  printf("watchpoint information:\n");
+  for (int i=0;i<NR_WP;i++){
+    printf("%d\n", wp_pool[i].NO);
+  }
+  return ;
+}
+
 
 
