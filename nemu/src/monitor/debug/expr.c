@@ -9,22 +9,21 @@
 enum {
   TK_NOTYPE = 256, TK_EQ
 
-  /* TODO: Add more token types */
+  
 
 };
 
+ /* TODO: Add more rules.
+   * Pay attention to the precedence level of different rules.
+   */
 static struct rule {
   char *regex;
   int token_type;
-} rules[] = {
-
-  /* TODO: Add more rules.
-   * Pay attention to the precedence level of different rules.
-   */
-
+}  rules[] = {
   {" +", TK_NOTYPE},    // spaces
   {"\\+", '+'},         // plus
   {"==", TK_EQ}         // equal
+
 };
 
 #define NR_REGEX (sizeof(rules) / sizeof(rules[0]) )
@@ -53,8 +52,8 @@ typedef struct token {
   char str[32];
 } Token;
 
-Token tokens[32];
-int nr_token;
+Token tokens[32];// the tokens that have already been recognized
+int nr_token;    //the number of tokens above
 
 static bool make_token(char *e) {
   int position = 0;
@@ -86,7 +85,7 @@ static bool make_token(char *e) {
         break;
       }
     }
-
+    // recognize failed
     if (i == NR_REGEX) {
       printf("no match at position %d\n%s\n%*.s^\n", position, e, position, "");
       return false;

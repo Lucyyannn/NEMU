@@ -41,10 +41,10 @@ static int cmd_q(char *args) {
 static int cmd_help(char *args);
 static int cmd_si(char *args);
 static int cmd_info(char *args);
-// static int cmd_p(char *args);
-// static int cmd_x(char *args1,char *args2);
-// static int cmd_w(char *args);
-// static int cmd_d(char *args);
+static int cmd_p(char *args);
+static int cmd_x(char *args);
+static int cmd_w(char *args);
+static int cmd_d(char *args);
 
 
 static struct {
@@ -56,11 +56,11 @@ static struct {
   { "c", "Continue the execution of the program", cmd_c },
   { "q", "Exit NEMU", cmd_q },
   { "si", "Execute N instructions, the default number is 1", cmd_si},
-  { "info", "Print the state of the program", cmd_info}
-  // { "p", "Compute the expression", cmd_p},
-  // { "x", "Scan the memory", cmd_x},
-  // { "w", "Set the watchpoint", cmd_w},
-  // { "d", "Delete the watchpoint", cmd_d}
+  { "info", "Print the state of the program", cmd_info},
+  { "p", "Compute the expression", cmd_p},
+  { "x", "Scan the memory", cmd_x},
+  { "w", "Set the watchpoint", cmd_w},
+  { "d", "Delete the watchpoint", cmd_d}
 };
 
 #define NR_CMD (sizeof(cmd_table) / sizeof(cmd_table[0]))
@@ -116,9 +116,35 @@ static int cmd_info(char *args){
   return 0;
 }
 
-// static int cmd_p(char *args){
+static int cmd_p(char *args){
+  return 0;
+}
 
-// }
+//scan the memory
+static int cmd_x(char *args){
+  int num = args[0];
+  char *args2=args+1;
+  //(1) compute the expression
+  bool success = true;
+  uint32_t result = expr(args2,&success);
+  if(!success){
+    return 0;
+  }
+  //(2) scan the memory nearby
+  uint32_t addr = 0;
+  for(int i=0;i<num;i++){
+    addr = vaddr_read(result+i*4,4);
+    printf("%08X ",addr);
+  }printf("\n");
+  return 0;
+}
+
+static int cmd_w(char *args){
+  return 0;
+}
+static int cmd_d(char *args){
+  return 0;
+}
 
 
 void ui_mainloop(int is_batch_mode) {
