@@ -252,24 +252,45 @@ static bool make_token(char *e) {
 }
 
 bool checkparenthesis(int p, int q){
+  // (    )
+  if(tokens[p].type==TK_LPARENTHESIS&&
+    tokens[q].type==TK_RPARENTHESIS){
+      // if ( , depth++; if ) , depth--
+      // only when depth==0 at last, it's true
+      int depth=0;
+      for(int i=p+1;i<q;++i){
+        if(tokens[i].type==TK_LPARENTHESIS){
+          ++depth;
+        }else if(tokens[i].type==TK_RPARENTHESIS){
+          --depth;
+          if(depth<0){
+            return false;
+          }
+        }
+      }
+      if(depth==0){
+        return true;
+      }
+  }
   return false;
 }
 // p: start position
 // q: end position
 uint32_t eval(int p, int q){
-  // if(p>q){
-  //   panic("It's impossible that p>q.")
-  // }else if(p==q){
-  //   //sigle token ,return its value
-  //   // if(tokens[p]){
+  if(p>q){
+    panic("It's impossible that p>q.");
+  }else if(p==q){
+    // only number or register possible
+    assert(tokens[p].precedence==OP_LV0);
+    return tokens[p].value;
 
-  //   // }
+  }else if(checkparenthesis(p,q)){
+    // ( sub_expr )  --> cut off the ()
+    return eval(p+1,q-1);
 
-  // }else if(checkparenthesis(p,q)){
+  }else{
 
-  // }else{
-
-  // }
+  }
   return 0;
 }
 
