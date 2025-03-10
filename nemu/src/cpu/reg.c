@@ -54,3 +54,28 @@ void print_reg_info(){
   printf("pc     %X\n",cpu.eip);
   return ;
 }
+
+// get reg value by name
+uint32_t get_reg_value(char* name){
+  uint32_t result = 0;
+  for(int i=0;i<8;i++){
+    if(strcmp(name,regsl[i])==0){
+      result = reg_l(i);
+      return result;
+    }
+  }
+  for(int i=0;i<8;i++){
+    if(strcmp(name,regsw[i])==0){
+      result = reg_w(i);
+      return result;
+    }
+  }
+  for(int i=0;i<8;i++){
+    if(strcmp(name,regsb[i])==0){
+      result = reg_b(i);
+      return result;
+    }
+  }
+  assert(0);
+  return 0;
+}

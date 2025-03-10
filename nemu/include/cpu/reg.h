@@ -64,5 +64,7 @@ static inline const char* reg_name(int index, int width) {
 
 // for debug
 void print_reg_info();
+// get reg value by name
+uint32_t get_reg_value(char* name);
 
 #endif
