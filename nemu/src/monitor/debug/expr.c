@@ -92,19 +92,61 @@ void init_regex() {
 
 typedef struct token {
   int type;
-  char str[32];
+  //char str[32];
+  uint32_t value;
   int precedence;
 } Token;
 
 Token tokens[32];// the tokens that have already been recognized
 int nr_token;    //the number of tokens above
 
+uint32_t hex_to_num(char numstr){
+  if(numstr>='0'&&numstr<='9'){
+    return (numstr-'0');
+  }
+  if(numstr>='a'&&numstr<='f'){
+    return (numstr-'a'+10);
+  }
+  if(numstr>='A'&&numstr<='F'){
+    return (numstr-'A'+10);
+  }
+  assert(0);
+  return 0;
+}
+
+uint32_t comp_value_by_string(char* number){
+  uint32_t value=0;
+  int start_p=0,end_p=strlen(number)-1;
+  //hex
+  if((end_p+1)>2&&(*(number+1)=='x'||*(number+1)=='X')){
+    start_p=2;
+    for(int i=end_p;i>=start_p;i--){
+      uint32_t temp=hex_to_num(number[i]);
+      value+=temp*(end_p-i)*16;
+    }
+    return value;
+  }
+  //dec
+  else{
+    for(int i=end_p;i>=start_p;i--){
+      uint32_t temp = number[i]-'0';
+      value+=temp*(end_p-i)*10;
+    }
+    return value;
+  }
+
+  assert(0);
+  return 0;
+}
+
 static bool make_token(char *e) {
   int position = 0;
   int i;
   regmatch_t pmatch;// to locate
-  // pmatch.rm_so, pmatch_rm_eo
+  // pmatch.rm_so, pmatch._rm_eo
   nr_token = 0;
+  uint32_t value=0;
+  char *substr='\0';
 
   while (e[position] != '\0') {
     /* Try all rules one by one. */
@@ -157,11 +199,22 @@ static bool make_token(char *e) {
             tokens[nr_token].precedence = OP_LV1;
             ++nr_token;
             break;
-          case TK_REGISTER:
-            // if()
-          case TK_NUMBER:
+          case TK_REGISTER:// register
+            strncpy(substr,substr_start+1,substr_len-1);
+            substr[substr_len-1]='\0';
+            value=get_reg_value(substr);
             tokens[nr_token].type = rules[i].token_type;
             tokens[nr_token].precedence = OP_LV0;
+            tokens[nr_token].value=value;
+            ++nr_token;
+            break;
+          case TK_NUMBER: // number   hex or dec
+            strncpy(substr,substr_start,substr_len);
+            substr[substr_len]='\0';
+            value=comp_value_by_string(substr);
+            tokens[nr_token].type = rules[i].token_type;
+            tokens[nr_token].precedence = OP_LV0;
+            tokens[nr_token].value=value;
             ++nr_token;
             break;
           case TK_EQ:
