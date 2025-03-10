@@ -289,6 +289,46 @@ uint32_t eval(int p, int q){
     return eval(p+1,q-1);
 
   }else{
+    // look for the dominant operator
+    int d=0;//position of the dominant operator
+    int depth=0;
+    for(int i=p;i<=q;i++){
+      // identify the ()
+      if(tokens[i].type==TK_LPARENTHESIS){
+        ++depth;
+      }else if(tokens[i].type==TK_RPARENTHESIS){
+        --depth;
+      }
+      // only for +-*/%, and not in ()
+      else if(depth==0&&(tokens[i].precedence==OP_LV3||tokens[i].precedence==OP_LV4)){
+        if(d==0){
+          d=i;
+        }else if(tokens[i].precedence>=tokens[d].precedence){
+          d=i;
+        }
+      }
+    }
+    assert(depth==0);
+    assert(d!=0);
+    //compute substr and combine
+    uint32_t val1 = eval(p,d-1);
+    uint32_t val2 = eval(d+1,q);
+    switch(tokens[d].type){
+      case '+':
+        return val1+val2;
+      case '-':
+        return val1-val2;
+      case '*':
+        return val1*val2;
+      case '/':
+        assert(val2!=0);
+        return val1/val2;
+      case '%':
+        assert(val2!=0);
+        return val1%val2;
+      default:
+        assert(0);
+    }
 
   }
   return 0;
@@ -317,5 +357,7 @@ uint32_t expr(char *e, bool *success) {
 // 1.define the rules                          ~
 // 2.regular expressiong --> identify tokens   ~
 // 3.make token()                              ~
-// 4.eval(recursive computing)                                     
+// 4.eval(recursive computing)                 ~                       
 // 5.expand expressions to P30,especially '*'  ~
+
+// with '-'
