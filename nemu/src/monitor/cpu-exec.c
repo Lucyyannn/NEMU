@@ -43,10 +43,11 @@ void cpu_exec(uint64_t n) {
 #ifdef DEBUG
     /* check watchpoints here. */
     for(int i=0;i<w_nr;i++){
-      if(expr(w_tokens[i],&success)!=values[i]){
+      uint32_t result=expr(w_tokens[i],&success);
+      if(result!=values[i]){
         nemu_state = NEMU_STOP;
-        printf("You have triggered the watchpoint: %s\n",w_tokens[i]);
-        break;
+        printf("You have triggered the watchpoint: %s.",w_tokens[i]);
+        printf("origion value: %d , current value: %d .\n",values[i],result);
       }
     }
 
