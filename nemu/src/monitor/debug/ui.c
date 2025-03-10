@@ -116,8 +116,10 @@ static int cmd_info(char *args){
   return 0;
 }
 
+// compute the expression
 static int cmd_p(char *args){
-  return 0;
+  bool success=true;
+  return expr(args,&success);
 }
 
 //scan the memory
@@ -139,10 +141,31 @@ static int cmd_x(char *args){
   return 0;
 }
 
+// set the watchpoints
 static int cmd_w(char *args){
+  WP* wp=new_wp();
+  wp->expression=args;
+
+  w_tokens[w_nr]=wp->expression;
+
   return 0;
 }
 static int cmd_d(char *args){
+  assert(args!=NULL);
+  WP* wp=find_wp(args);
+  // delete it from the list
+  free_wp(wp); 
+  //delete the global watchpoint expression infomation
+  for(int i=0;i<w_nr;i++){
+    if(strcmp(args,w_tokens[i])==0){
+      for(int j=i;j<w_nr-1;j++){
+        w_tokens[j]=w_tokens[j+1];
+      }
+      break;
+    }
+  }
+  --w_nr;
+
   return 0;
 }
 

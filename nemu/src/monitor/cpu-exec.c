@@ -1,5 +1,7 @@
+#include <stdlib.h>
 #include "nemu.h"
 #include "monitor/monitor.h"
+#include "monitor/expr.h"
 
 /* The assembly code of instructions executed is only output to the screen
  * when the number of instructions executed is less than this value.
@@ -25,13 +27,28 @@ void cpu_exec(uint64_t n) {
 
   bool print_flag = n < MAX_INSTR_TO_PRINT;
 
+  // for debug: watchpoints
+  bool success;
+  uint32_t *values=(uint32_t *)malloc(w_nr * sizeof(uint32_t));
+  for(int i=0;i<w_nr;i++){
+    values[i]=expr(w_tokens[i],&success);
+  }
+
+  // run for each step
   for (; n > 0; n --) {
     /* Execute one instruction, including instruction fetch,
      * instruction decode, and the actual execution. */
     exec_wrapper(print_flag);
 
 #ifdef DEBUG
-    /* TODO: check watchpoints here. */
+    /* check watchpoints here. */
+    for(int i=0;i<w_nr;i++){
+      if(expr(w_tokens[i],&success)!=values[i]){
+        nemu_state = NEMU_STOP;
+        printf("You have triggered the watchpoint: %s\n",w_tokens[i]);
+        break;
+      }
+    }
 
 #endif
 
@@ -40,8 +57,13 @@ void cpu_exec(uint64_t n) {
     device_update();
 #endif
 
-    if (nemu_state != NEMU_RUNNING) { return; }
+    if (nemu_state != NEMU_RUNNING) { 
+      free(values);
+      values=NULL;
+      return; 
+    }
   }
+
 
   if (nemu_state == NEMU_RUNNING) { nemu_state = NEMU_STOP; }
 }

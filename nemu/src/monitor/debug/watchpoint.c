@@ -31,12 +31,28 @@ void add_to_list(WP* list,WP* newnode){
   list=newnode;
   return;
 }
+// find a watchpoint with expression e
+WP* find_wp(char* e){
+  if(head==NULL){assert(0);}
 
+  WP* temp=head;
+  while(temp!=NULL){
+    if(strcmp(e,temp->expression)==0){
+      return temp;
+    }
+    temp=temp->next;
+  }
+  assert(0);
+}
 // release a node from free_ at the beginning
 WP* new_wp(){
   if(free_!=NULL){
-    WP* des=free_;
+    WP* des=free_; // release from free_
     free_=free_->next;
+
+    des->next=head;//add to head
+    head=des;
+
     return des;
   }
   assert(0);
@@ -70,8 +86,14 @@ void free_wp(WP* wp){
 //print the information of all the watchpoints, to debug
 void print_wp_pool_info(){
   printf("watchpoint information:\n");
-  for (int i=0;i<NR_WP;i++){
-    printf("%d\n", wp_pool[i].NO);
+  WP* temp=head;
+  if(temp==NULL){
+    printf("No watchpoints.\n");
+    return ;
+  }
+  while(temp!=NULL){
+    printf("NO: %d , EXPRESSION: %s\n",temp->NO,temp->expression);
+    temp=temp->next;
   }
   return ;
 }

@@ -4,4 +4,7 @@
 enum { NEMU_STOP, NEMU_RUNNING, NEMU_END };
 extern int nemu_state;
 
+char* w_tokens[32]; //  <--
+int w_nr;
+
 #endif
