@@ -159,6 +159,8 @@ static bool make_token(char *e) {
             i, rules[i].regex, position, substr_len,substr_len,substr_start);
         position += substr_len;
 
+        printf("here0 ");
+
         switch (rules[i].token_type) {
           case TK_PLUS://+
             tokens[nr_token].type = rules[i].token_type;
