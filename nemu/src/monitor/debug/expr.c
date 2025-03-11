@@ -5,8 +5,7 @@
  */
 #include <sys/types.h>
 #include <regex.h>
-#include <string.h>
-#include <stdio.h>
+#include <stdlib.h>
 
 //token type
 enum {
