@@ -261,7 +261,7 @@ static bool make_token(char *e) {
             tokens[nr_token].type = rules[i].token_type;
             tokens[nr_token].precedence = OP_LV0;
             tokens[nr_token].value=value;
-            snprintf(tokens[nr_token].str,sizeof(tokens[nr_token].str),"%s%s","$",substr);
+            //snprintf(tokens[nr_token].str,sizeof(tokens[nr_token].str),"%s%s","$",substr);
             ++nr_token;
             break;
           case TK_NUMBER: // number   hex or dec
