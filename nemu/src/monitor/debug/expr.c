@@ -340,15 +340,13 @@ uint32_t eval(int p, int q){
       }
       // only for +-*/%, and not in ()
       else if(depth==0&&(tokens[i].precedence==OP_LV3||tokens[i].precedence==OP_LV4)){
-        if(d==0){
-          d=i;
-        }else if(tokens[i].precedence>=tokens[d].precedence){
+        if(d==0||tokens[i].precedence>=tokens[d].precedence){
           d=i;
         }
       }
     }
     assert(depth==0);
-    //assert(d!=0);
+    assert(d!=0);
     //compute substr and combine
     uint32_t val1 = eval(p,d-1);
     uint32_t val2 = eval(d+1,q);
