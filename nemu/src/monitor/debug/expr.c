@@ -5,8 +5,16 @@
  */
 #include <sys/types.h>
 #include <regex.h>
-#include <math.h>
 #include <stdlib.h>
+
+// additional functions
+long long powcomp(int base, int exponent){
+  long long res=1;
+  for(int i=0;i<exponent;++i){
+    res*=base;
+  }
+  return res;
+}
 
 //token type
 enum {
@@ -124,7 +132,7 @@ uint32_t comp_value_by_string(char* number,int length){
     start_p=2;
     for(int i=end_p;i>=start_p;i--){
       uint32_t temp=hex_to_num(number[i]);
-      value+=temp*pow(16,(end_p-i));
+      value+=temp*powcomp(16,(end_p-i));
     }
     return value;
   }
@@ -132,7 +140,7 @@ uint32_t comp_value_by_string(char* number,int length){
   else{
     for(int i=end_p;i>=start_p;i--){
       uint32_t temp = number[i]-'0';
-      value+=temp*pow(10,(end_p-i));
+      value+=temp*powcomp(10,(end_p-i));
     }
     return value;
   }
