@@ -167,7 +167,7 @@ static bool make_token(char *e) {
           case TK_PLUS://+
             tokens[nr_token].type = rules[i].token_type;
             tokens[nr_token].precedence = OP_LV4;
-            strcpy(tokens[nr_token].str,"+\0");
+            //strcpy(tokens[nr_token].str,"+\0");
             ++nr_token;
             break;
           case TK_SUB:
@@ -231,14 +231,12 @@ static bool make_token(char *e) {
             ++nr_token;
             break;
           case TK_NUMBER: // number   hex or dec
-            printf("here1 ");
             value=comp_value_by_string(substr_start,substr_len);
             tokens[nr_token].type = rules[i].token_type;
             tokens[nr_token].precedence = OP_LV0;
             tokens[nr_token].value = value;
-            strcpy(tokens[nr_token].str,substr);
+            //strcpy(tokens[nr_token].str,substr);
             ++nr_token;
-            printf("here2 ");
             break;
           case TK_EQ:
             tokens[nr_token].type = rules[i].token_type;
