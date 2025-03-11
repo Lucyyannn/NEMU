@@ -16,6 +16,31 @@ long long powcomp(int base, int exponent){
   return res;
 }
 
+void cpy(char* dest, char* src){
+  assert(strlen(src)>0);
+  int n=strlen(src);
+  dest = (char*)malloc((n+1)*sizeof(char));
+  for(int i=0;i<n;++i){
+    *(dest+i)=*(src+i);
+  }
+  if(dest[n-1]!='\0'){
+    dest[n]='\0';
+  }
+  return;
+}
+
+void ncpy(char* dest, char* src, int n){
+  assert(strlen(src)>=n);
+  dest = (char*)malloc((n+1)*sizeof(char));
+  for(int i=0;i<n;++i){
+    *(dest+i)=*(src+i);
+  }
+  if(dest[n-1]!='\0'){
+    dest[n]='\0';
+  }
+  return ;
+}
+
 //token type
 enum {
   TK_NOTYPE = 256, 
@@ -176,7 +201,7 @@ static bool make_token(char *e) {
           case TK_PLUS://+
             tokens[nr_token].type = rules[i].token_type;
             tokens[nr_token].precedence = OP_LV4;
-            //strcpy(tokens[nr_token].str,"+\0");
+            cpy(tokens[nr_token].str,"+\0");
             ++nr_token;
             break;
           case TK_SUB:
@@ -189,7 +214,7 @@ static bool make_token(char *e) {
               tokens[nr_token].type = rules[i].token_type;
               tokens[nr_token].precedence = OP_LV4;
             }
-            strcpy(tokens[nr_token].str,"-\0");
+            cpy(tokens[nr_token].str,"-\0");
             ++nr_token;
             break;
           case TK_MULTI:
@@ -202,35 +227,35 @@ static bool make_token(char *e) {
               tokens[nr_token].type = rules[i].token_type;
               tokens[nr_token].precedence = OP_LV3;
             }
-            strcpy(tokens[nr_token].str,"*\0");
+            cpy(tokens[nr_token].str,"*\0");
             ++nr_token;
             break;
           case TK_DIV://  /
             tokens[nr_token].type = rules[i].token_type;
             tokens[nr_token].precedence = OP_LV3;
-            strcpy(tokens[nr_token].str,"/\0");
+            cpy(tokens[nr_token].str,"/\0");
             ++nr_token;
             break;
           case TK_MOD://  %
             tokens[nr_token].type = rules[i].token_type;
             tokens[nr_token].precedence = OP_LV3;
-            strcpy(tokens[nr_token].str,"%\0");
+            cpy(tokens[nr_token].str,"%\0");
             ++nr_token;
             break;
           case TK_LPARENTHESIS:// (
             tokens[nr_token].type = rules[i].token_type;
             tokens[nr_token].precedence = OP_LV1;
-            strcpy(tokens[nr_token].str,"(\0");
+            cpy(tokens[nr_token].str,"(\0");
             ++nr_token;
             break;
           case TK_RPARENTHESIS:// )
             tokens[nr_token].type = rules[i].token_type;
             tokens[nr_token].precedence = OP_LV1;
-            strcpy(tokens[nr_token].str,")\0");
+            cpy(tokens[nr_token].str,")\0");
             ++nr_token;
             break;
           case TK_REGISTER:// register
-            strncpy(substr,substr_start+1,substr_len-1);
+            ncpy(substr,substr_start+1,substr_len-1);
             substr[substr_len-1]='\0';
             value=get_reg_value(substr);
             tokens[nr_token].type = rules[i].token_type;
@@ -250,37 +275,37 @@ static bool make_token(char *e) {
           case TK_EQ:
             tokens[nr_token].type = rules[i].token_type;
             tokens[nr_token].precedence = OP_LV7;
-            strcpy(tokens[nr_token].str,"==\0");
+            cpy(tokens[nr_token].str,"==\0");
             ++nr_token;
             break;
           case TK_NEQ:
             tokens[nr_token].type = rules[i].token_type;
             tokens[nr_token].precedence = OP_LV7;
-            strcpy(tokens[nr_token].str,"!=\0");
+            cpy(tokens[nr_token].str,"!=\0");
             ++nr_token;
             break;
           case TK_LEQ:
             tokens[nr_token].type = rules[i].token_type;
             tokens[nr_token].precedence = OP_LV7;
-            strcpy(tokens[nr_token].str,">=\0");
+            cpy(tokens[nr_token].str,">=\0");
             ++nr_token;
             break;
           case TK_BEQ:
             tokens[nr_token].type = rules[i].token_type;
             tokens[nr_token].precedence = OP_LV7;
-            strcpy(tokens[nr_token].str,"<=\0");
+            cpy(tokens[nr_token].str,"<=\0");
             ++nr_token;
             break;
           case TK_AND:
             tokens[nr_token].type = rules[i].token_type;
             tokens[nr_token].precedence = OP_LV11;
-            strcpy(tokens[nr_token].str,"&&\0");
+            cpy(tokens[nr_token].str,"&&\0");
             ++nr_token;
             break;
           case TK_OR:
             tokens[nr_token].type = rules[i].token_type;
             tokens[nr_token].precedence = OP_LV12;
-            strcpy(tokens[nr_token].str,"||\0");
+            cpy(tokens[nr_token].str,"||\0");
             ++nr_token;
             break;
           default:
