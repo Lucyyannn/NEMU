@@ -116,9 +116,9 @@ uint32_t hex_to_num(char numstr){
   return 0;
 }
 
-uint32_t comp_value_by_string(char* number){
+uint32_t comp_value_by_string(char* number,int length){
   uint32_t value=0;
-  int start_p=0,end_p=strlen(number)-1;
+  int start_p=0,end_p=length-1;
   //hex
   if((end_p+1)>2&&(*(number+1)=='x'||*(number+1)=='X')){
     start_p=2;
@@ -236,9 +236,7 @@ static bool make_token(char *e) {
             break;
           case TK_NUMBER: // number   hex or dec
             printf("here1 ");
-            strncat(substr,substr_start,substr_len);
-            substr[substr_len]='\0';
-            value=comp_value_by_string(substr);
+            value=comp_value_by_string(substr_start,substr_len);
             tokens[nr_token].type = rules[i].token_type;
             tokens[nr_token].precedence = OP_LV0;
             tokens[nr_token].value = value;
