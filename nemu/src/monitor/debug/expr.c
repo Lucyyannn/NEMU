@@ -225,7 +225,7 @@ static bool make_token(char *e) {
             ++nr_token;
             break;
           case TK_REGISTER:// register
-            strncpy(substr,substr_start+1,substr_len-1);
+            strncat(substr,substr_start+1,substr_len-1);
             substr[substr_len-1]='\0';
             value=get_reg_value(substr);
             tokens[nr_token].type = rules[i].token_type;
@@ -236,7 +236,7 @@ static bool make_token(char *e) {
             break;
           case TK_NUMBER: // number   hex or dec
             printf("here1 ");
-            strncpy(substr,substr_start,substr_len);
+            strncat(substr,substr_start,substr_len);
             substr[substr_len]='\0';
             value=comp_value_by_string(substr);
             tokens[nr_token].type = rules[i].token_type;
