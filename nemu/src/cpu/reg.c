@@ -48,11 +48,11 @@ void print_reg_info(){
     printf("| %s  ",reg_name(i,4));
     printf("%08X     ",reg_l(i));
     printf("| %s  ",reg_name(i,2));
-    printf("%04X     ",reg_w(i));
+    printf("%08X     ",reg_w(i));
     printf("| %s  ",reg_name(i,1));
-    printf("%02X      |\n",reg_b(i));
+    printf("%08X      |\n",reg_b(i));
   }
-  printf("pc     %X\n",cpu.eip);
+  printf("pc     %08X\n",cpu.eip);
   return ;
 }
 
