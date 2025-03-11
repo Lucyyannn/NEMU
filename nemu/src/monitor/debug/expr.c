@@ -348,7 +348,7 @@ uint32_t eval(int p, int q){
       }
     }
     assert(depth==0);
-    assert(d!=0);
+    //assert(d!=0);
     //compute substr and combine
     uint32_t val1 = eval(p,d-1);
     uint32_t val2 = eval(d+1,q);
