@@ -353,16 +353,16 @@ uint32_t eval(int p, int q){
     uint32_t val1 = eval(p,d-1);
     uint32_t val2 = eval(d+1,q);
     switch(tokens[d].type){
-      case '+':
+      case TK_PLUS:
         return val1+val2;
-      case '-':
+      case TK_SUB:
         return val1-val2;
-      case '*':
+      case TK_MULTI:
         return val1*val2;
-      case '/':
+      case TK_DIV:
         assert(val2!=0);
         return val1/val2;
-      case '%':
+      case TK_MOD:
         assert(val2!=0);
         return val1%val2;
       default:
