@@ -227,6 +227,7 @@ static bool make_token(char *e) {
             ++nr_token;
             break;
           case TK_NUMBER: // number   hex or dec
+            printf("here1 ");
             strncpy(substr,substr_start,substr_len);
             substr[substr_len]='\0';
             value=comp_value_by_string(substr);
@@ -235,6 +236,7 @@ static bool make_token(char *e) {
             tokens[nr_token].value = value;
             strcpy(tokens[nr_token].str,substr);
             ++nr_token;
+            printf("here2 ");
             break;
           case TK_EQ:
             tokens[nr_token].type = rules[i].token_type;
