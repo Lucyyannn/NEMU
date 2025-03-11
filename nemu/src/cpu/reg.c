@@ -14,6 +14,8 @@ void reg_test() {
   uint32_t eip_sample = rand();
   cpu.eip = eip_sample;
 
+  printf("sample[R_EAX]:%d\n",sample[R_EAX]);
+  printf("cpu.eax:%d\n",cpu.eax);
   int i;
   for (i = R_EAX; i <= R_EDI; i ++) {
     sample[i] = rand();
@@ -29,6 +31,9 @@ void reg_test() {
   assert(reg_b(R_CH) == ((sample[R_ECX] >> 8) & 0xff));
   assert(reg_b(R_DL) == (sample[R_EDX] & 0xff));
   assert(reg_b(R_DH) == ((sample[R_EDX] >> 8) & 0xff));
+
+  printf("sample[R_EAX]:%d\n",sample[R_EAX]);
+  printf("cpu.eax:%d\n",cpu.eax);
 
   assert(sample[R_EAX] == cpu.eax);
   assert(sample[R_ECX] == cpu.ecx);
