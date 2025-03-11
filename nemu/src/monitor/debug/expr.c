@@ -48,13 +48,13 @@ static struct rule {
 }  rules[] = {
   {" +", TK_NOTYPE},    // spaces
 
-  {"\\+", '+'},         // plus
-  {"\\-",'-'},          //sub
-  {"\\*",'*'},          //multi
-  {"/",'/'},            //div
-  {"%",'%'},            //mod
-  {"\\(",'('},
-  {"\\)",')'},
+  {"\\+", TK_PLUS},         // plus
+  {"\\-",TK_SUB},          //sub
+  {"\\*",TK_MULTI},          //multi
+  {"/",TK_DIV},            //div
+  {"%",TK_MOD},            //mod
+  {"\\(",TK_LPARENTHESIS},
+  {"\\)",TK_RPARENTHESIS},
 
   {"\\$[a-zA-Z]+",TK_REGISTER},
   {"(0|[1-9][0-9]*)",TK_NUMBER},
@@ -379,7 +379,7 @@ uint32_t expr(char *e, bool *success) {
     *success = false;
     return 0;
   }
-  
+
   printf("nr_token:%d \n",nr_token);
   for(int i=0;i<nr_token;i++){
     printf("type:%d \n",tokens[i].type);
