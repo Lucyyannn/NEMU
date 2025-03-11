@@ -5,6 +5,7 @@
  */
 #include <sys/types.h>
 #include <regex.h>
+#include <math.h>
 #include <stdlib.h>
 
 //token type
@@ -123,7 +124,7 @@ uint32_t comp_value_by_string(char* number,int length){
     start_p=2;
     for(int i=end_p;i>=start_p;i--){
       uint32_t temp=hex_to_num(number[i]);
-      value+=temp*(end_p-i)*16;
+      value+=temp*pow(16,(end_p-i));
     }
     return value;
   }
@@ -131,7 +132,7 @@ uint32_t comp_value_by_string(char* number,int length){
   else{
     for(int i=end_p;i>=start_p;i--){
       uint32_t temp = number[i]-'0';
-      value+=temp*(end_p-i)*10;
+      value+=temp*pow(10,(end_p-i));
     }
     return value;
   }
