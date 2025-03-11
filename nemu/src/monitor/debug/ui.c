@@ -119,7 +119,9 @@ static int cmd_info(char *args){
 // compute the expression
 static int cmd_p(char *args){
   bool success=true;
-  return expr(args,&success);
+  uint32_t result= expr(args,&success);
+  printf("%d \n",result);
+  return 0;
 }
 
 //scan the memory
