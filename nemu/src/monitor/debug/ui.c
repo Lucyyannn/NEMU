@@ -90,7 +90,7 @@ static int cmd_help(char *args) {
 
 static int cmd_si(char *args){
   //default number=1
-  if(*args=='\0'){
+  if(args==NULL){
     cpu_exec(1);
     return 0;
   }
