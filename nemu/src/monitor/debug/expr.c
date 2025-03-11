@@ -370,6 +370,7 @@ uint32_t eval(int p, int q){
     }
 
   }
+  assert(0);
   return 0;
 }
 
