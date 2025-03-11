@@ -392,6 +392,7 @@ uint32_t expr(char *e, bool *success) {
   int p=0,q=nr_token-1;
 
   uint32_t res=eval(p,q);
+  printf("res:%d \n",res);
   return res;
 }
 
