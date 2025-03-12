@@ -370,15 +370,13 @@ int eval(int p, int q){
     bool begin_by_sign=false;
     int l_limit=1;
     int r_limit=1;
-    for(int i=p;i<=q;){
+    for(int i=p;i<=q;++i){
       printf("num: %d , str: %s , precedence: %d \n",i,tokens[i].str,tokens[i].precedence);
       // identify the ()
       if(tokens[i].type==TK_LPARENTHESIS){
         ++depth;
-        ++i;
       }else if(tokens[i].type==TK_RPARENTHESIS){
         --depth;
-        ++i;
       }
       // only for +-*/%, and not in ()
       else if(depth==0){
@@ -404,14 +402,13 @@ int eval(int p, int q){
             if(subnum==0||(subnum!=0&&subnum%2==0)){op=TK_PLUS;}
             else {op=TK_SUB;}
             r_limit=j-i;
-            i=j;
+            i=j-1;
           }
           //if this time is */% ,  TODO : [[[deref]]]
           else if(tokens[i].precedence==OP_LV3&&(op==0||tokens[d].precedence==OP_LV3)){
             d=i;
             op=tokens[i].type;
             r_limit=1;
-            ++i;
           }
           else{
             panic("Any other possibilities ?\n");
