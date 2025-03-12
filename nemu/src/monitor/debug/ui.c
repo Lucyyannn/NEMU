@@ -126,15 +126,25 @@ static int cmd_p(char *args){
 
 //scan the memory
 static int cmd_x(char *args){
-  int num = args[0];
-  char *args2=args+1;
-  //(1) compute the expression
+  assert(strlen(args)>=3);
+  // (1)args --> num + expression
+  char * number = "\0";
+  int i=0;
+  for(i=0;args[i]!=32;++i){
+    *(number+i)=args[i];
+  }
+  int num=comp_value_by_string(number,i);
+  char * args2="\0"; int j=i+1;
+  for(j=i+1;args[j]!='\0';++j){
+    *(args2+j)=args[j];
+  }args[j]='\0';
+  //(2) compute the expression
   bool success = true;
   uint32_t result = expr(args2,&success);
   if(!success){
     return 0;
   }
-  //(2) scan the memory nearby
+  //(3) scan the memory nearby
   uint32_t addr = 0;
   for(int i=0;i<num;i++){
     addr = vaddr_read(result+i*4,4);
