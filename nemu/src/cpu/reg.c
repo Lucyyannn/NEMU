@@ -47,9 +47,6 @@ void reg_test() {
 // compare two char*
 uint32_t strcomp(char* a,const char* b){
   //get length
-  // int i=0,j=0;
-  // for(i=0;*(a+i)!='\0';++i){ printf("he\n");}
-  // for(j=0;*(b+j)!='\0';++j){printf("xxx\n");}
   int i=strlen(a);
   int j=strlen(b);
   // compare length
@@ -79,12 +76,9 @@ void print_reg_info(){
 
 // get reg value by name
 uint32_t get_reg_value(char* name){
-  printf("regsl[0]:%s\n",regsl[0]);
   uint32_t result = 0;
   for(int i=0;i<8;i++){
     if(strcomp(name,regsl[i])==0){
-
-      printf("miyaya\n");
       result = reg_l(i);
       return result;
     }

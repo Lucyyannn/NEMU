@@ -18,9 +18,7 @@ long long powcomp(int base, int exponent){
 
 void cpy(char** dest, char* src){
   if(src==NULL){panic("the string to copy should not be null!\n");}
-  printf("Hi ! \n");
   assert(strlen(src)>0);
-  printf("Hello ! \n");
   int n=strlen(src);
   *dest = (char*)malloc((n+1)*sizeof(char));
   for(int i=0;i<n;++i){
@@ -33,9 +31,7 @@ void cpy(char** dest, char* src){
 }
 
 void ncpy(char** dest, char* src, int n){
-  printf("Hi ! \n");
   assert(strlen(src)>=n);
-  printf("Hello ! \n");
   *dest = (char*)malloc((n+1)*sizeof(char));
   for(int i=0;i<n;++i){
     (*dest)[i]=*(src+i);
@@ -43,7 +39,6 @@ void ncpy(char** dest, char* src, int n){
   if(dest[n-1]!='\0'){
     (*dest)[n]='\0';
   }
-  printf("How are you? \n");
   return ;
 }
 
@@ -196,8 +191,6 @@ static bool make_token(char *e) {
         char *substr_start = e + position;
         int substr_len = pmatch.rm_eo;
 
-        printf("substr_start:%s",substr_start);
-
         Log("match rules[%d] = \"%s\" at position %d with len %d: %.*s",
             i, rules[i].regex, position, substr_len,substr_len,substr_start);
         position += substr_len;
@@ -263,7 +256,6 @@ static bool make_token(char *e) {
           case TK_REGISTER:// register
             ncpy(&substr,substr_start+1,substr_len-1);
             value=get_reg_value(substr);
-            printf("Nice to meet you,too \n");
             tokens[nr_token].type = rules[i].token_type;
             tokens[nr_token].precedence = OP_LV0;
             tokens[nr_token].value=value;
@@ -418,11 +410,6 @@ uint32_t expr(char *e, bool *success) {
   if (!make_token(e)) {
     *success = false;
     return 0;
-  }
-
-  printf("nr_token:%d \n",nr_token);
-  for(int i=0;i<nr_token;i++){
-    printf("type:%d \n",tokens[i].type);
   }
 
   if(nr_token==0){
