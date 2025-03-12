@@ -126,6 +126,7 @@ static int cmd_p(char *args){
 
 //scan the memory
 static int cmd_x(char *args){
+  printf("wei \n");
   assert(strlen(args)>=3);
   // (1)args --> num + expression
   char * number = "\0";
