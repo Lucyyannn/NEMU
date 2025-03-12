@@ -132,6 +132,7 @@ static int cmd_x(char *args){
   char * number = "\0";
   int i=0;
   for(i=0;args[i]!=32;++i){
+    printf("args[i]: %c \n",args[i]);
     *(number+i)=args[i];
   }
   int num=comp_value_by_string(number,i);
