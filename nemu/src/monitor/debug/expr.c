@@ -92,8 +92,8 @@ static struct rule {
   {"\\)",TK_RPARENTHESIS},
 
   {"\\$[a-zA-Z]+",TK_REGISTER},
-  {"(0|[1-9][0-9]*)",TK_NUMBER},
   {"0[xX][0-9a-fA-F]+",TK_NUMBER},//hex
+  {"(0|[1-9][0-9]*)",TK_NUMBER},
   
   {"==", TK_EQ},       
   {"!=",TK_NEQ},        
