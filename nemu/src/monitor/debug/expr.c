@@ -261,7 +261,7 @@ static bool make_token(char *e) {
             ++nr_token;
             break;
           case TK_REGISTER:// register
-            ncpy(substr,substr_start,substr_len);
+            ncpy(substr,substr_start+1,substr_len-1);
             value=get_reg_value(substr);
             printf("Nice to meet you,too \n");
             tokens[nr_token].type = rules[i].token_type;
@@ -271,6 +271,7 @@ static bool make_token(char *e) {
             ++nr_token;
             break;
           case TK_NUMBER: // number   hex or dec
+            ncpy(substr,substr_start,substr_len);
             value=comp_value_by_string(substr_start,substr_len);
             tokens[nr_token].type = rules[i].token_type;
             tokens[nr_token].precedence = OP_LV0;
