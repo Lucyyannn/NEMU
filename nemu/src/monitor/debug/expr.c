@@ -365,6 +365,7 @@ uint32_t eval(int p, int q){
     int d=0;//position of the dominant operator
     int depth=0;
     for(int i=p;i<=q;++i){
+      printf("num: %d , str: %s , precedence: %d \n",i,tokens[i].str,tokens[i].precedence);
       // identify the ()
       if(tokens[i].type==TK_LPARENTHESIS){
         printf("the 1 \n");
