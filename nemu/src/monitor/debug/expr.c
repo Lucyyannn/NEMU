@@ -260,8 +260,10 @@ static bool make_token(char *e) {
             break;
           case TK_REGISTER:// register
             ncpy(substr,substr_start,substr_len);
+            printf("Nice to meet you. \n");
             substr[substr_len]='\0';
             value=get_reg_value(substr);
+            printf("Nice to meet you,too \n");
             tokens[nr_token].type = rules[i].token_type;
             tokens[nr_token].precedence = OP_LV0;
             tokens[nr_token].value=value;
