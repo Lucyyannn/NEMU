@@ -417,7 +417,7 @@ int eval(int p, int q){
     }
     assert(depth==0);
     //compute substr and combine
-    printf("p~q: %d, %d, %d, %d \n",p, d-l_limit, d-r_limit,q);
+    printf("p~q: %d, %d,%d , %d, %d \n",p, d-l_limit,d, d+r_limit,q);
     int val1 = begin_by_sign?0:eval(p,d-l_limit);
     int val2 = eval(d+r_limit,q);
     switch(op){
