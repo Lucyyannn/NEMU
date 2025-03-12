@@ -57,7 +57,8 @@ void print_reg_info(){
 }
 
 // get reg value by name
-uint32_t get_reg_value(char* name){
+uint32_t get_reg_value(char* prename){
+  char* name = prename+1;
   uint32_t result = 0;
   for(int i=0;i<8;i++){
     if(strcmp(name,regsl[i])==0){

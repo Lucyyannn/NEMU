@@ -255,14 +255,13 @@ static bool make_token(char *e) {
             ++nr_token;
             break;
           case TK_REGISTER:// register
-            ncpy(substr,substr_start+1,substr_len-1);
-            substr[substr_len-1]='\0';
+            ncpy(substr,substr_start,substr_len);
+            substr[substr_len]='\0';
             value=get_reg_value(substr);
             tokens[nr_token].type = rules[i].token_type;
             tokens[nr_token].precedence = OP_LV0;
             tokens[nr_token].value=value;
-            Log("log 1");
-            snprintf(tokens[nr_token].str,sizeof(tokens[nr_token].str),"%s%s","$",substr);
+            cpy(tokens[nr_token].str,substr);
             ++nr_token;
             break;
           case TK_NUMBER: // number   hex or dec
@@ -270,7 +269,7 @@ static bool make_token(char *e) {
             tokens[nr_token].type = rules[i].token_type;
             tokens[nr_token].precedence = OP_LV0;
             tokens[nr_token].value = value;
-            //strcpy(tokens[nr_token].str,substr);
+            cpy(tokens[nr_token].str,substr);
             ++nr_token;
             break;
           case TK_EQ:
