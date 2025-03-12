@@ -17,6 +17,7 @@ long long powcomp(int base, int exponent){
 }
 
 void cpy(char* dest, char* src){
+  if(src==NULL){panic("the string to copy should not be null!\n");}
   printf("Hi ! \n");
   assert(strlen(src)>0);
   printf("Hello ! \n");
