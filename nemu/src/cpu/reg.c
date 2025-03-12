@@ -1,12 +1,13 @@
 #include "nemu.h"
-#include <stdlib.h>
 #include <time.h>
+#include <stdlib.h>
 
 CPU_state cpu;
 
 const char *regsl[] = {"eax", "ecx", "edx", "ebx", "esp", "ebp", "esi", "edi"};
 const char *regsw[] = {"ax", "cx", "dx", "bx", "sp", "bp", "si", "di"};
 const char *regsb[] = {"al", "cl", "dl", "bl", "ah", "ch", "dh", "bh"};
+
 
 void reg_test() {
   srand(time(0));
@@ -43,6 +44,24 @@ void reg_test() {
   assert(eip_sample == cpu.eip);
 }
 
+// compare two char*
+uint32_t strcomp(char* a,const char* b){
+  //get length
+  int i,j;
+  for(i=0;*(a+i)!='\0';++i){;}
+  for(j=0;*(b+j)!='\0';++j){;}
+  // compare length
+  if(i!=j){
+    return -1;
+  }
+  //compare content
+  for(i=0;i<=j;++i){
+    if(*(a+i)!=*(b+i)){return -1;}
+  }
+  return 0;
+}
+
+
 void print_reg_info(){
   for(int i=0;i<8;i++){
     printf("| %s  ",reg_name(i,4));
@@ -61,19 +80,19 @@ uint32_t get_reg_value(char* prename){
   char* name = prename+1;
   uint32_t result = 0;
   for(int i=0;i<8;i++){
-    if(strcmp(name,regsl[i])==0){
+    if(strcomp(name,regsl[i])==0){
       result = reg_l(i);
       return result;
     }
   }
   for(int i=0;i<8;i++){
-    if(strcmp(name,regsw[i])==0){
+    if(strcomp(name,regsw[i])==0){
       result = reg_w(i);
       return result;
     }
   }
   for(int i=0;i<8;i++){
-    if(strcmp(name,regsb[i])==0){
+    if(strcomp(name,regsb[i])==0){
       result = reg_b(i);
       return result;
     }
