@@ -132,17 +132,16 @@ static int cmd_x(char *args){
   char * number = (char*)malloc(5*sizeof(char));
   int i=0;
   for(i=0;args[i]!=32;++i){
-    printf("args[i]: %c \n",args[i]);
     *(number+i)=args[i];
   }
   int num=comp_value_by_string(number,i);
-  printf("num is: %d \n",num);
   char * args2=(char*)malloc(32*sizeof(char));
   int j=i+1;
   for(j=i+1;args[j]!='\0';++j){
     *(args2+j)=args[j];
-  }args[j]='\0';
+  }args2[j]='\0';
   printf("here \n");
+  printf("the expression: %s \n",args2);
   //(2) compute the expression
   bool success = true;
   uint32_t result = expr(args2,&success);

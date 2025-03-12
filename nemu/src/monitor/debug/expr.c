@@ -164,12 +164,10 @@ int comp_value_by_string(char* number,int length){
   }
   //dec
   else{
-    printf("length: %d \n",length);
     for(int i=end_p;i>=start_p;i--){
       int temp = number[i]-'0';
       value+=temp*powcomp(10,(end_p-i));
     }
-    printf("value: %d",value);
     return value;
   }
 
