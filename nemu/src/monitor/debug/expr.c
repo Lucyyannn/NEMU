@@ -4,6 +4,7 @@
  * Type 'man regex' for more information about POSIX regex functions.
  */
 #include <sys/types.h>
+#include <stdlib.h>
 #include <regex.h>
 
 // additional functions
