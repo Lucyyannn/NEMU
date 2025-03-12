@@ -262,6 +262,7 @@ static bool make_token(char *e) {
             ncpy(substr,substr_start,substr_len);
             printf("Nice to meet you. \n");
             substr[substr_len]='\0';
+            printf("What happened?\n");
             value=get_reg_value(substr);
             printf("Nice to meet you,too \n");
             tokens[nr_token].type = rules[i].token_type;
