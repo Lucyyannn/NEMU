@@ -77,10 +77,13 @@ void print_reg_info(){
 
 // get reg value by name
 uint32_t get_reg_value(char* prename){
+  printf("miya\n");
   char* name = prename+1;
   uint32_t result = 0;
   for(int i=0;i<8;i++){
     if(strcomp(name,regsl[i])==0){
+
+      printf("miyaya\n");
       result = reg_l(i);
       return result;
     }
