@@ -76,9 +76,9 @@ void print_reg_info(){
 }
 
 // get reg value by name
-uint32_t get_reg_value(char* name){
+uint32_t get_reg_value(char* prename){
   printf("miya\n");
-  //char* name = prename+1;
+  char* name = prename+1;
   printf("regsl[0]:%s\n",regsl[0]);
   uint32_t result = 0;
   for(int i=0;i<8;i++){
@@ -101,6 +101,7 @@ uint32_t get_reg_value(char* name){
       return result;
     }
   }
+  printf("At last\n");
   assert(0);
   return 0;
 }
