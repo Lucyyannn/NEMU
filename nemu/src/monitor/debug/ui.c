@@ -129,7 +129,7 @@ static int cmd_x(char *args){
   printf("wei \n");
   assert(strlen(args)>=3);
   // (1)args --> num + expression
-  char * number = "\0";
+  char * number = (char*)malloc(5*sizeof(char));
   int i=0;
   for(i=0;args[i]!=32;++i){
     printf("args[i]: %c \n",args[i]);
@@ -137,7 +137,8 @@ static int cmd_x(char *args){
   }
   int num=comp_value_by_string(number,i);
   printf("num is: %d \n",num);
-  char * args2="\0"; int j=i+1;
+  char * args2=(char*)malloc(32*sizeof(char));
+  int j=i+1;
   for(j=i+1;args[j]!='\0';++j){
     *(args2+j)=args[j];
   }args[j]='\0';
