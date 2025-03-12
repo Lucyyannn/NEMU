@@ -67,8 +67,8 @@ enum {
 enum {
   OP_LV0 = 0 ,    // number , register
   OP_LV1 = 10 ,   // ()
-  OP_LV2_2 = 21 , // deference, *
-  OP_LV2_1 = 22 , // unary, - 
+  OP_LV2_1 = 21 , // deference, *
+  OP_LV2_2 = 22 , // unary, - 
   OP_LV3 = 30 ,   // *  /   %
   OP_LV4 = 40 ,   // + , − 
   OP_LV7 = 70 ,   // == , != ,>= ,<=
@@ -208,7 +208,7 @@ static bool make_token(char *e) {
             if(nr_token==0||(nr_token>0&&tokens[nr_token-1].precedence!=OP_LV0
                                        &&tokens[nr_token-1].precedence!=OP_LV1)){
               tokens[nr_token].type = TK_U;
-              tokens[nr_token].precedence = OP_LV2_1;
+              tokens[nr_token].precedence = OP_LV2_2;
             }else{
             // -
               tokens[nr_token].type = rules[i].token_type;
@@ -222,7 +222,7 @@ static bool make_token(char *e) {
             if(nr_token==0||(nr_token>0&&tokens[nr_token-1].precedence!=OP_LV0
                                         &&tokens[nr_token-1].precedence!=OP_LV1)){
               tokens[nr_token].type = TK_P;
-              tokens[nr_token].precedence = OP_LV2_2;
+              tokens[nr_token].precedence = OP_LV2_1;
             }else{
             // *
               tokens[nr_token].type = rules[i].token_type;
@@ -417,7 +417,7 @@ int eval(int p, int q){
     }
     assert(depth==0);
     //compute substr and combine
-    printf("p~q: %d, %d,%d , %d, %d \n",p, d-l_limit,d, d+r_limit,q);
+    printf("p~q: %d, %d, %d , %d, %d \n",p, d-l_limit,d, d+r_limit,q);
     int val1 = begin_by_sign?0:eval(p,d-l_limit);
     int val2 = eval(d+r_limit,q);
     switch(op){
