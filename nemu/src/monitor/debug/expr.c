@@ -386,7 +386,7 @@ int eval(int p, int q){
           // identify the continuous +/- , and cut
           int j=i;
           int plusnum=0,subnum=0;
-          for(j=i;tokens[j].precedence==OP_LV2_2||tokens[j].precedence==OP_LV4;++j){
+          for(j=i;(tokens[j].precedence==OP_LV2_2||tokens[j].precedence==OP_LV4)&&j<=q;++j){
             // begin by + or -  , add 0 to the front
             if(d==p&&i==p){
               begin_by_sign=true;
