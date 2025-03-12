@@ -16,32 +16,32 @@ long long powcomp(int base, int exponent){
   return res;
 }
 
-void cpy(char* dest, char* src){
+void cpy(char** dest, char* src){
   if(src==NULL){panic("the string to copy should not be null!\n");}
   printf("Hi ! \n");
   assert(strlen(src)>0);
   printf("Hello ! \n");
   int n=strlen(src);
-  dest = (char*)malloc((n+1)*sizeof(char));
+  *dest = (char*)malloc((n+1)*sizeof(char));
   for(int i=0;i<n;++i){
-    *(dest+i)=*(src+i);
+    (*dest)[i]=*(src+i);
   }
   if(dest[n-1]!='\0'){
-    dest[n]='\0';
+    (*dest)[n]='\0';
   }
   return;
 }
 
-void ncpy(char* dest, char* src, int n){
+void ncpy(char** dest, char* src, int n){
   printf("Hi ! \n");
   assert(strlen(src)>=n);
   printf("Hello ! \n");
-  dest = (char*)malloc((n+1)*sizeof(char));
+  *dest = (char*)malloc((n+1)*sizeof(char));
   for(int i=0;i<n;++i){
-    *(dest+i)=*(src+i);
+    (*dest)[i]=*(src+i);
   }
   if(dest[n-1]!='\0'){
-    dest[n]='\0';
+    (*dest)[n]='\0';
   }
   printf("How are you? \n");
   return ;
@@ -133,7 +133,7 @@ void init_regex() {
 
 typedef struct token {
   int type;
-  char str[32];
+  char *str;
   uint32_t value;
   int precedence;
 } Token;
@@ -187,7 +187,7 @@ static bool make_token(char *e) {
   // pmatch.rm_so, pmatch._rm_eo
   nr_token = 0;
   uint32_t value=0;
-  char *substr='\0';
+  char *substr ="\0";
 
   while (e[position] != '\0') {
     /* Try all rules one by one. */
@@ -207,7 +207,7 @@ static bool make_token(char *e) {
           case TK_PLUS://+
             tokens[nr_token].type = rules[i].token_type;
             tokens[nr_token].precedence = OP_LV4;
-            cpy(tokens[nr_token].str,"+\0");
+            cpy(&tokens[nr_token].str,"+\0");
             ++nr_token;
             break;
           case TK_SUB:
@@ -220,7 +220,7 @@ static bool make_token(char *e) {
               tokens[nr_token].type = rules[i].token_type;
               tokens[nr_token].precedence = OP_LV4;
             }
-            cpy(tokens[nr_token].str,"-\0");
+            cpy(&tokens[nr_token].str,"-\0");
             ++nr_token;
             break;
           case TK_MULTI:
@@ -233,86 +233,86 @@ static bool make_token(char *e) {
               tokens[nr_token].type = rules[i].token_type;
               tokens[nr_token].precedence = OP_LV3;
             }
-            cpy(tokens[nr_token].str,"*\0");
+            cpy(&tokens[nr_token].str,"*\0");
             ++nr_token;
             break;
           case TK_DIV://  /
             tokens[nr_token].type = rules[i].token_type;
             tokens[nr_token].precedence = OP_LV3;
-            cpy(tokens[nr_token].str,"/\0");
+            cpy(&tokens[nr_token].str,"/\0");
             ++nr_token;
             break;
           case TK_MOD://  %
             tokens[nr_token].type = rules[i].token_type;
             tokens[nr_token].precedence = OP_LV3;
-            cpy(tokens[nr_token].str,"%\0");
+            cpy(&tokens[nr_token].str,"%\0");
             ++nr_token;
             break;
           case TK_LPARENTHESIS:// (
             tokens[nr_token].type = rules[i].token_type;
             tokens[nr_token].precedence = OP_LV1;
-            cpy(tokens[nr_token].str,"(\0");
+            cpy(&tokens[nr_token].str,"(\0");
             ++nr_token;
             break;
           case TK_RPARENTHESIS:// )
             tokens[nr_token].type = rules[i].token_type;
             tokens[nr_token].precedence = OP_LV1;
-            cpy(tokens[nr_token].str,")\0");
+            cpy(&tokens[nr_token].str,")\0");
             ++nr_token;
             break;
           case TK_REGISTER:// register
-            ncpy(substr,substr_start+1,substr_len-1);
+            ncpy(&substr,substr_start+1,substr_len-1);
             value=get_reg_value(substr);
             printf("Nice to meet you,too \n");
             tokens[nr_token].type = rules[i].token_type;
             tokens[nr_token].precedence = OP_LV0;
             tokens[nr_token].value=value;
-            cpy(tokens[nr_token].str,substr);
+            cpy(&tokens[nr_token].str,substr);
             ++nr_token;
             break;
           case TK_NUMBER: // number   hex or dec
-            ncpy(substr,substr_start,substr_len);
+            ncpy(&substr,substr_start,substr_len);
             value=comp_value_by_string(substr_start,substr_len);
             tokens[nr_token].type = rules[i].token_type;
             tokens[nr_token].precedence = OP_LV0;
             tokens[nr_token].value = value;
-            cpy(tokens[nr_token].str,substr);
+            cpy(&tokens[nr_token].str,substr);
             ++nr_token;
             break;
           case TK_EQ:
             tokens[nr_token].type = rules[i].token_type;
             tokens[nr_token].precedence = OP_LV7;
-            cpy(tokens[nr_token].str,"==\0");
+            cpy(&tokens[nr_token].str,"==\0");
             ++nr_token;
             break;
           case TK_NEQ:
             tokens[nr_token].type = rules[i].token_type;
             tokens[nr_token].precedence = OP_LV7;
-            cpy(tokens[nr_token].str,"!=\0");
+            cpy(&tokens[nr_token].str,"!=\0");
             ++nr_token;
             break;
           case TK_LEQ:
             tokens[nr_token].type = rules[i].token_type;
             tokens[nr_token].precedence = OP_LV7;
-            cpy(tokens[nr_token].str,">=\0");
+            cpy(&tokens[nr_token].str,">=\0");
             ++nr_token;
             break;
           case TK_BEQ:
             tokens[nr_token].type = rules[i].token_type;
             tokens[nr_token].precedence = OP_LV7;
-            cpy(tokens[nr_token].str,"<=\0");
+            cpy(&tokens[nr_token].str,"<=\0");
             ++nr_token;
             break;
           case TK_AND:
             tokens[nr_token].type = rules[i].token_type;
             tokens[nr_token].precedence = OP_LV11;
-            cpy(tokens[nr_token].str,"&&\0");
+            cpy(&tokens[nr_token].str,"&&\0");
             ++nr_token;
             break;
           case TK_OR:
             tokens[nr_token].type = rules[i].token_type;
             tokens[nr_token].precedence = OP_LV12;
-            cpy(tokens[nr_token].str,"||\0");
+            cpy(&tokens[nr_token].str,"||\0");
             ++nr_token;
             break;
           default:
