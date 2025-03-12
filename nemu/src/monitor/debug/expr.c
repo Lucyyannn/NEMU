@@ -5,7 +5,6 @@
  */
 #include <sys/types.h>
 #include <regex.h>
-#include <stdlib.h>
 
 // additional functions
 long long powcomp(int base, int exponent){
@@ -17,7 +16,9 @@ long long powcomp(int base, int exponent){
 }
 
 void cpy(char* dest, char* src){
+  printf("Hi ! \n");
   assert(strlen(src)>0);
+  printf("Hello ! \n");
   int n=strlen(src);
   dest = (char*)malloc((n+1)*sizeof(char));
   for(int i=0;i<n;++i){
@@ -30,7 +31,9 @@ void cpy(char* dest, char* src){
 }
 
 void ncpy(char* dest, char* src, int n){
+  printf("Hi ! \n");
   assert(strlen(src)>=n);
+  printf("Hello ! \n");
   dest = (char*)malloc((n+1)*sizeof(char));
   for(int i=0;i<n;++i){
     *(dest+i)=*(src+i);
