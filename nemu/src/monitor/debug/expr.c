@@ -24,21 +24,21 @@ void cpy(char** dest, char* src){
   for(int i=0;i<n;++i){
     (*dest)[i]=*(src+i);
   }
-  if(dest[n-1]!='\0'){
-    (*dest)[n]='\0';
-  }
+  (*dest)[n]='\0';
+  
   return;
 }
 
 void ncpy(char** dest, char* src, int n){
+  if(src==NULL){panic("the string to copy should not be null!\n");}
   assert(strlen(src)>=n);
   *dest = (char*)malloc((n+1)*sizeof(char));
   for(int i=0;i<n;++i){
     (*dest)[i]=*(src+i);
   }
-  if(dest[n-1]!='\0'){
-    (*dest)[n]='\0';
-  }
+
+  (*dest)[n]='\0';
+  
   return ;
 }
 
@@ -270,7 +270,7 @@ static bool make_token(char *e) {
             tokens[nr_token].type = rules[i].token_type;
             tokens[nr_token].precedence = OP_LV0;
             tokens[nr_token].value = value;
-            cpy(&tokens[nr_token].str,substr);
+            ncpy(&tokens[nr_token].str,substr_start,substr_len);
             ++nr_token;
             break;
           case TK_EQ:
