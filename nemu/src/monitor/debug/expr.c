@@ -389,7 +389,7 @@ int eval(int p, int q){
             // begin by + or -  , add 0 to the front
             if(d==p&&i==p){
               begin_by_sign=true;
-            }
+            } 
             // compute the num of + or -
             if(tokens[j].type==TK_PLUS){
               ++plusnum;
