@@ -134,10 +134,12 @@ static int cmd_x(char *args){
     *(number+i)=args[i];
   }
   int num=comp_value_by_string(number,i);
+  printf("num is: %d \n",num);
   char * args2="\0"; int j=i+1;
   for(j=i+1;args[j]!='\0';++j){
     *(args2+j)=args[j];
   }args[j]='\0';
+  printf("here \n");
   //(2) compute the expression
   bool success = true;
   uint32_t result = expr(args2,&success);
