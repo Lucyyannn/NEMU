@@ -381,6 +381,7 @@ int eval(int p, int q){
       // only for +-*/%, and not in ()
       else if(depth==0){
         if(tokens[i].precedence>=OP_LV2_2&&tokens[i].precedence<=OP_LV4){
+          d=i;
           // identify the continuous +/- , and cut
           int j=i;
           int plusnum=0,subnum=0;
@@ -398,7 +399,6 @@ int eval(int p, int q){
           }
           // if this time is +/-
           if(j>i){
-            d = p;
             if(subnum==0||(subnum!=0&&subnum%2==0)){op=TK_PLUS;}
             else {op=TK_SUB;}
             r_limit=j-i;
@@ -406,7 +406,6 @@ int eval(int p, int q){
           }
           //if this time is */% ,  TODO : [[[deref]]]
           else if(tokens[i].precedence==OP_LV3&&(op==0||tokens[d].precedence==OP_LV3)){
-            d=i;
             op=tokens[i].type;
             r_limit=1;
           }
