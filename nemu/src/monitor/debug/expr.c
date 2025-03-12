@@ -373,6 +373,7 @@ uint32_t eval(int p, int q){
       }
       // only for +-*/%, and not in ()
       else if(depth==0&&(tokens[i].precedence==OP_LV3||tokens[i].precedence==OP_LV4)){
+        printf("heae \n");
         if(d==0||tokens[i].precedence>=tokens[d].precedence){
           d=i;
         }
