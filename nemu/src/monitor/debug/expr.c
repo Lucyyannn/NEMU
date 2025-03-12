@@ -67,8 +67,8 @@ enum {
 enum {
   OP_LV0 = 0 ,    // number , register
   OP_LV1 = 10 ,   // ()
-  OP_LV2_1 = 21 , // unary, - 
-  OP_LV2_2 = 22 , // deference, *
+  OP_LV2_2 = 21 , // deference, *
+  OP_LV2_1 = 22 , // unary, - 
   OP_LV3 = 30 ,   // *  /   %
   OP_LV4 = 40 ,   // + , − 
   OP_LV7 = 70 ,   // == , != ,>= ,<=
@@ -129,14 +129,14 @@ void init_regex() {
 typedef struct token {
   int type;
   char *str;
-  uint32_t value;
+  int value;
   int precedence;
 } Token;
 
 Token tokens[32];// the tokens that have already been recognized
 int nr_token;    //the number of tokens above
 
-uint32_t hex_to_num(char numstr){
+int hex_to_num(char numstr){
   if(numstr>='0'&&numstr<='9'){
     return (numstr-'0');
   }
@@ -150,8 +150,8 @@ uint32_t hex_to_num(char numstr){
   return 0;
 }
 
-uint32_t comp_value_by_string(char* number,int length){
-  uint32_t value=0;
+int comp_value_by_string(char* number,int length){
+  int value=0;
   int start_p=0,end_p=length-1;
   //hex
   if((end_p+1)>2&&(*(number+1)=='x'||*(number+1)=='X')){
@@ -165,7 +165,7 @@ uint32_t comp_value_by_string(char* number,int length){
   //dec
   else{
     for(int i=end_p;i>=start_p;i--){
-      uint32_t temp = number[i]-'0';
+      int temp = number[i]-'0';
       value+=temp*powcomp(10,(end_p-i));
     }
     return value;
@@ -181,7 +181,7 @@ static bool make_token(char *e) {
   regmatch_t pmatch;// to locate
   // pmatch.rm_so, pmatch._rm_eo
   nr_token = 0;
-  uint32_t value=0;
+  int value=0;
   char *substr ="\0";
 
   while (e[position] != '\0') {
@@ -350,7 +350,7 @@ bool checkparenthesis(int p, int q){
 }
 // p: start position
 // q: end position
-uint32_t eval(int p, int q){
+int eval(int p, int q){
   if(p>q){
     panic("It's impossible that p>q.");
   }else if(p==q){
@@ -364,29 +364,66 @@ uint32_t eval(int p, int q){
 
   }else{
     // look for the dominant operator
-    int d=0;//position of the dominant operator
+    int d=p;//position of the dominant operator
+    int op = 0;
     int depth=0;
-    for(int i=p;i<=q;++i){
+    bool begin_by_sign=false;
+    int l_limit=1;
+    int r_limit=1;
+    for(int i=p;i<=q;){
       printf("num: %d , str: %s , precedence: %d \n",i,tokens[i].str,tokens[i].precedence);
       // identify the ()
       if(tokens[i].type==TK_LPARENTHESIS){
         ++depth;
+        ++i;
       }else if(tokens[i].type==TK_RPARENTHESIS){
         --depth;
+        ++i;
       }
       // only for +-*/%, and not in ()
-      else if(depth==0&&(tokens[i].precedence==OP_LV3||tokens[i].precedence==OP_LV4)){
-        if(d==0||tokens[i].precedence>=tokens[d].precedence){
-          d=i;
+      else if(depth==0){
+        if(tokens[i].precedence>=OP_LV2_2&&tokens[i].precedence<=OP_LV4){
+          // identify the continuous +/- , and cut
+          int j=i;
+          int plusnum=0,subnum=0;
+          for(j=i;tokens[j].precedence==OP_LV2_2||tokens[j].precedence==OP_LV4;++j){
+            // begin by + or -  , add 0 to the front
+            if(d==p&&i==p){
+              begin_by_sign=true;
+            }
+            // compute the num of + or -
+            if(tokens[j].type==TK_PLUS){
+              ++plusnum;
+            }else if(tokens[j].type==TK_SUB||tokens[j].type==TK_U){
+              ++subnum;
+            }
+          }
+          // if this time is +/-
+          if(j>i){
+            d = p;
+            if(subnum==0||(subnum!=0&&subnum%2==0)){op=TK_PLUS;}
+            else {op=TK_SUB;}
+            r_limit=j-i;
+            i=j;
+          }
+          //if this time is */% ,  TODO : [[[deref]]]
+          else if(tokens[i].precedence==OP_LV3&&(op==0||tokens[d].precedence==OP_LV3)){
+            d=i;
+            op=tokens[i].type;
+            r_limit=1;
+            ++i;
+          }
+          else{
+            panic("Any other possibilities ?\n");
+          }
         }
       }
     }
     assert(depth==0);
-    assert(d!=0);
     //compute substr and combine
-    uint32_t val1 = eval(p,d-1);
-    uint32_t val2 = eval(d+1,q);
-    switch(tokens[d].type){
+    int val1 = begin_by_sign?0:eval(p,d-l_limit);
+    int val2 = eval(d+r_limit,q);
+    switch(op){
       case TK_PLUS:
         return val1+val2;
       case TK_SUB:
@@ -409,7 +446,7 @@ uint32_t eval(int p, int q){
 }
 
 
-uint32_t expr(char *e, bool *success) {
+int expr(char *e, bool *success) {
   if (!make_token(e)) {
     *success = false;
     return 0;
@@ -420,7 +457,7 @@ uint32_t expr(char *e, bool *success) {
   }
   int p=0,q=nr_token-1;
 
-  uint32_t res=eval(p,q);
+  int res=eval(p,q);
   return res;
 }
 
