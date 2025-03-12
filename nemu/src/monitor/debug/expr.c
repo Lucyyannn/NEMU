@@ -364,16 +364,18 @@ uint32_t eval(int p, int q){
     // look for the dominant operator
     int d=0;//position of the dominant operator
     int depth=0;
-    for(int i=p;i<=q;i++){
+    for(int i=p;i<=q;++i){
       // identify the ()
       if(tokens[i].type==TK_LPARENTHESIS){
+        printf("the 1 \n");
         ++depth;
       }else if(tokens[i].type==TK_RPARENTHESIS){
+        printf("the 2 \n");
         --depth;
       }
       // only for +-*/%, and not in ()
       else if(depth==0&&(tokens[i].precedence==OP_LV3||tokens[i].precedence==OP_LV4)){
-        printf("heae \n");
+        printf("the 3 \n");
         if(d==0||tokens[i].precedence>=tokens[d].precedence){
           d=i;
         }
