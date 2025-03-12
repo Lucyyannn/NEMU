@@ -370,15 +370,12 @@ uint32_t eval(int p, int q){
       printf("num: %d , str: %s , precedence: %d \n",i,tokens[i].str,tokens[i].precedence);
       // identify the ()
       if(tokens[i].type==TK_LPARENTHESIS){
-        printf("the 1 \n");
         ++depth;
       }else if(tokens[i].type==TK_RPARENTHESIS){
-        printf("the 2 \n");
         --depth;
       }
       // only for +-*/%, and not in ()
       else if(depth==0&&(tokens[i].precedence==OP_LV3||tokens[i].precedence==OP_LV4)){
-        printf("the 3 \n");
         if(d==0||tokens[i].precedence>=tokens[d].precedence){
           d=i;
         }
@@ -424,7 +421,6 @@ uint32_t expr(char *e, bool *success) {
   int p=0,q=nr_token-1;
 
   uint32_t res=eval(p,q);
-  printf("res:%d \n",res);
   return res;
 }
 
