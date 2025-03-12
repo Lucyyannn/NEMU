@@ -205,7 +205,8 @@ static bool make_token(char *e) {
             break;
           case TK_SUB:
             //unary
-            if(nr_token==0||(nr_token>0&&tokens[nr_token-1].precedence!=OP_LV0)){
+            if(nr_token==0||(nr_token>0&&tokens[nr_token-1].precedence!=OP_LV0
+                                       &&tokens[nr_token-1].precedence!=OP_LV1)){
               tokens[nr_token].type = TK_U;
               tokens[nr_token].precedence = OP_LV2_1;
             }else{
@@ -218,7 +219,8 @@ static bool make_token(char *e) {
             break;
           case TK_MULTI:
             //deref
-            if(nr_token==0||(nr_token>0&&tokens[nr_token-1].precedence!=OP_LV0)){
+            if(nr_token==0||(nr_token>0&&tokens[nr_token-1].precedence!=OP_LV0
+                                        &&tokens[nr_token-1].precedence!=OP_LV1)){
               tokens[nr_token].type = TK_P;
               tokens[nr_token].precedence = OP_LV2_2;
             }else{
@@ -259,7 +261,7 @@ static bool make_token(char *e) {
             tokens[nr_token].type = rules[i].token_type;
             tokens[nr_token].precedence = OP_LV0;
             tokens[nr_token].value=value;
-            cpy(&tokens[nr_token].str,substr);
+            ncpy(&tokens[nr_token].str,substr_start,substr_len);
             ++nr_token;
             break;
           case TK_NUMBER: // number   hex or dec
