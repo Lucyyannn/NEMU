@@ -137,7 +137,7 @@ static int cmd_x(char *args){
   int num=comp_value_by_string(number,i);
   char * args2=(char*)malloc(32*sizeof(char));
   int j=i+1;
-  for(j=i+1;args[j]!='\0';++j){
+  for(j=i+2;args[j]!='\0';++j){
     *(args2+j)=args[j];
   }args2[j]='\0';
   printf("here \n");
