@@ -139,7 +139,7 @@ static int cmd_x(char *args){
   int j=i+1;
   for(j=i+1;args[j]!='\0';++j){
     *(args2+j-i-1)=args[j];
-  }args2[j]='\0';
+  }args2[j-i-1]='\0';
   printf("here \n");
   printf("the expression: %s \n",args2);
   //(2) compute the expression
