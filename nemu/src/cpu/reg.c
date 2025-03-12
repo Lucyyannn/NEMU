@@ -47,9 +47,11 @@ void reg_test() {
 // compare two char*
 uint32_t strcomp(char* a,const char* b){
   //get length
-  int i=0,j=0;
-  for(i=0;*(a+i)!='\0';++i){ printf("he\n");}
-  for(j=0;*(b+j)!='\0';++j){printf("xxx\n");}
+  // int i=0,j=0;
+  // for(i=0;*(a+i)!='\0';++i){ printf("he\n");}
+  // for(j=0;*(b+j)!='\0';++j){printf("xxx\n");}
+  int i=strlen(a);
+  int j=strlen(b);
   // compare length
   if(i!=j){
     return -1;
