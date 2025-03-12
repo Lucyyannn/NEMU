@@ -41,6 +41,7 @@ void ncpy(char* dest, char* src, int n){
   if(dest[n-1]!='\0'){
     dest[n]='\0';
   }
+  printf("How are you? \n");
   return ;
 }
 
