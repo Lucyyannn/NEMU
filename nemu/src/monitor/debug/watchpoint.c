@@ -1,5 +1,6 @@
 #include "monitor/watchpoint.h"
 #include "monitor/expr.h"
+#include "monitor/monitor.h"
 
 #define NR_WP 32
 
@@ -74,16 +75,14 @@ void free_wp(int number){
 //print the information of all the watchpoints, to debug
 void print_wp_pool_info(){
   printf("watchpoints: \n");
-  WP* temp=head;
-  if(temp==NULL){
+  if(w_nr==0){
     printf("No watchpoints.\n");
     return ;
   }
-  while(temp!=NULL){
+  for(int i=0;i<w_nr;++i){
     bool success=true;
-    uint32_t value = expr(temp->expression,&success);
-    printf("NO: %d , EXPRESSION: %s , value: %d \n",temp->NO,temp->expression,value);
-    temp=temp->next;
+    uint32_t value = expr(w_tokens[i],&success);
+    printf("NO: %d , EXPRESSION: %s , value: %d \n",i,w_tokens[i],value);
   } 
   return ;
 }
