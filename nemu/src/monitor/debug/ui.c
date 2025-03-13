@@ -163,7 +163,7 @@ static int cmd_w(char *args){
 
   cpy(&w_tokens[w_nr],wp->expression);
   ++w_nr;
-  printf("watchpoint %d : %s \n",w_nr-1,w_tokens[w_nr]);
+  printf("watchpoint %d : %s \n",w_nr-1,w_tokens[w_nr-1]);
   return 0;
 }
 static int cmd_d(char *args){
