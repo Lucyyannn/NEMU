@@ -351,17 +351,19 @@ bool checkparenthesis(int p, int q){
 // p: start position
 // q: end position
 int eval(int p, int q){
+  //[1]
   if(p>q){
     panic("It's impossible that p>q.");
+  //[2]
   }else if(p==q){
     // only number or register possible
     assert(tokens[p].precedence==OP_LV0);
     return tokens[p].value;
-
+  //[3]
   }else if(checkparenthesis(p,q)){
     // ( sub_expr )  --> cut off the ()
     return eval(p+1,q-1);
-
+  //[4]
   }else{
     // look for the dominant operator
     int d=p;//position of the dominant operator
@@ -372,14 +374,17 @@ int eval(int p, int q){
     int r_limit=1;
     for(int i=p;i<=q;++i){
       printf("num: %d , str: %s , precedence: %d \n",i,tokens[i].str,tokens[i].precedence);
+      //[4.1]
       // identify the ()
       if(tokens[i].type==TK_LPARENTHESIS){
         ++depth;
       }else if(tokens[i].type==TK_RPARENTHESIS){
         --depth;
       }
+      //[4.2]
       // only for +-*/%, and not in ()
       else if(depth==0){
+        //[4.2.1]
         if(tokens[i].precedence>=OP_LV2_2&&tokens[i].precedence<=OP_LV4){
           d=i;
           // identify the continuous +/- , and cut
@@ -393,22 +398,43 @@ int eval(int p, int q){
               ++subnum;
             }
           }
-          // if this time is +/-
+          // [4.2.1](1) if this time is +/-
           if(j>i){
             if(subnum==0||(subnum!=0&&subnum%2==0)){op=TK_PLUS;}
             else {op=TK_SUB;}
             r_limit=j-i;
             i=j-1;
           }
-          //if this time is */% ,  TODO : [[[deref]]]
+          // [4.2.1](2) if this time is */% ,  
           else if(tokens[i].precedence==OP_LV3&&(op==0||tokens[d].precedence==OP_LV3)){
             op=tokens[i].type;
             r_limit=1;
           }
+          // [4.2.1](3)
           else{
             panic("Any other possibilities ?\n");
           }
         }
+        // [4.2.2] deref
+        else if(tokens[i].precedence==OP_LV2_1){
+          //tackle the * only when there is only a *xx
+          if(i==p){
+            int j=i;
+            for(j=i;tokens[j].precedence==OP_LV2_1;++j){;}
+            assert(tokens[j].precedence==OP_LV0);
+            int addr=tokens[j].value; int k=j-i;//num of *
+            int result=0;
+            for(int t=0;t<k;++t){
+              result = vaddr_read(addr,4);
+              addr = result;
+            }
+            return result;
+            
+          }else{
+            Log("A deref sign, digard.");
+          }
+        }
+        
       }
     }
     assert(depth==0);
