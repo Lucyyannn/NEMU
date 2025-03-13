@@ -386,10 +386,6 @@ int eval(int p, int q){
           int j=i;
           int plusnum=0,subnum=0;
           for(j=i;(tokens[j].precedence==OP_LV2_2||tokens[j].precedence==OP_LV4)&&j<=q;++j){
-            // begin by + or -  , add 0 to the front
-            if(d==p&&i==p){
-              begin_by_sign=true;
-            } 
             // compute the num of + or -
             if(tokens[j].type==TK_PLUS){
               ++plusnum;
@@ -418,6 +414,7 @@ int eval(int p, int q){
     assert(depth==0);
     //compute substr and combine
     printf("p~q: %d, %d, %d , %d, %d \n",p, d-l_limit,d, d+r_limit,q);
+    if(d==p){begin_by_sign=true;}
     int val1 = begin_by_sign?0:eval(p,d-l_limit);
     int val2 = eval(d+r_limit,q);
     switch(op){
