@@ -162,7 +162,7 @@ static int cmd_w(char *args){
   cpy(&wp->expression,args);
   // record to w_tokens
   cpy(&w_tokens[w_nr],wp->expression);
-  printf("watchpoint %d : %s \n",w_nr-1,w_tokens[w_nr-1]);
+  printf("watchpoint %d : %s \n",w_nr,w_tokens[w_nr]);
   ++w_nr;
 
   return 0;
