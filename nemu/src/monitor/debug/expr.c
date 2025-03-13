@@ -25,7 +25,6 @@ void cpy(char** dest, char* src){
     (*dest)[i]=*(src+i);
   }
   (*dest)[n]='\0';
-  printf("dest:%s \n",*dest);
   
   return;
 }
