@@ -126,7 +126,6 @@ static int cmd_p(char *args){
 
 //scan the memory
 static int cmd_x(char *args){
-  printf("wei \n");
   assert(strlen(args)>=3);
   // (1)args --> num + expression
   char * number = (char*)malloc(5*sizeof(char));
@@ -140,7 +139,6 @@ static int cmd_x(char *args){
   for(j=i+1;args[j]!='\0';++j){
     *(args2+j-i-1)=args[j];
   }args2[j-i-1]='\0';
-  printf("here \n");
   printf("the expression: %s \n",args2);
   //(2) compute the expression
   bool success = true;

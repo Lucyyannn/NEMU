@@ -85,14 +85,16 @@ void free_wp(WP* wp){
 
 //print the information of all the watchpoints, to debug
 void print_wp_pool_info(){
-  printf("watchpoint information:\n");
+  printf("watchpoints: \n");
   WP* temp=head;
   if(temp==NULL){
     printf("No watchpoints.\n");
     return ;
   }
   while(temp!=NULL){
-    printf("NO: %d , EXPRESSION: %s\n",temp->NO,temp->expression);
+    bool success=true;
+    uint32_t value = expr(temp->expression,&success);
+    printf("NO: %d , EXPRESSION: %s , value: %d \n",temp->NO,temp->expression,value);
     temp=temp->next;
   } 
   return ;
