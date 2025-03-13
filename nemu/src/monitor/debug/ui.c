@@ -157,13 +157,14 @@ static int cmd_x(char *args){
 
 // set the watchpoints
 static int cmd_w(char *args){
+  // add to head
   WP* wp=new_wp();
-  wp->expression=args;
-  printf("wp->expression: %s \n",wp->expression);
-
+  cpy(&wp->expression,args);
+  // record to w_tokens
   cpy(&w_tokens[w_nr],wp->expression);
-  ++w_nr;
   printf("watchpoint %d : %s \n",w_nr-1,w_tokens[w_nr-1]);
+  ++w_nr;
+
   return 0;
 }
 static int cmd_d(char *args){
