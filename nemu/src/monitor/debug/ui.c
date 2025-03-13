@@ -159,27 +159,26 @@ static int cmd_x(char *args){
 static int cmd_w(char *args){
   WP* wp=new_wp();
   wp->expression=args;
+  printf("wp->expression: %s \n",wp->expression);
 
   w_tokens[w_nr]=wp->expression;
-
+  ++w_nr;
+  printf("watchpoint %d : %s \n",w_nr-1,w_tokens[w_nr]);
   return 0;
 }
 static int cmd_d(char *args){
-  assert(args!=NULL);
-  WP* wp=find_wp(args);
+
+  int N = comp_value_by_string(args,strlen(args));
+  assert(N>=0&&N<=31);
   // delete it from the list
-  free_wp(wp); 
+  free_wp(N); 
   //delete the global watchpoint expression infomation
-  for(int i=0;i<w_nr;i++){
-    if(strcmp(args,w_tokens[i])==0){
-      for(int j=i;j<w_nr-1;j++){
-        w_tokens[j]=w_tokens[j+1];
-      }
-      break;
-    }
+  for(int j=N;j<w_nr-1;++j){
+      w_tokens[j]=w_tokens[j+1];
   }
   --w_nr;
-
+  // display the remaining watchpoints
+  print_wp_pool_info();
   return 0;
 }
 

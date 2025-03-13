@@ -31,19 +31,7 @@ void add_to_list(WP* list,WP* newnode){
   list=newnode;
   return;
 }
-// find a watchpoint with expression e
-WP* find_wp(char* e){
-  if(head==NULL){assert(0);}
 
-  WP* temp=head;
-  while(temp!=NULL){
-    if(strcmp(e,temp->expression)==0){
-      return temp;
-    }
-    temp=temp->next;
-  }
-  assert(0);
-}
 // release a node from free_ at the beginning
 WP* new_wp(){
   if(free_!=NULL){
@@ -58,10 +46,10 @@ WP* new_wp(){
   assert(0);
 }
 // wp-->free_
-void free_wp(WP* wp){
+void free_wp(int number){
   WP* temp = head;
   // if wp is the head
-  if(temp->NO==wp->NO){
+  if(temp->NO==number){
     head=head->next;// release
     add_to_list(free_,temp);//add
     return;
@@ -70,7 +58,7 @@ void free_wp(WP* wp){
   WP* pre = head;
   temp=temp->next;
   while(temp!=NULL){
-    if(temp->NO==wp->NO){
+    if(temp->NO==number){
       pre->next=temp->next;//release
       add_to_list(free_,temp);//add
       return ;
