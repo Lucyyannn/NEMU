@@ -42,7 +42,7 @@ static make_EHelper(name) { \
 /* 0x80, 0x81, 0x83 */
 make_group(gp1,
     EMPTY, EMPTY, EMPTY, EMPTY,
-    EMPTY, EMPTY, EMPTY, EMPTY)
+    EMPTY, EMPTY, EMPTY, EMPTY) //TODO
 
   /* 0xc0, 0xc1, 0xd0, 0xd1, 0xd2, 0xd3 */
 make_group(gp2,
@@ -70,6 +70,32 @@ make_group(gp7,
     EMPTY, EMPTY, EMPTY, EMPTY)
 
 /* TODO: Add more instructions!!! */
+/* 
+Data Movement Instructions: 
+  mov-345!, push-367!, pop-361, 
+  leave-329, cltd(在i386手册中为cdq)-290, 
+  movsx-350, movzx-351
+
+Binary Arithmetic Instructions: 
+  add-261, inc-303!, sub-404!, 
+  dec-293!, cmp-287, neg-354, 
+  adc-260, sbb-386!, mul-352!, 
+  imul-300, div-294, idiv-298
+
+Logical Instructions: 
+  not-356, and-262, or-357!, 
+  xor-411!, sal(shl)-383, shr-383, 
+  sar-383, setcc-389!, test-405
+
+Control Transfer Instructions: 
+  jmp-319, jcc-316!, call-275, ret-378
+
+Miscellaneous Instructions: 
+  lea-327, nop-355
+
+Extra:RCL/RCR/ROL/ROR 372,out 358,in 302
+       lidt 330,int 306
+*/
 
 opcode_entry opcode_table [512] = {
   /* 0x00 */	EMPTY, EMPTY, EMPTY, EMPTY,
@@ -107,6 +133,13 @@ opcode_entry opcode_table [512] = {
   /* 0x80 */	IDEXW(I2E, gp1, 1), IDEX(I2E, gp1), EMPTY, IDEX(SI2E, gp1),
   /* 0x84 */	EMPTY, EMPTY, EMPTY, EMPTY,
   /* 0x88 */	IDEXW(mov_G2E, mov, 1), IDEX(mov_G2E, mov), IDEXW(mov_E2G, mov, 1), IDEX(mov_E2G, mov),
+  /*
+                     G: gloabl reg        E:reg/memory
+  88<–>mov Eb,Gb     b : IDEXW(xx,xx,1)   byte(8)
+  89<–>mov Ev,Gv     v : IDEX(xx,xx)      word(16)/double word(32)   (upt to "operand size")
+  8A<–>mov Gb,Eb
+  8B<–>mov Gv,Ev
+ */
   /* 0x8c */	EMPTY, EMPTY, EMPTY, EMPTY,
   /* 0x90 */	EMPTY, EMPTY, EMPTY, EMPTY,
   /* 0x94 */	EMPTY, EMPTY, EMPTY, EMPTY,
