@@ -163,7 +163,7 @@ static int cmd_w(char *args){
   // record to w_tokens
   cpy(&w_tokens[w_nr],wp->expression);
   printf("watchpoint %d : %s ;",w_nr,w_tokens[w_nr]);
-  printf("hex: %08x \n",w_nr,w_tokens[w_nr]);
+  printf("hex: %s \n",w_tokens[w_nr]);
   ++w_nr;
 
   return 0;
