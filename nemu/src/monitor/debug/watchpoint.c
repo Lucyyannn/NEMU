@@ -83,7 +83,7 @@ void print_wp_pool_info(){
     bool success=true;
     uint32_t value = expr(w_tokens[i],&success);
     printf("NO: %d , EXPRESSION: %s , value: %d ,",i,w_tokens[i],value);
-    printf("hex: %08x \n",value);
+    printf("hex: 0X%08X \n",value);
   } 
   return ;
 }
