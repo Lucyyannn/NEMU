@@ -110,7 +110,6 @@ static int cmd_info(char *args){
     print_reg_info();
   }// info w: print the watchpoint value
   else if(*args=='w'){
-    //TODO :print the position and number of all the watchpoints
     print_wp_pool_info();
   }
   return 0;
