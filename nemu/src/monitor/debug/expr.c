@@ -54,21 +54,21 @@ enum {
   TK_RPARENTHESIS, // )
   TK_REGISTER,
   TK_NUMBER,
-  TK_EQ,
-  TK_NEQ,
-  TK_LEQ,
-  TK_BEQ,
-  TK_AND,
-  TK_OR,
-  TK_U, // unary -
-  TK_P  //deref *
+  TK_EQ,    // ==
+  TK_NEQ,   // !=
+  TK_LEQ,   // <=
+  TK_BEQ,   // >=
+  TK_AND,   // &&
+  TK_OR,    //or
+  TK_U,     // unary -
+  TK_P      //deref *
 };
 //precedence level
 enum {
   OP_LV0 = 0 ,    // number , register
   OP_LV1 = 10 ,   // ()
   OP_LV2_1 = 21 , // deference, *
-  OP_LV2_2 = 22 , // unary, - 
+  OP_LV2_2 = 22 , // unary,     - 
   OP_LV3 = 30 ,   // *  /   %
   OP_LV4 = 40 ,   // + , − 
   OP_LV7 = 70 ,   // == , != ,>= ,<=
@@ -91,9 +91,9 @@ static struct rule {
   {"\\(",TK_LPARENTHESIS},
   {"\\)",TK_RPARENTHESIS},
 
-  {"\\$[a-zA-Z]+",TK_REGISTER},
+  {"\\$[a-zA-Z]+",TK_REGISTER},   
   {"0[xX][0-9a-fA-F]+",TK_NUMBER},//hex
-  {"(0|[1-9][0-9]*)",TK_NUMBER},
+  {"(0|[1-9][0-9]*)",TK_NUMBER},  //dec
   
   {"==", TK_EQ},       
   {"!=",TK_NEQ},        
@@ -200,7 +200,7 @@ static bool make_token(char *e) {
           case TK_PLUS://+
             tokens[nr_token].type = rules[i].token_type;
             tokens[nr_token].precedence = OP_LV4;
-            cpy(&tokens[nr_token].str,"+\0");
+            cpy(&tokens[nr_token].str,"+\0"); 
             ++nr_token;
             break;
           case TK_SUB:
