@@ -373,7 +373,6 @@ int eval(int p, int q){
     int l_limit=1;
     int r_limit=1;
     for(int i=p;i<=q;++i){
-      printf("num: %d , str: %s , precedence: %d \n",i,tokens[i].str,tokens[i].precedence);
       //[4.1]
       // identify the ()
       if(tokens[i].type==TK_LPARENTHESIS){
