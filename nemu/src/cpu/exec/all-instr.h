@@ -12,3 +12,4 @@ make_EHelper(push);
 make_EHelper(pop);
 make_EHelper(ret);
 make_EHelper(call);
+make_EHelper(xor);
