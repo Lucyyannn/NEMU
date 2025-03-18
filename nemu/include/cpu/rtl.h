@@ -3,6 +3,8 @@
 
 #include "nemu.h"
 
+#define DATALEN 4
+
 extern rtlreg_t t0, t1, t2, t3;
 extern const rtlreg_t tzero;
 
@@ -143,13 +145,13 @@ static inline void rtl_push(const rtlreg_t* src1) {
   // esp <- esp - 4
   // M[esp] <- src1
   cpu.esp = cpu.esp-4;
-  paddr_write(cpu.esp,4,*src1); // bytes ? *4/8???
+  paddr_write(cpu.esp,DATALEN,*src1); // bytes ? *4/8???
 }
 
 static inline void rtl_pop(rtlreg_t* dest) {
   // dest <- M[esp]
   // esp <- esp + 4
-  *dest = paddr_read(cpu.esp,4);
+  *dest = paddr_read(cpu.esp,DATALEN);
   cpu.esp = cpu.esp+4;
 }
 
