@@ -50,6 +50,13 @@ static inline int check_reg_index(int index) {
 #define reg_w(index) (cpu.gpr[check_reg_index(index)]._16)
 #define reg_b(index) (cpu.gpr[check_reg_index(index) & 0x3]._8[index >> 2])
 
+// visit eflags
+#define EFLAG_CF (cpu.eflags&1)
+#define EFLAG_ZF ((cpu.eflags>>6)&1)
+#define EFLAG_SF ((cpu.eflags>>7)&1)
+#define EFLAG_IF ((cpu.eflags>>9)&1)
+#define EFLAG_OF ((cpu.eflags>>11)&1)
+
 extern const char* regsl[];
 extern const char* regsw[];
 extern const char* regsb[];
@@ -68,5 +75,7 @@ static inline const char* reg_name(int index, int width) {
 void print_reg_info();
 // get reg value by name
 uint32_t get_reg_value(char* name);
+// set eflag bits
+void set_eflags(int flag,int val);
 
 #endif
