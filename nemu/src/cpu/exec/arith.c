@@ -1,13 +1,16 @@
 #include "cpu/exec.h"
 
 make_EHelper(add) {
-  TODO();
 
+  rtl_add(&t0,&id_dest->val,&id_src->val);
+  operand_write(id_dest,&t0);
+  
   print_asm_template2(add);
 }
 
 make_EHelper(sub) {
-  TODO();
+  rtl_sub(&t0,&id_dest->val,&id_src->val);
+  operand_write(id_dest,&t0);
 
   print_asm_template2(sub);
 }
