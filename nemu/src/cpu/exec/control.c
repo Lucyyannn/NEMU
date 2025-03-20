@@ -33,8 +33,9 @@ make_EHelper(call) {
 
 make_EHelper(ret) {
   // if near to caller
-  rtl_pop(&cpu.eip);
-  
+  rtl_pop(&t0);
+  decoding.is_jmp=1;
+  decoding.jmp_eip=t0;
 
   print_asm("ret");
 }
