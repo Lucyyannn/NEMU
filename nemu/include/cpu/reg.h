@@ -6,7 +6,7 @@
 enum { R_EAX, R_ECX, R_EDX, R_EBX, R_ESP, R_EBP, R_ESI, R_EDI };
 enum { R_AX, R_CX, R_DX, R_BX, R_SP, R_BP, R_SI, R_DI };
 enum { R_AL, R_CL, R_DL, R_BL, R_AH, R_CH, R_DH, R_BH };
-enum { CF=0,ZF=6,SF=7,IF=9,OF=11}; //eflags
+enum { CF=0,ZF=6,SF=7,IF=9,OF=11}; //eflags 
 
 /* TODO: Re-organize the `CPU_state' structure to match the register
  * encoding scheme in i386 instruction format. For example, if we
@@ -50,13 +50,6 @@ static inline int check_reg_index(int index) {
 #define reg_w(index) (cpu.gpr[check_reg_index(index)]._16)
 #define reg_b(index) (cpu.gpr[check_reg_index(index) & 0x3]._8[index >> 2])
 
-// visit eflags
-#define EFLAG_CF (cpu.eflags&1)
-#define EFLAG_ZF ((cpu.eflags>>6)&1)
-#define EFLAG_SF ((cpu.eflags>>7)&1)
-#define EFLAG_IF ((cpu.eflags>>9)&1)
-#define EFLAG_OF ((cpu.eflags>>11)&1)
-
 extern const char* regsl[];
 extern const char* regsw[];
 extern const char* regsb[];
@@ -76,6 +69,6 @@ void print_reg_info();
 // get reg value by name
 uint32_t get_reg_value(char* name);
 // set eflag bits
-void set_eflags(int flag,int val);
+void set_eflags(int flag,rtlreg_t val);
 
 #endif
