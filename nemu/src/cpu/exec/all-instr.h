@@ -7,10 +7,12 @@ make_EHelper(operand_size);
 make_EHelper(inv);
 make_EHelper(nemu_trap);
 
-make_EHelper(add);
+//PA2-1
 make_EHelper(sub);
 make_EHelper(push);
 make_EHelper(pop);
 make_EHelper(ret);
 make_EHelper(call);
 make_EHelper(xor);
+//PA2-2
+make_EHelper(add);
