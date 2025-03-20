@@ -7,19 +7,22 @@ make_EHelper(test) {
 }
 
 make_EHelper(and) {
-  TODO();
+  rtl_and(&t2,&id_dest->val,&id_src->val);
+  operand_write(id_dest,&t2);
 
   print_asm_template2(and);
 }
 
 make_EHelper(xor) {
-  TODO();
+  rtl_xor(&t2,&id_dest->val,&id_src->val);
+  operand_write(id_dest,&t2);
 
   print_asm_template2(xor);
 }
 
 make_EHelper(or) {
-  TODO();
+  rtl_or(&t2,&id_dest->val,&id_src->val);
+  operand_write(id_dest,&t2);
 
   print_asm_template2(or);
 }
@@ -55,6 +58,6 @@ make_EHelper(setcc) {
 
 make_EHelper(not) {
   TODO();
-
+  
   print_asm_template1(not);
 }
