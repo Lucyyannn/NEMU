@@ -33,6 +33,7 @@ make_EHelper(call) {
 make_EHelper(ret) {
   // if near to caller
   rtl_pop(&cpu.eip);
+  cpu.esp = cpu.esp-4;
 
   print_asm("ret");
 }
