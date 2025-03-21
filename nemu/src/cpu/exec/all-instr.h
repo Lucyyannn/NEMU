@@ -34,3 +34,4 @@ make_EHelper(leave);
 make_EHelper(cltd);
 make_EHelper(not);
 make_EHelper(and);
+make_EHelper(or);
