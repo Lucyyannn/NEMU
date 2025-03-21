@@ -46,10 +46,18 @@ make_EHelper(leave) {
 
 make_EHelper(cltd) {
   if (decoding.is_operand_size_16) {
-    TODO();
+    if(reg_w(0)<0){
+      cpu.gpr[2]._16 = 0xFFFF;
+    }else{
+      cpu.gpr[2]._16 = 0;
+    }
   }
   else {
-    TODO();
+    if(reg_l(0)<0){
+      cpu.edx=0xFFFFFFFF;
+    }else{
+      cpu.edx=0;
+    }
   }
 
   print_asm(decoding.is_operand_size_16 ? "cwtl" : "cltd");
