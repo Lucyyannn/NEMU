@@ -32,3 +32,4 @@ make_EHelper(movsx);
 make_EHelper(movzx);
 make_EHelper(leave);
 make_EHelper(cltd);
+make_EHelper(not);
