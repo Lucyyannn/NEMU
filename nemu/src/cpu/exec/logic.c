@@ -34,26 +34,41 @@ make_EHelper(or) {
   rtl_or(&t2,&id_dest->val,&id_src->val);
   operand_write(id_dest,&t2);
 
+  t0 = 0;
+  rtl_set_CF(&t0);
+  rtl_set_OF(&t0);
+  rtl_update_ZFSF(&t2,id_dest->width);
+
   print_asm_template2(or);
 }
 
+// unnecessary to update CF and OF in NEMU
 make_EHelper(sar) {
   TODO();
-  // unnecessary to update CF and OF in NEMU
+  
 
   print_asm_template2(sar);
 }
 
+// unnecessary to update CF and OF in NEMU
 make_EHelper(shl) {
-  TODO();
-  // unnecessary to update CF and OF in NEMU
+  int count = id_src->val;
+  t2 = id_dest->val;
+  while(count!=0){
+    t2*=2;
+    --count;
+  }
+  operand_write(id_dest,&t2);
+  rtl_update_ZFSF(&t2,id_dest->width);
+  
 
   print_asm_template2(shl);
 }
 
+// unnecessary to update CF and OF in NEMU
 make_EHelper(shr) {
   TODO();
-  // unnecessary to update CF and OF in NEMU
+  
 
   print_asm_template2(shr);
 }
