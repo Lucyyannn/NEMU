@@ -16,3 +16,4 @@ make_EHelper(call);
 make_EHelper(xor);
 //PA2-2
 make_EHelper(add);
+make_EHelper(adc);
