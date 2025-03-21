@@ -5,6 +5,7 @@ make_EHelper(mov) {
   print_asm_template2(mov);
 }
 
+//push imm8指令需要对立即数进行符号扩展
 make_EHelper(push) {
   rtl_push(&id_dest->val);
 
