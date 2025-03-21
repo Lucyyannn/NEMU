@@ -30,3 +30,4 @@ make_EHelper(cmp);
 make_EHelper(neg);
 make_EHelper(movsx);
 make_EHelper(movzx);
+make_EHelper(leave);

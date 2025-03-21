@@ -7,7 +7,7 @@ make_EHelper(mov) {
 
 //push imm8指令需要对立即数进行符号扩展
 make_EHelper(push) {
-  
+
   if(id_dest->width==1&&id_dest->type==OP_TYPE_IMM){
     rtl_sext(&t0,&id_dest->val,id_dest->width);
     rtl_push(&t0);
@@ -37,7 +37,9 @@ make_EHelper(popa) {
 }
 
 make_EHelper(leave) {
-  TODO();
+  cpu.esp = cpu.ebp;//esp <- ebp
+  rtl_pop(&t0);
+  cpu.ebp=t0;       //ebp <- pop()
 
   print_asm("leave");
 }
