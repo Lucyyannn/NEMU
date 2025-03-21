@@ -28,3 +28,5 @@ make_EHelper(inc);
 make_EHelper(dec);
 make_EHelper(cmp);
 make_EHelper(neg);
+make_EHelper(movsx);
+make_EHelper(movzx);
