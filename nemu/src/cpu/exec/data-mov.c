@@ -7,6 +7,7 @@ make_EHelper(mov) {
 
 //push imm8指令需要对立即数进行符号扩展
 make_EHelper(push) {
+  printf("To here!\n");
 
   if(id_dest->width==1&&id_dest->type==OP_TYPE_IMM){
     rtl_sext(&t0,&id_dest->val,id_dest->width);
