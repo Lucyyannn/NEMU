@@ -48,7 +48,7 @@ static inline make_DopHelper(SI) {
   rtl_li(&op->val, op->simm);
 
 #ifdef DEBUG
-  snprintf(op->str, OP_STR_SIZE, "$0x%x", op->simm);
+  snprintf(op->str, OP_STR_SIZE, ":)$0x%x", op->simm);
 #endif
 }
 
