@@ -32,6 +32,10 @@ make_EHelper(call) {
 }
 
 make_EHelper(ret) {
+  //if has return value
+  if(decoding.is_operand_size_16){
+    rtl_pop(&t1);
+  }
   // if near to caller
   rtl_pop(&t0);
   decoding.is_jmp=1;
