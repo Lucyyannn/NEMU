@@ -163,31 +163,31 @@ void difftest_step(uint32_t eip) {
     }
   if(r.eax != cpu.eax){
     diff=true;
-    printf("DIFF: r.eax=%d,  cpu.eax=%d",r.eax,cpu.eax);
+    printf("DIFF: r.eax=%d,  cpu.eax=%d\n",r.eax,cpu.eax);
   }else if(r.ecx != cpu.ecx){
     diff=true;
-    printf("DIFF: r.ecx=%d,  cpu.ecx=%d",r.ecx,cpu.ecx);
+    printf("DIFF: r.ecx=%d,  cpu.ecx=%d\n",r.ecx,cpu.ecx);
   }else if(r.edx != cpu.edx){
     diff=true;
-    printf("DIFF: r.edx=%d,  cpu.edx=%d",r.edx,cpu.edx);
+    printf("DIFF: r.edx=%d,  cpu.edx=%d\n",r.edx,cpu.edx);
   }else if(r.ebx != cpu.ebx){
     diff=true;
-    printf("DIFF: r.ebx=%d,  cpu.ebx=%d",r.ebx,cpu.ebx);
+    printf("DIFF: r.ebx=%d,  cpu.ebx=%d\n",r.ebx,cpu.ebx);
   }else if(r.esp != cpu.esp){
     diff=true;
-    printf("DIFF: r.esp=%d,  cpu.esp=%d",r.esp,cpu.esp);
+    printf("DIFF: r.esp=%d,  cpu.esp=%d\n",r.esp,cpu.esp);
   }else if(r.ebp != cpu.ebp){
     diff=true;
-    printf("DIFF: r.ebp=%d,  cpu.ebp=%d",r.ebp,cpu.ebp);
+    printf("DIFF: r.ebp=%d,  cpu.ebp=%d\n",r.ebp,cpu.ebp);
   }else if(r.esi != cpu.esi){
     diff=true;
-    printf("DIFF: r.esi=%d,  cpu.esi=%d",r.esi,cpu.esi);
+    printf("DIFF: r.esi=%d,  cpu.esi=%d\n",r.esi,cpu.esi);
   }else if(r.edi != cpu.edi){
     diff=true;
-    printf("DIFF: r.edi=%d,  cpu.edi=%d",r.edi,cpu.edi);
+    printf("DIFF: r.edi=%d,  cpu.edi=%d\n",r.edi,cpu.edi);
   }else if(r.eip != cpu.eip){
     diff=true;
-    printf("DIFF: r.edi=%d,  cpu.edi=%d",r.edi,cpu.edi);
+    printf("DIFF: r.edi=%d,  cpu.edi=%d\n",r.edi,cpu.edi);
   }else {}
 
   if (diff) {
