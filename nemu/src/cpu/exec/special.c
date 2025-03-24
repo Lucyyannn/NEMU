@@ -15,7 +15,7 @@ make_EHelper(inv) {
   temp[1] = instr_fetch(eip, 4);
 
   uint8_t *p = (void *)temp;
-  printf("AAAAinvalid opcode(eip = 0x%08x): %02x %02x %02x %02x %02x %02x %02x %02x ...\n\n",
+  printf("invalid opcode(eip = 0x%08x): %02x %02x %02x %02x %02x %02x %02x %02x ...\n\n",
       ori_eip, p[0], p[1], p[2], p[3], p[4], p[5], p[6], p[7]);
 
   extern char logo [];
@@ -28,7 +28,7 @@ make_EHelper(inv) {
       "* Every line of untested code is always wrong!\33[0m\n\n", logo);
 
   nemu_state = NEMU_END;
-  printf("BBB\n");
+
   print_asm("invalid opcode");
 }
 
