@@ -29,7 +29,7 @@ make_EHelper(inv) {
 
   nemu_state = NEMU_END;
 
-  print_asm("invalid opcode");
+  print_asm(":)invalid opcode");
 }
 
 make_EHelper(nemu_trap) {
