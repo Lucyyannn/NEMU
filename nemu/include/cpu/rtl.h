@@ -219,6 +219,7 @@ static inline void rtl_update_ZF(const rtlreg_t* result, int width) {
   printf("result:%d \n",*result);
   printf("width:%d \n",width);
   printf("mask:%08x \n",mask);
+  printf("*result & mask = %d\n ",(*result & mask));
   int result_val = ((*result & mask) ==0);
   printf("result_val:%d \n",*result);
   set_eflags(ZF,result_val);
