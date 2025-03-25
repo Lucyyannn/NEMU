@@ -201,9 +201,24 @@ static inline void rtl_msb(rtlreg_t* dest, const rtlreg_t* src1, int width) {
 
 static inline void rtl_update_ZF(const rtlreg_t* result, int width) {
   // eflags.ZF <- is_zero(result[width * 8 - 1 .. 0])
+  int mask = 0;
+  switch (width){
+    case 1:
+      mask = 0xFF;
+      break;
+    case 2:
+      mask = 0xFFFF;
+      break;
+    case 4:
+      mask = 0xFFFFFFFF;
+      break;
+    default:
+      assert(0);
+  }
+
   printf("result:%d \n",*result);
   printf("width:%d \n",width);
-  int result_val= ((*result & ((int64_t)(1<<(width*8)) -1))==0);
+  int result_val = ((*result & mask) ==0);
   printf("result_val:%d \n",*result);
   set_eflags(ZF,result_val);
 }
