@@ -30,6 +30,10 @@ static inline void idex(vaddr_t *eip, opcode_entry *e) {
   }
   //printf("in Idex,before execute,next eip is %02x\n",*eip);
   e->execute(eip);
+  if(*eip==0x100033){
+    rtl_get_ZF(&t0);
+    printf("ZF: %d \n",t0);
+  }
 }
 
 static make_EHelper(2byte_esc);
