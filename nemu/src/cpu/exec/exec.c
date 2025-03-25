@@ -28,7 +28,7 @@ static inline void idex(vaddr_t *eip, opcode_entry *e) {
   if (e->decode){
     e->decode(eip);
   }
-  printf("in Idex,before execute,next eip is %02x\n",*eip);
+  //printf("in Idex,before execute,next eip is %02x\n",*eip);
   e->execute(eip);
 }
 
