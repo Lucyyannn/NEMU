@@ -5,10 +5,9 @@ typedef struct {
   DHelper decode;
   EHelper execute;
   int width;
-  int opcode;
 } opcode_entry;
 
-#define IDEXWN(id,ex,w,n)  {concat(decode_, id), concat(exec_, ex), w,n}
+
 #define IDEXW(id, ex, w)   {concat(decode_, id), concat(exec_, ex), w}
 #define IDEX(id, ex)       IDEXW(id, ex, 0)
 #define EXW(ex, w)         {NULL, concat(exec_, ex), w}
@@ -213,7 +212,7 @@ opcode_entry opcode_table [512] = {
   /* 0xa8 */	EMPTY, EMPTY, EMPTY, EMPTY,
   /* 0xac */	EMPTY, EMPTY, EMPTY, IDEX(E2G,imul2),
   /* 0xb0 */	EMPTY, EMPTY, EMPTY, EMPTY,
-  /* 0xb4 */	EMPTY, EMPTY, IDEXWN(mov_E2G,movzx,1,0x1b6), IDEX(mov_E2G,movzx),
+  /* 0xb4 */	EMPTY, EMPTY, IDEXW(mov_E2G,movzx,1), IDEX(mov_E2G,movzx),
   /* 0xb8 */	EMPTY, EMPTY, EMPTY, EMPTY,
   /* 0xbc */	EMPTY, EMPTY, IDEXW(mov_E2G,movsx,1), IDEX(mov_E2G,movsx),
   /* 0xc0 */	EMPTY, EMPTY, EMPTY, EMPTY,
@@ -236,7 +235,7 @@ opcode_entry opcode_table [512] = {
 
 static make_EHelper(2byte_esc) {
   printf("Let's look at the opcode table:\n");
-  printf("0x1b6: 0x%04x \n",opcode_table[0x1b6].opcode);
+  printf("0x1b6: %d \n",opcode_table[0x1b6].width);
   uint32_t opcode = instr_fetch(eip, 1) | 0x100;
   printf("2byte_esc: 0x%04x \n",opcode);
   decoding.opcode = opcode;
