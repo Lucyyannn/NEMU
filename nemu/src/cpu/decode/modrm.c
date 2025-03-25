@@ -12,6 +12,7 @@ void load_addr(vaddr_t *eip, ModR_M *m, Operand *rm) {
   if (m->R_M == R_ESP) {
     SIB s;
     s.val = instr_fetch(eip, 1);
+    printf("here 1: \n");
     base_reg = s.base;
     scale = s.ss;
 
@@ -31,6 +32,7 @@ void load_addr(vaddr_t *eip, ModR_M *m, Operand *rm) {
   if (disp_size != 0) {
     /* has disp */
     disp = instr_fetch(eip, disp_size);
+    printf("here 2: \n");
     if (disp_size == 1) { disp = (int8_t)disp; }
 
     rtl_addi(&rm->addr, &rm->addr, disp);
@@ -49,7 +51,7 @@ void load_addr(vaddr_t *eip, ModR_M *m, Operand *rm) {
   char disp_buf[16];
   char base_buf[8];
   char index_buf[8];
-
+  printf(" buf printing: \n");
   if (disp_size != 0) {
     /* has disp */
     sprintf(disp_buf, "%s%#x", (disp < 0 ? "-" : ""), (disp < 0 ? -disp : disp));
