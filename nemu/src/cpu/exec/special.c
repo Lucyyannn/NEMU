@@ -28,8 +28,8 @@ make_EHelper(inv) {
       "* Every line of untested code is always wrong!\33[0m\n\n", logo);
 
   nemu_state = NEMU_END;
-  printf("logo:%s \n",logo);
-  print_asm(":)invalid opcode");
+
+  print_asm("invalid opcode");
 }
 
 make_EHelper(nemu_trap) {
