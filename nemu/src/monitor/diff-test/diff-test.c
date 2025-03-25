@@ -176,7 +176,7 @@ void difftest_step(uint32_t eip) {
     printf("DIFF: r.edi=0X%08X,  cpu.edi=0X%08X\n",r.edi,cpu.edi);
   }else if(r.eip != cpu.eip){
     diff=true;
-    printf("DIFF: r.edi=0X%08X,  cpu.edi=0X%08X\n",r.edi,cpu.edi);
+    printf("DIFF: r.eip=0X%08X,  cpu.eip=0X%08X\n",r.edi,cpu.edi);
   }else {}
 
   if (diff) {
