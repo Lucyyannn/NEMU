@@ -235,6 +235,7 @@ opcode_entry opcode_table [512] = {
 
 static make_EHelper(2byte_esc) {
   printf("Let's look at the opcode table:\n");
+  printf("0x194: %d \n",opcode_table[0x194].width);
   printf("0x1b6: %d \n",opcode_table[0x1b6].width);
   uint32_t opcode = instr_fetch(eip, 1) | 0x100;
   printf("2byte_esc: 0x%04x \n",opcode);
