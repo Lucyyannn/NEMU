@@ -17,7 +17,7 @@ static inline uint32_t instr_fetch(vaddr_t *eip, int len) {
   printf("the instr: \n");
   for (i = 0; i < len; i ++) {
     decoding.p += sprintf(decoding.p, "%02x ", p_instr[i]);
-    printf("%0x2 \n",p_instr[i]);
+    printf("%02x \n",p_instr[i]);
   }
   
 #endif
