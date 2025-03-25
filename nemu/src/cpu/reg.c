@@ -100,12 +100,3 @@ uint32_t get_reg_value(char* name){
   return 0;
 }
 
-//enum { CF=0,ZF=6,SF=7,IF=9,OF=11};
-void set_eflags(int flag,rtlreg_t val){
-  if(val==1){
-    cpu.eflags |= (1<<flag);
-  }else if(val==0){
-    cpu.eflags |= ~(1<<flag);
-  }
-  return ;
-}
