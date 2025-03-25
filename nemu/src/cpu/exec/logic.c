@@ -3,18 +3,11 @@
 // similar to and, but only eflags impacted
 make_EHelper(test) {
   rtl_and(&t2,&id_dest->val,&id_src->val);
-  printf("the test result: t2= %d \n",t2);
-  rtl_get_ZF(&t1);
-  printf("the ZF: %d \n",t1);
+
   rtl_update_ZFSF(&t2,id_dest->width);
   t0 = 0;
-  rtl_get_ZF(&t1);
-  printf("and the ZF: %d \n",t1);
   rtl_set_CF(&t0);
   rtl_set_OF(&t0);
-
-  rtl_get_ZF(&t1);
-  printf("and the ZF: %d \n",t1);
 
   print_asm_template2(test);
 }
