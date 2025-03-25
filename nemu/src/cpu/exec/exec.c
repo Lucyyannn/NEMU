@@ -23,9 +23,14 @@ static inline void set_width(int width) {
 /* Instruction Decode and Execute */
 static inline void idex(vaddr_t *eip, opcode_entry *e) {
   /* eip is pointing to the byte next to opcode */
-  if (e->decode)
+  printf("in idex, before decode, now eip is :%02x\n",*eip);
+  if (e->decode){
+    printf("in idex, before decode 22, now eip is :%02x\n",*eip);
     e->decode(eip);
+    printf("in idex, after decode, now eip is :%02x\n",*eip);
+  }
   e->execute(eip);
+  printf("in idex, after excutecode, now eip is :%02x\n",*eip);
 }
 
 static make_EHelper(2byte_esc);
@@ -238,8 +243,10 @@ static make_EHelper(2byte_esc) {
 
 make_EHelper(real) {
   uint32_t opcode = instr_fetch(eip, 1);
+  printf("real , instr fetch finish\n");
   decoding.opcode = opcode;
   set_width(opcode_table[opcode].width);
+  printf("width:%d\n",opcode_table[opcode].width);
   idex(eip, &opcode_table[opcode]);
 }
 
