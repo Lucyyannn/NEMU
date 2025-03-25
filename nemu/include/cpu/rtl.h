@@ -201,7 +201,7 @@ static inline void rtl_msb(rtlreg_t* dest, const rtlreg_t* src1, int width) {
 
 static inline void rtl_update_ZF(const rtlreg_t* result, int width) {
   // eflags.ZF <- is_zero(result[width * 8 - 1 .. 0])
-  int mask = 0;
+  int mask = 1;
   switch (width){
     case 1:
       mask = 0xFF;
@@ -218,6 +218,7 @@ static inline void rtl_update_ZF(const rtlreg_t* result, int width) {
 
   printf("result:%d \n",*result);
   printf("width:%d \n",width);
+  printf("mask:%08x \n",mask);
   int result_val = ((*result & mask) ==0);
   printf("result_val:%d \n",*result);
   set_eflags(ZF,result_val);
