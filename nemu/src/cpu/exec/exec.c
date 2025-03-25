@@ -5,8 +5,10 @@ typedef struct {
   DHelper decode;
   EHelper execute;
   int width;
+  int opcode;
 } opcode_entry;
 
+#define IDEXWN(id,ex,w,n)  {concat(decode_, id), concat(exec_, ex), w,n}
 #define IDEXW(id, ex, w)   {concat(decode_, id), concat(exec_, ex), w}
 #define IDEX(id, ex)       IDEXW(id, ex, 0)
 #define EXW(ex, w)         {NULL, concat(exec_, ex), w}
@@ -27,7 +29,7 @@ static inline void idex(vaddr_t *eip, opcode_entry *e) {
   if (e->decode){
     e->decode(eip);
   }
-  printf("in Idex,before execute,now eip is %02x\n",*eip);
+  printf("in Idex,before execute,next eip is %02x\n",*eip);
   e->execute(eip);
 }
 
@@ -198,10 +200,10 @@ opcode_entry opcode_table [512] = {
   /* 0x74 */	EMPTY, EMPTY, EMPTY, EMPTY,
   /* 0x78 */	EMPTY, EMPTY, EMPTY, EMPTY,
   /* 0x7c */	EMPTY, EMPTY, EMPTY, EMPTY,
-  /* 0x80 */	IDEXW(J,jcc,1),IDEXW(J,jcc,1),IDEXW(J,jcc,1),IDEXW(J,jcc,1),
-  /* 0x84 */	IDEXW(J,jcc,1),IDEXW(J,jcc,1),IDEXW(J,jcc,1),IDEXW(J,jcc,1),
-  /* 0x88 */	IDEXW(J,jcc,1),IDEXW(J,jcc,1),IDEXW(J,jcc,1),IDEXW(J,jcc,1),
-  /* 0x8c */	IDEXW(J,jcc,1),IDEXW(J,jcc,1),IDEXW(J,jcc,1),IDEXW(J,jcc,1),
+  /* 0x80 */	IDEX(J,jcc),IDEX(J,jcc),IDEX(J,jcc),IDEX(J,jcc),
+  /* 0x84 */	IDEX(J,jcc),IDEX(J,jcc),IDEX(J,jcc),IDEX(J,jcc),
+  /* 0x88 */	IDEX(J,jcc),IDEX(J,jcc),IDEX(J,jcc),IDEX(J,jcc),
+  /* 0x8c */	IDEX(J,jcc),IDEX(J,jcc),IDEX(J,jcc),IDEX(J,jcc),
   /* 0x90 */	IDEXW(E,setcc,1), IDEXW(E,setcc,1), IDEXW(E,setcc,1), IDEXW(E,setcc,1),
   /* 0x94 */	IDEXW(E,setcc,1), IDEXW(E,setcc,1), IDEXW(E,setcc,1), IDEXW(E,setcc,1),
   /* 0x98 */	IDEXW(E,setcc,1), IDEXW(E,setcc,1), IDEXW(E,setcc,1), IDEXW(E,setcc,1),
@@ -211,7 +213,7 @@ opcode_entry opcode_table [512] = {
   /* 0xa8 */	EMPTY, EMPTY, EMPTY, EMPTY,
   /* 0xac */	EMPTY, EMPTY, EMPTY, IDEX(E2G,imul2),
   /* 0xb0 */	EMPTY, EMPTY, EMPTY, EMPTY,
-  /* 0xb4 */	EMPTY, EMPTY, IDEXW(mov_E2G,movzx,1), IDEX(mov_E2G,movzx),
+  /* 0xb4 */	EMPTY, EMPTY, IDEXWN(mov_E2G,movzx,1,0x1b6), IDEX(mov_E2G,movzx),
   /* 0xb8 */	EMPTY, EMPTY, EMPTY, EMPTY,
   /* 0xbc */	EMPTY, EMPTY, IDEXW(mov_E2G,movsx,1), IDEX(mov_E2G,movsx),
   /* 0xc0 */	EMPTY, EMPTY, EMPTY, EMPTY,
@@ -233,6 +235,8 @@ opcode_entry opcode_table [512] = {
 };
 
 static make_EHelper(2byte_esc) {
+  printf("Let's look at the opcode table:\n");
+  printf("0x1b6: 0x%04x \n",opcode_table[0x1b6].opcode);
   uint32_t opcode = instr_fetch(eip, 1) | 0x100;
   printf("2byte_esc: 0x%04x \n",opcode);
   decoding.opcode = opcode;
