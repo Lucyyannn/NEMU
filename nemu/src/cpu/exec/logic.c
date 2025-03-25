@@ -10,6 +10,9 @@ make_EHelper(test) {
   rtl_set_CF(&t0);
   rtl_set_OF(&t0);
 
+  rtl_get_ZF(&t1);
+  printf("and the ZF: %d \n",t1);
+
   print_asm_template2(test);
 }
 
