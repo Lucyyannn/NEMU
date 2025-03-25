@@ -29,8 +29,9 @@ static inline void idex(vaddr_t *eip, opcode_entry *e) {
     e->decode(eip);
     printf("in idex, after decode, now eip is :%02x\n",*eip);
   }
+  printf("in idex, before excute, now eip is :%02x\n",*eip);
   e->execute(eip);
-  printf("in idex, after excutecode, now eip is :%02x\n",*eip);
+  printf("in idex, after excute, now eip is :%02x\n",*eip);
 }
 
 static make_EHelper(2byte_esc);
