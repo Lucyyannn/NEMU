@@ -1,8 +1,8 @@
 #include "cpu/exec.h"
 
+// similar to and, but only eflags impacted
 make_EHelper(test) {
   rtl_and(&t2,&id_dest->val,&id_src->val);
-  operand_write(id_dest,&t2);
 
   t0 = 0;
   rtl_set_CF(&t0);
