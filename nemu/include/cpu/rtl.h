@@ -157,8 +157,7 @@ static inline void rtl_sext(rtlreg_t* dest, const rtlreg_t* src1, int width) {
   // }else if(sign==0){
   //   *dest = val_in_width;
   // }
-  int sbit = (4 - width) * 8;
-  *dest = ((int)(*src1 << sbit) >> sbit);
+  *dest = (int)((*src1 << (32-width*8)) >> (32-width*8));
 }
 
 static inline void rtl_push(const rtlreg_t* src1) {
