@@ -37,15 +37,6 @@ make_EHelper(sub) {
 }
 
 make_EHelper(cmp) {
-  rtl_get_ZF(&t0);
-  rtl_get_SF(&t1);
-  rtl_get_OF(&t2);
-  printf("before cmp:\n");
-  printf("ZF: %d \n",t0);
-  printf("SF: %d \n",t1);
-  printf("OF: %d \n",t2);
-
-
   rtl_sub(&t2,&id_dest->val,&id_src->val);// t2 stores the result
   
   rtl_update_ZFSF(&t2, id_dest->width);
@@ -60,13 +51,6 @@ make_EHelper(cmp) {
   rtl_msb(&t0, &t0, id_dest->width);
   rtl_set_OF(&t0);
 
-  rtl_get_ZF(&t0);
-  rtl_get_SF(&t1);
-  rtl_get_OF(&t2);
-  printf("after cmp:\n");
-  printf("ZF: %d \n",t0);
-  printf("SF: %d \n",t1);
-  printf("OF: %d \n",t2);
 
   print_asm_template2(cmp);
 }
