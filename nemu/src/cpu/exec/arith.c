@@ -211,13 +211,11 @@ make_EHelper(imul1) {
 
 // imul with two operands
 make_EHelper(imul2) {
-  printf("two operands before sext: %d, %d \n",id_src->val, id_dest->val);
   rtl_sext(&id_src->val, &id_src->val, id_src->width);
   rtl_sext(&id_dest->val, &id_dest->val, id_dest->width);
-  printf("two operands: %d, %d \n",id_src->val, id_dest->val);
+
   rtl_imul(&t0, &t1, &id_dest->val, &id_src->val);
   operand_write(id_dest, &t1);
-  printf("result: %d, \n",t1);
 
   print_asm_template2(imul);
 }
