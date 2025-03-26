@@ -88,6 +88,11 @@ make_EHelper(dec) {
     rtl_set_OF(&t1);
   }
 
+  rtl_get_ZF(&t0);
+  rtl_get_SF(&t1);
+  rtl_get_OF(&t2);
+  printf("result: ZF: %d. SF: %d. OF: %d\n",t0,t1,t2);
+
   print_asm_template1(dec);
 }
 
