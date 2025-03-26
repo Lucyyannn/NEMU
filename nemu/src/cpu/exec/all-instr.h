@@ -45,4 +45,4 @@ make_EHelper(jcc);
 make_EHelper(lea);
 make_EHelper(nop);
 make_EHelper(call_rm);
-make_EHelper(jmp_rm);
+ make_EHelper(jmp_rm);
