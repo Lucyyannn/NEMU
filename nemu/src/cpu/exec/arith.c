@@ -38,25 +38,28 @@ make_EHelper(sub) {
 
 make_EHelper(cmp) {
   //sign extend
-  if(id_dest->width>1&&id_src->width==1
-  &&id_src->type==OP_TYPE_IMM){
-    t0 = id_src->val;
-    rtl_sext(&t1,&t0,1); // t1 = imm
-    rtl_sub(&t2,&id_dest->val,&t1);
+  // if(id_dest->width>1&&id_src->width==1
+  // &&id_src->type==OP_TYPE_IMM){
+  //   t0 = id_src->val;
+  //   rtl_sext(&t1,&t0,1); // t1 = imm
+  //   rtl_sub(&t2,&id_dest->val,&t1);
 
-    rtl_xor(&t0, &id_dest->val, &t1);// msb(t0)=1 if dest and src have different sign (r1)
-  }else{
-    rtl_sub(&t2,&id_dest->val,&id_src->val);
+  //   rtl_xor(&t0, &id_dest->val, &t1);// msb(t0)=1 if dest and src have different sign (r1)
+  // }else{
+  //   rtl_sub(&t2,&id_dest->val,&id_src->val);
 
-    rtl_xor(&t0, &id_dest->val, &id_src->val);// msb(t0)=1 if dest and src have different sign (r1)
-  }
-  // t2 stores the result
+  //   rtl_xor(&t0, &id_dest->val, &id_src->val);// msb(t0)=1 if dest and src have different sign (r1)
+  // }
+
+  rtl_sub(&t2,&id_dest->val,&id_src->val);// t2 stores the result
+  
   rtl_update_ZFSF(&t2, id_dest->width);
 
   rtl_sltu(&t3, &id_dest->val, &t2); //t3=1 if jiewei else 0
   rtl_set_CF(&t3);
 
   //OF: the first code is above
+  rtl_xor(&t0, &id_dest->val, &id_src->val);// msb(t0)=1 if dest and src have different sign (r1)
   rtl_xor(&t1, &id_dest->val, &t2);//msb(t1)=1 if dest and t2 have different sign (r2)
   rtl_and(&t0, &t0, &t1);//both 1 and 2 satisfied
   rtl_msb(&t0, &t0, id_dest->width);
