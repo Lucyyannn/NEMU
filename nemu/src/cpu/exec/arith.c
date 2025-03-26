@@ -37,19 +37,14 @@ make_EHelper(sub) {
 }
 
 make_EHelper(cmp) {
-  //sign extend
-  // if(id_dest->width>1&&id_src->width==1
-  // &&id_src->type==OP_TYPE_IMM){
-  //   t0 = id_src->val;
-  //   rtl_sext(&t1,&t0,1); // t1 = imm
-  //   rtl_sub(&t2,&id_dest->val,&t1);
+  rtl_get_ZF(&t0);
+  rtl_get_SF(&t1);
+  rtl_get_OF(&t2);
+  printf("before cmp:\n");
+  printf("ZF: %d \n",t0);
+  printf("SF: %d \n",t1);
+  printf("OF: %d \n",t2);
 
-  //   rtl_xor(&t0, &id_dest->val, &t1);// msb(t0)=1 if dest and src have different sign (r1)
-  // }else{
-  //   rtl_sub(&t2,&id_dest->val,&id_src->val);
-
-  //   rtl_xor(&t0, &id_dest->val, &id_src->val);// msb(t0)=1 if dest and src have different sign (r1)
-  // }
 
   rtl_sub(&t2,&id_dest->val,&id_src->val);// t2 stores the result
   
@@ -65,6 +60,13 @@ make_EHelper(cmp) {
   rtl_msb(&t0, &t0, id_dest->width);
   rtl_set_OF(&t0);
 
+  rtl_get_ZF(&t0);
+  rtl_get_SF(&t1);
+  rtl_get_OF(&t2);
+  printf("after cmp:\n");
+  printf("ZF: %d \n",t0);
+  printf("SF: %d \n",t1);
+  printf("OF: %d \n",t2);
 
   print_asm_template2(cmp);
 }
