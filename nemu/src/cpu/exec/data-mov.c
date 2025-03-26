@@ -77,12 +77,9 @@ make_EHelper(cwtl) {
 
 make_EHelper(movsx) {
   id_dest->width = decoding.is_operand_size_16 ? 2 : 4;
-  if(decoding.is_operand_size_16){
-    printf("id_dest->width==2\n");
-  }else {
-    printf("id_dest->width==4\n");
-  }
+  printf("src: %d \n",id_src->val);
   rtl_sext(&t2, &id_src->val, id_src->width);
+  printf("result: %d \n",t2);
   operand_write(id_dest, &t2);
   print_asm_template2(movsx);
 }
