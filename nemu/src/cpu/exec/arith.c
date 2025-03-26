@@ -66,7 +66,7 @@ make_EHelper(inc) {
 
   rtl_msb(&t0,&id_dest->val,id_dest->width);
   rtl_msb(&t1,&t0,id_dest->width);
-  if(t0==1&&t1==0){
+  if(t0==0&&t1==1){
     rtl_set_OF(&t0);
   }
 
@@ -84,14 +84,14 @@ make_EHelper(dec) {
 
   rtl_msb(&t0,&id_dest->val,id_dest->width);
   rtl_msb(&t1,&t0,id_dest->width);
-  if(t0==0&&t1==1){
+  if(t0==1&&t1==0){
     rtl_set_OF(&t1);
   }
 
-  rtl_get_ZF(&t0);
-  rtl_get_SF(&t1);
-  rtl_get_OF(&t2);
-  printf("result: ZF: %d. SF: %d. OF: %d\n",t0,t1,t2);
+  // rtl_get_ZF(&t0);
+  // rtl_get_SF(&t1);
+  // rtl_get_OF(&t2);
+  // printf("result: ZF: %d. SF: %d. OF: %d\n",t0,t1,t2);
 
   print_asm_template1(dec);
 }
