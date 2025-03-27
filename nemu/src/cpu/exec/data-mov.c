@@ -69,7 +69,11 @@ make_EHelper(cwtl) {
     TODO();
   }
   else {
-    TODO();
+    if(reg_w(0)<0){
+      cpu.gpr[2]._16 = 0xFFFF;
+    }else{
+      cpu.gpr[2]._16 = 0;
+    }
   }
 
   print_asm(decoding.is_operand_size_16 ? "cbtw" : "cwtl");
