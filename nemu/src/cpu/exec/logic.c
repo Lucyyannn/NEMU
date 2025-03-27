@@ -109,3 +109,42 @@ make_EHelper(not) {
   
   print_asm_template1(not);
 }
+
+make_EHelper(rol){
+  int count=id_src->val; //count
+  int value = id_dest->val;
+  while(count!=0){
+    uint32_t hbit= (value>>(id_dest->width *8-1))&1;
+    value = (value<<1) +hbit;
+    --count;
+  }
+  uint32_t hbit= (value>>(id_dest->width *8-1))&1;
+  //OF
+  if(id_src->val==1){
+    rtl_get_CF(&t0);
+    t1 = (hbit!=t0)?1:0;
+    rtl_set_OF(&t1);
+  }
+  //CF
+  rtl_get_CF(&t0);
+  rtl_xor(&t2,&hbit,&t0);
+  rtl_set_CF(&t2);
+
+
+  print_asm_template2(rol);
+}
+
+make_EHelper(ror){
+  TODO();
+  print_asm_template2(ror);
+}
+
+make_EHelper(rcl){
+  TODO();
+  print_asm_template2(rcl);
+}
+
+make_EHelper(rcr){
+  TODO();
+  print_asm_template2(rcr);
+}
