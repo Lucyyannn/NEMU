@@ -112,13 +112,15 @@ make_EHelper(not) {
 
 make_EHelper(rol){
   int count=id_src->val; //count
-  int value = id_dest->val;
+  uint32_t value = id_dest->val;
+  uint32_t hbit=0;
   while(count!=0){
-    uint32_t hbit= (value>>(id_dest->width *8-1))&1;
+    hbit = (value>>(id_dest->width *8-1))&1;
     value = (value<<1) +hbit;
     --count;
   }
-  uint32_t hbit= (value>>(id_dest->width *8-1))&1;
+  operand_write(id_dest,&value);
+  hbit= (value>>(id_dest->width *8-1))&1;
   //OF
   if(id_src->val==1){
     rtl_get_CF(&t0);
