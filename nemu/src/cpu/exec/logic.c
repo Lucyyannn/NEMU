@@ -82,6 +82,7 @@ make_EHelper(shl) {
 
 // unnecessary to update CF and OF in NEMU
 make_EHelper(shr) {
+  printf("the value before shr:0X%08X \n",id_dest->val);
   int count = id_src->val;
   t2 = id_dest->val;
   while(count!=0){
@@ -90,7 +91,7 @@ make_EHelper(shr) {
   }
   operand_write(id_dest,&t2);
   rtl_update_ZFSF(&t2,id_dest->width);
-  
+  printf("the value after shr:0X%08X \n",t2);
 
   print_asm_template2(shr);
 }
