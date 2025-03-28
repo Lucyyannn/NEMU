@@ -92,25 +92,22 @@ make_EHelper(dec) {
 }
 
 make_EHelper(neg) {
-  //compute new value
-  int mask = (0xFFFF>>(32-(id_dest->width*8-1)));
-  int val = id_dest->val & mask;
-  rtl_msb(&t1,&id_dest->val,id_dest->width);
-  int realsign = t1 ^ 1;
-  t0 = (realsign<<(id_dest->width*8-1))|val;
-  operand_write(id_dest,&t0);
+  int rmval=id_dest->val;
+  int negval = -rmval;
+  t2 = negval;
+  operand_write(id_dest,&t2);
 
+  //set SF ZF
+  rtl_update_ZFSF(&t2,id_dest->width);
   //set CF
-  if(id_dest->val==0){
-    t2=0;
-  }else{
-    t2=1;
-  }
-  rtl_set_CF(&t2);
-  //set SF
-  rtl_get_SF(&t3);
-  t3 = ~t3;
-  rtl_set_SF(&t3);
+  t0 = (rmval==0)?0:1;
+  rtl_set_CF(&t0);
+  //set OF  OF= (msb(result)==msb(val))
+  rtl_msb(&t1,&t2,id_dest->width);
+  rtl_msb(&t0,&id_dest->val,id_dest->width);
+  t0 = (t1==t0);
+  rtl_set_OF(&t0);
+  
 
   print_asm_template1(neg);
 }
