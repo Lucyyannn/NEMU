@@ -34,5 +34,11 @@ void _draw_sync() {
 }
 
 int _read_key() {
-  return _KEY_NONE;
+  int ret = _KEY_NONE;
+  if (key_f != key_r) {
+    ret = key_queue[key_f];
+    key_f = (key_f + 1) % KEY_QUEUE_LEN;
+  }
+
+  return ret;
 }
