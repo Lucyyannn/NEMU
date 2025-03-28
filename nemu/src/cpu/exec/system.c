@@ -4,7 +4,13 @@ void diff_test_skip_qemu();
 void diff_test_skip_nemu();
 
 make_EHelper(lidt) {
-  TODO();
+  if(id_dest->width==2){
+    cpu.idtr.limit = vaddr_read(id_dest->val,2);
+    cpu.idtr.base  = vaddr_read(id_dest->val+2,3);
+  }else if(id_dest->width==4){
+    cpu.idtr.limit = vaddr_read(id_dest->val,2);
+    cpu.idtr.base  = vaddr_read(id_dest->val+2,4);
+  }
 
   print_asm_template1(lidt);
 }

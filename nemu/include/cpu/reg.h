@@ -37,6 +37,11 @@ typedef struct {
   vaddr_t eip;
   rtlreg_t CF,ZF,SF,OF;
 
+  struct {
+    uint16_t limit;
+    uint32_t base;
+  } idtr;
+
 } CPU_state;
 
 extern CPU_state cpu;
