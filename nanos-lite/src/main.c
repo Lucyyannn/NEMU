@@ -27,7 +27,7 @@ int main() {
   Log("Initializing interrupt/exception handler...");
   init_irq();
 #endif
-  printf("Reach here!\n");
+
   init_fs();
 
   uint32_t entry = loader(NULL, NULL);
