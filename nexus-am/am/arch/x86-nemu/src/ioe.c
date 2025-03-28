@@ -2,8 +2,12 @@
 #include <x86.h>
 
 #define RTC_PORT 0x48   // Note that this is not standard
-static unsigned long boot_time;
+#define I8042_DATA_PORT 0x60
+#define I8042_STATUS_PORT 0x64
 
+
+static unsigned long boot_time;
+// inb inl  outb outl
 void _ioe_init() {
   boot_time = inl(RTC_PORT);
 }
@@ -35,9 +39,8 @@ void _draw_sync() {
 
 int _read_key() {
   int ret = _KEY_NONE;
-  if (key_f != key_r) {
-    ret = key_queue[key_f];
-    key_f = (key_f + 1) % KEY_QUEUE_LEN;
+  if(inb(I8042_STATUS_PORT)==1){
+    ret = inl(I8042_STATUS_PORT);
   }
 
   return ret;
