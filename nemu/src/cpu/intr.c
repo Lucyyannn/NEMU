@@ -7,6 +7,11 @@ void raise_intr(uint8_t NO, vaddr_t ret_addr) {
   /* TODO: Trigger an interrupt/exception with ``NO''.
    * That is, use ``NO'' to index the IDT.
    */
+  if(NO*8>cpu.idtr.limit){
+    panic("No in raise_intr is beyond IDT's limit!");
+    return ;
+  }
+
   //push eflags, cs,eip
   rtl_push(&cpu.eflags);
   rtl_push(&cpu.CS);
