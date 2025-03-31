@@ -27,7 +27,7 @@ make_EHelper(pop) {
 
 make_EHelper(pusha) {
 
-  rtlreg_t temp = cpu.gpr[4]._16;
+  rtlreg_t temp = cpu.esp;
   rtl_push(&cpu.eax);
   rtl_push(&cpu.ecx);
   rtl_push(&cpu.edx);
