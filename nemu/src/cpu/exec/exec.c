@@ -80,6 +80,7 @@ Data Movement Instructions:
   (mov-345)!, (push-367!, (pop-361, 
   leave-329, cltd(在i386手册中为cdq)-290, 
   movsx-350, movzx-351
+  pusha
 
 Binary Arithmetic Instructions: 
   (add-261, inc-303!, (sub-404!, 
@@ -127,7 +128,7 @@ opcode_entry opcode_table [512] = {
   /* 0x54 */	IDEX(r,push),     IDEX(r,push),  IDEX(r,push),     IDEX(r,push),
   /* 0x58 */	IDEX(r,pop),      IDEX(r,pop),   IDEX(r,pop),      IDEX(r,pop),
   /* 0x5c */	IDEX(r,pop),      IDEX(r,pop),   IDEX(r,pop),      IDEX(r,pop),
-  /* 0x60 */	EMPTY,            EMPTY,         EMPTY,            EMPTY,
+  /* 0x60 */	EX(pusha),            EMPTY,         EMPTY,            EMPTY,
   /* 0x64 */	EMPTY,            EMPTY,         EX(operand_size), EMPTY,
   /* 0x68 */	IDEX(push_SI,push),     IDEX(I2E,imul3), IDEXW(push_SI,push,1), IDEXW(I2E,imul3,1),
   /* 0x6c */	EMPTY,            EMPTY,          EMPTY,           EMPTY,
