@@ -16,7 +16,7 @@ _RegSet* do_syscall(_RegSet *r) {
 
     case 3:{//SYS_write
       int fd       = (int)a[1];
-      char *buf    = (void*)a[2];
+      char *buf    = (char*)a[2];
       size_t count = (size_t)a[3];
       if(fd==1||fd==2){
         Log("SYS_write.\n");
@@ -24,7 +24,6 @@ _RegSet* do_syscall(_RegSet *r) {
           _putc(*(buf+i));
           Log("%c" ,*(buf+i));
         }
-        Log("\n");
       }
       r->eax = (fd==1)?count:-1;
       break;
