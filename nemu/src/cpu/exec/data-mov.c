@@ -33,6 +33,7 @@ make_EHelper(pusha) {
   rtl_push(&cpu.edx);
   rtl_push(&cpu.ebx);
   rtl_push(&temp);
+  rtl_push(&cpu.ebp);
   rtl_push(&cpu.esi);
   rtl_push(&cpu.edi);
   
