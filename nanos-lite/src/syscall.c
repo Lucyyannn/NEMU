@@ -13,12 +13,12 @@ _RegSet* do_syscall(_RegSet *r) {
       break;
     case 3:{//SYS_write
       int fd       = (int)a[1];
-      void *buf    = (void*)a[2];
+      //void *buf    = (void*)a[2];
       size_t count = (size_t)a[3];
 
       if(fd==1||fd==2){
         for(int i=0;i<count;i++){
-          _putc(*((char*)buf+ i));
+          //_putc(*((char*)buf+ i));
         }
       //return value: stdout(1):count; stderr(2):-1
         if(a[1]==1){
