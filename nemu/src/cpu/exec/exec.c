@@ -101,6 +101,7 @@ Miscellaneous Instructions:
 
 Extra:RCL/RCR/ROL/ROR 372,out 358,in 302
        lidt 330,int 306
+       iret 311
 */
 
 opcode_entry opcode_table [512] = {
@@ -128,7 +129,7 @@ opcode_entry opcode_table [512] = {
   /* 0x54 */	IDEX(r,push),     IDEX(r,push),  IDEX(r,push),     IDEX(r,push),
   /* 0x58 */	IDEX(r,pop),      IDEX(r,pop),   IDEX(r,pop),      IDEX(r,pop),
   /* 0x5c */	IDEX(r,pop),      IDEX(r,pop),   IDEX(r,pop),      IDEX(r,pop),
-  /* 0x60 */	EX(pusha),            EMPTY,         EMPTY,            EMPTY,
+  /* 0x60 */	EX(pusha),        EX(popa),         EMPTY,            EMPTY,
   /* 0x64 */	EMPTY,            EMPTY,         EX(operand_size), EMPTY,
   /* 0x68 */	IDEX(push_SI,push),     IDEX(I2E,imul3), IDEXW(push_SI,push,1), IDEXW(I2E,imul3,1),
   /* 0x6c */	EMPTY,            EMPTY,          EMPTY,           EMPTY,
@@ -155,7 +156,7 @@ opcode_entry opcode_table [512] = {
   /* 0xc0 */	IDEXW(gp2_Ib2E, gp2, 1),IDEX(gp2_Ib2E, gp2),    IDEX(I,ret),            EX(ret),
   /* 0xc4 */	EMPTY,                  EMPTY,                  IDEXW(mov_I2E, mov, 1), IDEX(mov_I2E, mov),
   /* 0xc8 */	EMPTY,                  EX(leave),              IDEX(I,ret),            EMPTY,
-  /* 0xcc */	IDEXW(I,int,1), IDEXW(I,int,1), EMPTY, EMPTY,
+  /* 0xcc */	IDEXW(I,int,1), IDEXW(I,int,1), EMPTY, EX(iret),
   /* 0xd0 */	IDEXW(gp2_1_E, gp2, 1), IDEX(gp2_1_E, gp2), IDEXW(gp2_cl2E, gp2, 1), IDEX(gp2_cl2E, gp2),
   /* 0xd4 */	EMPTY, EMPTY, EX(nemu_trap), EMPTY,
   /* 0xd8 */	EMPTY, EMPTY, EMPTY, EMPTY,
