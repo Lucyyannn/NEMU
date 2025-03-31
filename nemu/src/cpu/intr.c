@@ -7,8 +7,7 @@ void raise_intr(uint8_t NO, vaddr_t ret_addr) {
   /* TODO: Trigger an interrupt/exception with ``NO''.
    * That is, use ``NO'' to index the IDT.
    */
-   printf("NO: %d \n",NO);
-   printf("limit: %d \n",cpu.idtr.limit);
+
   if(NO>cpu.idtr.limit){
     panic("the NO in raise_intr is beyond IDT's limit!");
     return ;
@@ -18,7 +17,9 @@ void raise_intr(uint8_t NO, vaddr_t ret_addr) {
   rtl_push(&cpu.eflags);
   rtl_push(&cpu.CS);
   rtl_push(&ret_addr);
-  
+  printf("NO: %d \n",NO);
+  printf("base: %d \n",cpu.idtr.base);
+  printf("limit: %d \n",cpu.idtr.limit);
   //read the base of IDT , index the idt to find the GD
   uint32_t idt_index = cpu.idtr.base + NO*8;//8 bytes for each GD
   uint32_t gd_l = vaddr_read(idt_index, HALF_GD);
