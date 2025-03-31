@@ -11,7 +11,7 @@ _RegSet* do_syscall(_RegSet *r) {
   a[3] = SYSCALL_ARG4(r);
   switch (a[0]) {
     case 0://SYS_none
-      r->eax = 1;
+      SYSCALL_ARG1(r) = 1;
       break;
     case 3:{//SYS_write
       int fd       = (int)a[1];
@@ -26,16 +26,16 @@ _RegSet* do_syscall(_RegSet *r) {
         // }
       //return value: stdout(1):count; stderr(2):-1
         if(fd ==1){
-          r->eax = count;
+          SYSCALL_ARG1(r) = count;
         }else{
-          r->eax = -1;
+          SYSCALL_ARG1(r) = -1;
         }
       }
       break;
     }
     case 4:{//SYS_exit
       _halt(a[1]); 
-      r->eax = 1;
+      SYSCALL_ARG1(r) = 1;
       break;
     }
     default: 
