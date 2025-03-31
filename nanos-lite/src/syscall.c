@@ -11,13 +11,16 @@ _RegSet* do_syscall(_RegSet *r) {
     case 0://SYS_none
       r->eax = 1;
       break;
-    case 3://SYS_write
-    // a[1]:fd     a[2]:buf    a[3]:count
-      if(a[1]==1||a[1]==2){
-        for(int i=0;i<a[3];i++){
-          _putc(a[2]+i);
+    case 3:{//SYS_write
+      int fd       = (int)a[1];
+      void *buf    = (void*)a[2];
+      size_t count = (size_t)a[3];
+
+      if(fd==1||fd==2){
+        for(size_t i=0;i<count;i++){
+          _putc(*((char*)buf+i));
         }
-    //return value: stdout(1):count; stderr(2):-1
+      //return value: stdout(1):count; stderr(2):-1
         if(a[1]==1){
           r->eax = a[3];
         }else{
@@ -25,10 +28,12 @@ _RegSet* do_syscall(_RegSet *r) {
         }
       }
       break;
-    case 4://SYS_exit
+    }
+    case 4:{//SYS_exit
       _halt(r->eax); 
       r->eax = 1;
       break;
+    }
     default: 
       panic("Unhandled syscall ID = %d", a[0]);
   }
