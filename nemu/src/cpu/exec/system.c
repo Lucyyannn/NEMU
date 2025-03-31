@@ -7,6 +7,7 @@ make_EHelper(lidt) {
   printf("limit: %d \n",cpu.idtr.limit);
   printf("base: %d \n",cpu.idtr.base);
   if(id_dest->width==2){
+    printf("lyh\n");
     cpu.idtr.limit = vaddr_read(id_dest->val,2);
     cpu.idtr.base  = vaddr_read(id_dest->val+2,3);
   }else if(id_dest->width==4){
