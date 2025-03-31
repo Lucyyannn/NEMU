@@ -10,7 +10,7 @@ make_EHelper(lidt) {
     cpu.idtr.limit = vaddr_read(id_dest->val,2);
     cpu.idtr.base  = vaddr_read(id_dest->val+2,3);
   }else if(id_dest->width==4){
-    cpu.idtr.limit = vaddr_read(id_dest->val,2);
+    cpu.idtr.limit = vaddr_read(id_dest->addr,2);
     printf("2~4: %x \n",vaddr_read(id_dest->addr,4));
     printf("4~6: %x \n",vaddr_read(id_dest->addr+4,2));
     printf("4~6: %x \n",vaddr_read(id_dest->addr+8,2));
