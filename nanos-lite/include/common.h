@@ -16,4 +16,5 @@ void ramdisk_write(const void *buf, off_t offset, size_t len);
 size_t get_ramdisk_size();
 
 
+
 #endif
