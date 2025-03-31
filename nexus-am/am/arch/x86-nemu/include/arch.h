@@ -6,11 +6,19 @@
 #define PMEM_SIZE (128 * 1024 * 1024)
 #define PGSIZE    4096    // Bytes mapped by a page
 
+// struct _RegSet {
+//   uintptr_t eflags, cs, eip;//hardware
+//   uintptr_t error_code;     
+//   int       irq;
+//   uintptr_t eax, ecx, edx, ebx, esp, ebp, esi, edi;//pusha (int asm_trap)
+
+// };
+
 struct _RegSet {
-  uintptr_t eflags, cs, eip;//hardware
-  uintptr_t error_code;     
-  int       irq;
-  uintptr_t eax, ecx, edx, ebx, esp, ebp, esi, edi;//pusha (int asm_trap)
+  uintptr_t edi, esi, ebp, esp, ebx, edx, ecx, eax;
+  int irq;
+  uintptr_t error_code;
+  uintptr_t eip, cs, eflags;
 
 };
 
