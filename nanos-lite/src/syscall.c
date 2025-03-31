@@ -13,30 +13,29 @@ _RegSet* do_syscall(_RegSet *r) {
     case 0://SYS_none
       r->eax = 1;
       break;
+
     case 3:{//SYS_write
       int fd       = (int)a[1];
       char *buf    = (void*)a[2];
       size_t count = (size_t)a[3];
-
       if(fd==1||fd==2){
-        //r->eax = fs_write(fd, buf,count);
+        Log("SYS_write.\n");
         for(int i=0;i<count;i++){
           _putc(*(buf+i));
+          Log("%c" ,*(buf+i));
         }
-      //return value: stdout(1):count; stderr(2):-1
-        if(fd ==1){
-          r->eax = count;
-        }else{
-          r->eax = -1;
-        }
+        Log("\n");
       }
+      r->eax = (fd==1)?count:-1;
       break;
     }
+
     case 4:{//SYS_exit
       _halt(a[1]); 
       r->eax = 1;
       break;
     }
+
     default: 
       panic("Unhandled syscall ID = %d", a[0]);
   }
