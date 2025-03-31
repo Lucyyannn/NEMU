@@ -14,7 +14,10 @@ make_EHelper(lidt) {
     printf("2~4: %x \n",vaddr_read(id_dest->val,4));
     printf("4~6: %x \n",vaddr_read(id_dest->val+4,2));
     printf("4~6: %x \n",vaddr_read(id_dest->val+8,2));
-    cpu.idtr.base  = vaddr_read(id_dest->val+2,4);
+    uint32_t high = vaddr_read(id_dest->val+8,2);
+    uint32_t low = vaddr_read(id_dest->val+4,2);
+    cpu.idtr.base = (high <<16)|low;
+    //cpu.idtr.base  = vaddr_read(id_dest->val+2,4);
   }
   printf("after:\n");
   printf("limit: %x \n",cpu.idtr.limit);
