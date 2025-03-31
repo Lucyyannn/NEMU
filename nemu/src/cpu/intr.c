@@ -7,8 +7,10 @@ void raise_intr(uint8_t NO, vaddr_t ret_addr) {
   /* TODO: Trigger an interrupt/exception with ``NO''.
    * That is, use ``NO'' to index the IDT.
    */
+   printf("NO: %d \n",NO);
+   printf("limit: %d \n",cpu.idtr.limit);
   if(NO>cpu.idtr.limit){
-    panic("No in raise_intr is beyond IDT's limit!");
+    panic("the NO in raise_intr is beyond IDT's limit!");
     return ;
   }
 
