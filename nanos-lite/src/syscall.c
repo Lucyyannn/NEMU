@@ -15,12 +15,12 @@ _RegSet* do_syscall(_RegSet *r) {
       break;
     case 3:{//SYS_write
       int fd       = (int)a[1];
-      char *buf    = (void*)a[2];
+      //char *buf    = (void*)a[2];
       size_t count = (size_t)a[3];
 
       if(fd==1||fd==2){
         //r->eax = fs_write(fd, buf,count);
-        _putc(*buf);
+        //_putc(*buf);
         // for(int i=0;i<count;i++){
         //   _putc(*(buf+i));
         // }
