@@ -30,7 +30,6 @@ _RegSet* do_syscall(_RegSet *r) {
           r->eax = -1;
         }
       }
-      printf("I'm fine!\n");
       break;
     }
     case 4:{//SYS_exit
