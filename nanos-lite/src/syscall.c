@@ -17,8 +17,8 @@ _RegSet* do_syscall(_RegSet *r) {
       size_t count = (size_t)a[3];
 
       if(fd==1||fd==2){
-        for(size_t i=0;i<count;i++){
-          _putc(*((char*)buf+i));
+        for(int i=0;i<count;i++){
+          _putc(*((char*)buf+ i));
         }
       //return value: stdout(1):count; stderr(2):-1
         if(a[1]==1){
