@@ -24,6 +24,6 @@ enum {
   SYS_times,
   SYS_gettimeofday
 };
-_RegSet* do_syscall(_RegSet *r);
+
 
 #endif
