@@ -4,24 +4,14 @@ void diff_test_skip_qemu();
 void diff_test_skip_nemu();
 
 make_EHelper(lidt) {
-  printf("limit: %d \n",cpu.idtr.limit);
-  printf("base: %d \n",cpu.idtr.base);
   if(id_dest->width==2){
-    cpu.idtr.limit = vaddr_read(id_dest->val,2);
-    cpu.idtr.base  = vaddr_read(id_dest->val+2,3);
+    cpu.idtr.limit = vaddr_read(id_dest->addr,2);
+    cpu.idtr.base  = vaddr_read(id_dest->addr+2,3);
   }else if(id_dest->width==4){
     cpu.idtr.limit = vaddr_read(id_dest->addr,2);
-    printf("2~4: %x \n",vaddr_read(id_dest->addr,4));
-    printf("4~6: %x \n",vaddr_read(id_dest->addr+4,2));
-    printf("4~6: %x \n",vaddr_read(id_dest->addr+8,2));
-    uint32_t high = vaddr_read(id_dest->addr+4,2);
-    uint32_t low = vaddr_read(id_dest->addr+2,2);
-    cpu.idtr.base = (high <<16)|low;
-    //cpu.idtr.base  = vaddr_read(id_dest->val+2,4);
+    cpu.idtr.base = vaddr_read(id_dest->addr+2,4);
   }
-  printf("after:\n");
-  printf("limit: %x \n",cpu.idtr.limit);
-  printf("base: %x \n",cpu.idtr.base);
+
   print_asm_template1(lidt);
 }
 
