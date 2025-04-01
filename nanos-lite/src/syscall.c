@@ -30,7 +30,7 @@ _RegSet* do_syscall(_RegSet *r) {
       int fd       = (int)a[1];
       char *buf    = (char*)a[2];
       ssize_t count = (ssize_t)a[3];
-      
+      Log("write len: %d \n",count);
       r->eax = fs_write(fd,buf,count);
       if(fd==2){ r->eax = -1;}
       // if(fd==1||fd==2){
