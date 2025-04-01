@@ -69,6 +69,7 @@ _RegSet* do_syscall(_RegSet *r) {
     }
 
     case 9:{//SYS_brk
+      Log("SYS_brk!");
       r->eax = mm_brk(a[1]);//always return 0
       break;
     }
