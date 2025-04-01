@@ -85,4 +85,7 @@ off_t fs_lseek(int fd, off_t offset, int whence){
   return file_table[fd].open_offset;
 }
 
-
+void initSize(int fd,size_t size){
+  file_table[fd].size = size;
+  return;
+}
