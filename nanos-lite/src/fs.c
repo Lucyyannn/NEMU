@@ -52,18 +52,19 @@ size_t fs_filesz(int fd){
 
 ssize_t fs_read(int fd, void *buf, size_t len){
   assert(len>=0 && len<=fs_filesz(fd));
-  ssize_t o_offset = strlen((char*)buf);
+  
   ramdisk_read(buf,file_table[fd].disk_offset,len);
-  ssize_t c_offset = strlen((char*)buf);
-  return (c_offset-o_offset);
+  file_table[fd].open_offset += len;
+
+  return len;
 }
 
 ssize_t fs_write(int fd, const void *buf, size_t len){
   assert(len>=0 && len<=fs_filesz(fd));
-  ssize_t o_size = file_table[fd].size;
+  
   ramdisk_write(buf,file_table[fd].disk_offset,len);
-  ssize_t c_size = file_table[fd].size;
-  return (c_size-o_size);
+  file_table[fd].open_offset += len;
+  return len;
 }
 
 
