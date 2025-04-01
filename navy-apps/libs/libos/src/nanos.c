@@ -7,7 +7,7 @@
 #include "syscall.h"
 
 extern char _end;
-static uintptr_t end = &_end;
+// static uintptr_t end = &_end;
 
 // TODO: discuss with syscall interface
 #ifndef __ISA_NATIVE__
@@ -50,7 +50,8 @@ int _read(int fd, void *buf, size_t count) {
 }
 
 int _close(int fd) {
-  return _syscall_(SYS_close, (uintptr_t)fd);
+  //return _syscall_(SYS_close, (uintptr_t)fd);
+  return 0;
 }
 
 off_t _lseek(int fd, off_t offset, int whence) {
