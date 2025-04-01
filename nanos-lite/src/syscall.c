@@ -37,8 +37,12 @@ _RegSet* do_syscall(_RegSet *r) {
       int fd       = (int)a[1];
       char *buf    = (char*)a[2];
       ssize_t count = (ssize_t)a[3];
-      //Log("write len: %d \n",count);
-      r->eax = fs_write(fd,buf,count);
+      Log("write len: %d \n",count);
+      //r->eax = fs_write(fd,buf,count);
+      for(int i=0;i<count;i++){
+        _putc( *(buf+i));
+      }
+      r->eax = (fd==1)?count :-1;
       break;
     }
 
