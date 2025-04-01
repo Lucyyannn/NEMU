@@ -7,7 +7,7 @@
 #include "syscall.h"
 
 extern char end;
-static uintptr_t _end = (uintptr_t)end;
+static uintptr_t _end = (uintptr_t)&end;
 
 // TODO: discuss with syscall interface
 #ifndef __ISA_NATIVE__
