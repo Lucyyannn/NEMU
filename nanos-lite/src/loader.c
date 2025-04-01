@@ -12,7 +12,7 @@ uintptr_t loader(_Protect *as, const char *filename) {
   int fd = fs_open(filename,0,0);
   fs_read(fd,DEFAULT_ENTRY,fs_filesz(fd));
   initSize(fd,fs_filesz(fd));
-  printf("filesz when load: %d \n",fs_filesz(fd));
+  printf("filesz of %d when load: %d \n",fd,fs_filesz(fd));
 
   fs_close(fd);
   return (uintptr_t)DEFAULT_ENTRY;
