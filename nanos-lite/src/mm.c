@@ -2,7 +2,6 @@
 #include "memory.h"
 
 static void *pf = NULL;
-extern uintptr_t _end;
 
 void* new_page(void) {
   assert(pf < (void *)_heap.end);
@@ -17,7 +16,6 @@ void free_page(void *p) {
 
 /* The brk() system call handler. */
 int mm_brk(uint32_t new_brk) {
-  _end = new_brk;
   return 0;
 }
 
