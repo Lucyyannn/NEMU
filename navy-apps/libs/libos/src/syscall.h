@@ -5,7 +5,7 @@
 enum {
   SYS_none,//0
   SYS_open,
-  SYS_read,
+  SYS_read,//2
   SYS_write,//3
   SYS_exit,
   SYS_kill,

@@ -5,6 +5,7 @@
 int mm_brk(uint32_t new_brk) ;
 ssize_t fs_write(int fd, const void *buf, size_t len);
 off_t fs_lseek(int fd, off_t offset, int whence);
+ssize_t fs_read(int fd, void *buf, size_t len);
 
 _RegSet* do_syscall(_RegSet *r) {
   uintptr_t a[4];
@@ -17,19 +18,27 @@ _RegSet* do_syscall(_RegSet *r) {
       r->eax = 1;
       break;
 
+    case 2:{//SYS_read
+      int fd       = (int)a[1];
+      char *buf    = (char*)a[2];
+      ssize_t count = (ssize_t)a[3];
+      r->eax = fs_read(fd,buf,count);
+      break;
+    }
+
     case 3:{//SYS_write
       int fd       = (int)a[1];
       char *buf    = (char*)a[2];
       ssize_t count = (ssize_t)a[3];
-      //r->eax = fs_write(fd,buf,count);
-      if(fd==1||fd==2){
-        Log("SYS_write.\n");
-        for(int i=0;i<count;i++){
-          _putc(*(buf+i));
-          Log("%c" ,*(buf+i));
-        }
-      }
-      r->eax = (fd==1)?count:-1;
+      r->eax = fs_write(fd,buf,count);
+      // if(fd==1||fd==2){
+      //   Log("SYS_write.\n");
+      //   for(int i=0;i<count;i++){
+      //     _putc(*(buf+i));
+      //     Log("%c" ,*(buf+i));
+      //   }
+      // }
+      // r->eax = (fd==1)?count:-1;
       //if(fd==2){ r->eax = -1;}
       break;
     }
