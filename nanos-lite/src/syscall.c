@@ -18,7 +18,7 @@ _RegSet* do_syscall(_RegSet *r) {
   if(a[0]==9){
     Log("sys_brk!");
   }
-  
+
   switch (a[0]) {
     case 0://SYS_none
       r->eax = 1;
@@ -74,7 +74,9 @@ _RegSet* do_syscall(_RegSet *r) {
 
     case 9:{//SYS_brk
       Log("SYS_brk!");
+      Log("a[1]:%d",a[1]);
       r->eax = mm_brk(a[1]);//always return 0
+      Log("return %d",r->eax);
       break;
     }
 
