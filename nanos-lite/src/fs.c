@@ -1,9 +1,11 @@
 #include "fs.h"
+#include <stdlib.h>
 
 typedef struct {
   char *name;
   size_t size;
-  off_t disk_offset;
+  off_t disk_offset;  
+  off_t open_offset;  // 文件被打开之后的读写指针
 } Finfo;
 
 enum {FD_STDIN, FD_STDOUT, FD_STDERR, FD_FB, FD_EVENTS, FD_DISPINFO, FD_NORMAL};
@@ -24,3 +26,62 @@ static Finfo file_table[] __attribute__((used)) = {
 void init_fs() {
   // TODO: initialize the size of /dev/fb
 }
+
+off_t _lseek(int fd, off_t offset, int whence);
+
+int fs_open(const char *pathname, int flags, int mode){
+  int fd=0;
+  while(fd<NR_FILES){
+    if(strcmp(pathname, file_table[fd].name)==0){
+      return fd;
+    }
+    ++fd;
+  }
+  assert(0);
+  return -1;
+}
+
+int fs_close(int fd){
+  return 0; //always succeed
+}
+
+size_t fs_filesz(int fd){
+  assert(fd>=0&&fd<NR_FILES);
+  return file_table[fd].size;
+}
+
+ssize_t fs_read(int fd, void *buf, size_t len){
+  assert(len>=0 && len<=fs_filesz(fd));
+  ssize_t o_offset = strlen((char*)buf);
+  ramdisk_read(buf,file_table[fd].disk_offset,len);
+  ssize_t c_offset = strlen((char*)buf);
+  return (c_offset-o_offset);
+}
+
+ssize_t fs_write(int fd, const void *buf, size_t len){
+  assert(len>=0 && len<=fs_filesz(fd));
+  ssize_t o_size = file_table[fd].size;
+  ramdisk_write(buf,file_table[fd].disk_offset,len);
+  ssize_t c_size = file_table[fd].size;
+  return (c_size-o_size);
+}
+
+
+off_t fs_lseek(int fd, off_t offset, int whence){
+  switch(whence){
+    case SEEK_SET:
+      file_table[fd].open_offset=offset;
+      break;
+    case SEEK_CUR:
+      file_table[fd].open_offset+=offset;
+      break;
+    case SEEK_END:
+      file_table[fd].open_offset=offset+file_table[fd].size;
+      break;
+    default:
+      assert(0);
+    }
+  return file_table[fd].open_offset;
+}
+
+

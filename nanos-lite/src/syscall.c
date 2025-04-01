@@ -1,8 +1,10 @@
 #include "common.h"
 #include "syscall.h"
+#include "fs.h"
 
 int mm_brk(uint32_t new_brk) ;
 ssize_t fs_write(int fd, const void *buf, size_t len);
+off_t fs_lseek(int fd, off_t offset, int whence);
 
 _RegSet* do_syscall(_RegSet *r) {
   uintptr_t a[4];
@@ -33,6 +35,14 @@ _RegSet* do_syscall(_RegSet *r) {
     case 4:{//SYS_exit
       _halt(a[1]); 
       r->eax = 1;
+      break;
+    }
+
+    case 8:{//SYS_lseek
+      int fd = (int)a[1];
+      off_t offset = (off_t)a[2];
+      int whence = (int)a[3];
+      r->eax = fs_lseek(fd,offset,whence);
       break;
     }
 
