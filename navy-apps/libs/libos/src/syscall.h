@@ -4,13 +4,13 @@
 
 enum {
   SYS_none,//0
-  SYS_open,
+  SYS_open,//1
   SYS_read,//2
   SYS_write,//3
-  SYS_exit,
+  SYS_exit,//4
   SYS_kill,
   SYS_getpid,
-  SYS_close,
+  SYS_close,//7
   SYS_lseek,//8
   SYS_brk,//9
   SYS_fstat,
