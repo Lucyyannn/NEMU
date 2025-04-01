@@ -15,9 +15,6 @@ _RegSet* do_syscall(_RegSet *r) {
   a[1] = SYSCALL_ARG2(r);
   a[2] = SYSCALL_ARG3(r);
   a[3] = SYSCALL_ARG4(r);
-  if(a[0]==9){
-    Log("sys_brk!");
-  }
 
   switch (a[0]) {
     case 0://SYS_none
