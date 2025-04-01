@@ -1,5 +1,4 @@
 #include "fs.h"
-#include <stdlib.h>
 
 typedef struct {
   char *name;
@@ -33,6 +32,7 @@ int fs_open(const char *pathname, int flags, int mode){
   int fd=0;
   while(fd<NR_FILES){
     if(strcmp(pathname, file_table[fd].name)==0){
+      file_table[fd].open_offset = 0;
       return fd;
     }
     ++fd;
