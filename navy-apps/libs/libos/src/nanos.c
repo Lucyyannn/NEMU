@@ -6,6 +6,8 @@
 #include <time.h>
 #include "syscall.h"
 
+extern uintptr_t edata;
+
 // TODO: discuss with syscall interface
 #ifndef __ISA_NATIVE__
 
@@ -30,7 +32,12 @@ int _write(int fd, void *buf, size_t count){
 }
 
 void *_sbrk(intptr_t increment){
-  return (void *)-1;
+  intptr_t programbreak  = edata;
+  intptr_t new_programbreak = programbreak  + increment;
+  _syscall_(SYS_brk,new_programbreak,NULL,NULL);
+  edata = new_programbreak;
+  return programbreak;
+  
 }
 
 int _read(int fd, void *buf, size_t count) {

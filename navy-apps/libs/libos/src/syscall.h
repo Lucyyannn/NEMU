@@ -3,16 +3,16 @@
 
 
 enum {
-  SYS_none,
+  SYS_none,//0
   SYS_open,
   SYS_read,
-  SYS_write,
+  SYS_write,//3
   SYS_exit,
   SYS_kill,
   SYS_getpid,
   SYS_close,
   SYS_lseek,
-  SYS_brk,
+  SYS_brk,//9
   SYS_fstat,
   SYS_time,
   SYS_signal,

@@ -1,6 +1,7 @@
 #include "common.h"
 #include "syscall.h"
 
+int mm_brk(uint32_t new_brk) ;
 ssize_t fs_write(int fd, const void *buf, size_t len);
 
 _RegSet* do_syscall(_RegSet *r) {
@@ -32,6 +33,14 @@ _RegSet* do_syscall(_RegSet *r) {
     case 4:{//SYS_exit
       _halt(a[1]); 
       r->eax = 1;
+      break;
+    }
+
+    case 9:{//SYS_brk
+      r->eax = mm_brk(a[1]);//always return 0
+      if(r->eax != 0){
+        panic("SYS_brk must return 0!\n");
+      }
       break;
     }
 
