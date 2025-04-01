@@ -37,10 +37,10 @@ void *_sbrk(intptr_t increment){
    programbreak  = ( uintptr_t)&_end;
   }
   uintptr_t new_programbreak = programbreak  + increment;
-  if(_syscall_(SYS_brk,new_programbreak,(uintptr_t)0,(uintptr_t)0)!=0){
-    return (void*)-1;
-  }
-  _end = new_programbreak;
+  // if(_syscall_(SYS_brk,new_programbreak,(uintptr_t)0,(uintptr_t)0)!=0){
+  //   return (void*)-1;
+  // }
+  // _end = new_programbreak;
   return (void*)programbreak;
 
 }
