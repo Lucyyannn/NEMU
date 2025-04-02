@@ -1,4 +1,5 @@
 #include "common.h"
+#include <stdlib.h>
 
 #define NAME(key) \
   [_KEY_##key] = #key,

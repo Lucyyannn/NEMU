@@ -36,8 +36,11 @@ int NDL_OpenDisplay(int w, int h) {
     assert(screen_h >= canvas_h);
     pad_x = (screen_w - canvas_w) / 2;
     pad_y = (screen_h - canvas_h) / 2;
+    printf("opendisplay! \n");
     fbdev = fopen("/dev/fb", "w"); assert(fbdev);
+    printf("opendisplay 222!\n");
     evtdev = fopen("/dev/events", "r"); assert(evtdev);
+    printf("opendisplay 333!\n");
   }
 }
 
