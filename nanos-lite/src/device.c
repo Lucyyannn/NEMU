@@ -11,37 +11,23 @@ static const char *keyname[256] __attribute__((used)) = {
 };
 
 size_t events_read(void *buf, size_t len) {
-  // int key = _read_key();
-  // //key event
-  // if(key!=_KEY_NONE){
-  //   printf("key event!\n");
-  //   bool down = false;
-  //   if (key & 0x8000) {
-  //     down = true;
-  //     key ^= 0x8000;// delete the down_mask, now key==index
-  //   }
-  //   char* event = down? "kd" :"ku";
-  //   sprintf((char*)buf,"%s %s\n",event,keyname[key]);
-  //   return strlen((char*)buf);
-  // }
-  // //time event
-  // sprintf((char*)buf,"t %u\n",_uptime());
-  // return strlen(buf);
   int key = _read_key();
-  bool down = false;
-  if (key == _KEY_NONE)
-    sprintf((char *)buf, "t %u\n", _uptime());
-  else {
+  //key event
+  if(key!=_KEY_NONE){
+    printf("key event!\n");
+    bool down = false;
     if (key & 0x8000) {
-      key ^= 0x8000;
       down = true;
+      key ^= 0x8000;// delete the down_mask, now key==index
     }
-    // press KEY_F12 to switch game
-    // if (down && key == _KEY_F12)
-    //   switch_game();
-    sprintf((char *)buf, "k%c %s\n", (down ? 'd' : 'u'), keyname[key]);
-  } 
-  return strlen((char *)buf);
+    char* event = down? "kd" :"ku";
+    sprintf((char*)buf,"%s %s\n",event,keyname[key]);
+    return strlen((char*)buf);
+  }
+  //time event
+  sprintf((char*)buf,"t %u\n",_uptime());
+  return strlen(buf);
+
 }
 
 static char dispinfo[128] __attribute__((used));
