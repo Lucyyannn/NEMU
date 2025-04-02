@@ -13,11 +13,12 @@ int main() {
 
   fseek(fp, 500 * 5, SEEK_SET);
   printf("how are you 222\n");
-  int i, n;
+  int i, n= 0;
   for (i = 500; i < 1000; i ++) {
     printf("how are you 333\n");
     fscanf(fp, "%d", &n);
     printf("how are you 444\n");
+    printf("i= %d, n= %d \n",i,n);
     assert(n == i + 1);
   }
   printf("how are you 555\n");
