@@ -104,7 +104,7 @@ ssize_t fs_write(int fd, const void *buf, size_t len){
       if(real_len<=0){return 0;}
 
       off_t offset = file_table[fd].open_offset+file_table[fd].disk_offset;
-
+      printf("len:%d   ; real_len :%d  \n",len,real_len);
       fb_write(buf, offset, real_len);
       break;
     }
