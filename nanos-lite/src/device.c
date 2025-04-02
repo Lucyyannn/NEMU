@@ -14,6 +14,7 @@ size_t events_read(void *buf, size_t len) {
   int key = _read_key();
   //key event
   if(key!=_KEY_NONE){
+    printf("key event!\n");
     bool down = false;
     if (key & 0x8000) {
       down = true;
