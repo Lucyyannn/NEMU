@@ -70,9 +70,7 @@ ssize_t fs_read(int fd, void *buf, size_t len){
   switch(fd){
     case FD_EVENTS:{
       Log("[in fs_read] reach events!");
-      size_t result_len =events_read(buf, len);
-      //file_table[fd].open_offset += result_len;
-      return result_len;
+      return events_read(buf, len);
     }
     case FD_DISPINFO:{
       dispinfo_read(buf, offset, real_len) ;
