@@ -13,7 +13,6 @@ static const char *keyname[256] __attribute__((used)) = {
 size_t events_read(void *buf, size_t len) {
   int key = _read_key();
   printf("[in events_read] key: %d \n",key);
-  if(key!=0){printf("1111111111111111111111111\n");}
   //key event
   if(key!=_KEY_NONE){
     printf("key event!\n");
