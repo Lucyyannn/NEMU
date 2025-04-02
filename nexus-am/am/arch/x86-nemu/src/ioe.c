@@ -47,5 +47,5 @@ int _read_key() {
   //   ret = inl(I8042_DATA_PORT);
   // }
   // return ret;
-  return 3;
+  return 0x8003;
 }
