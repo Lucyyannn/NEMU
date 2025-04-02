@@ -16,8 +16,8 @@ size_t events_read(void *buf, size_t len) {
   if(key!=_KEY_NONE){
     bool down = false;
     if (key & 0x8000) {
-      key ^= 0x8000;// delete the down_mask, now key==index
       down = true;
+      key ^= 0x8000;// delete the down_mask, now key==index
     }
     char* event = down? "kd" :"ku";
     sprintf((char*)buf,"%s %s\n",event,keyname[key]);

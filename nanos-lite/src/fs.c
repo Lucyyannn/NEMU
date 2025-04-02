@@ -61,15 +61,20 @@ size_t fs_filesz(int fd){
 }
 
 ssize_t fs_read(int fd, void *buf, size_t len){
-
-  int real_len = file_table[fd].size-file_table[fd].open_offset;
-  if(real_len<=0){
-      return 0;
-  }else{
-      real_len = (real_len<len)?real_len:len;
+  //prepare
+  int real_len=0;
+  off_t offset=0;
+  if(fd!=FD_EVENTS){
+    real_len = file_table[fd].size-file_table[fd].open_offset;
+    if(real_len<=0){
+        return 0;
+    }else{
+        real_len = (real_len<len)?real_len:len;
+    }
+    offset = file_table[fd].open_offset+file_table[fd].disk_offset;
   }
-  off_t offset = file_table[fd].open_offset+file_table[fd].disk_offset;
-
+  
+  //handle
   switch(fd){
     case FD_EVENTS:{
       Log("[in fs_read] reach events!");
