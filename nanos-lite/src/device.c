@@ -21,10 +21,12 @@ size_t events_read(void *buf, size_t len) {
     }
     char* event = down? "kd" :"ku";
     sprintf(buf,"%s %s",event,keyname[key]);
+    printf("[in events_read] buf:%s\n",buf);
     return strlen(buf);
   }else{
     //time event
     sprintf(buf,"t %d",_uptime());
+    printf("[in events_read] buf:%s\n",buf);
     return strlen(buf);
   }
   return 0;
