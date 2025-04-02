@@ -1,4 +1,5 @@
 #include "fs.h"
+void _putc(char ch);
 
 typedef struct {
   char *name;
@@ -67,6 +68,14 @@ ssize_t fs_write(int fd, const void *buf, size_t len){
   Log("[in fs_write]  fd: %d ",fd);
   Log("[in fs_write]  write len: %d \n",len);
   Log("[in fs_write]  filesz: %d \n",fs_filesz(fd));
+  if(fd==1||fd==2){//stdout stderr
+    char* buffer = (char*)buf;
+    for(int i=0;i<len;i++){
+      _putc( *(buffer+i));
+    }
+    ssize_t reval = (fd==1)?len:-1;
+    return reval;
+  }
   //assert(len>=0 && len<=fs_filesz(fd));
   ramdisk_write(buf,file_table[fd].disk_offset,len);
   Log(" write success!");
