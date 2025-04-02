@@ -3,10 +3,7 @@
 
 int main() {
   FILE *fp = fopen("/share/texts/num", "r+");
-  if(!fp){
-    printf("fp error!\n");
-  }
-  //assert(fp);
+  assert(fp);
 
   fseek(fp, 0, SEEK_END);
   long size = ftell(fp);

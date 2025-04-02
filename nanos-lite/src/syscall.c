@@ -36,10 +36,9 @@ _RegSet* do_syscall(_RegSet *r) {
 
     case 3:{//SYS_write
       int fd       = (int)a[1];
-      char *buf    = (char*)a[2];
+      const void *buf = (const void*)a[2];
       ssize_t count = (ssize_t)a[3];
       r->eax = fs_write(fd,buf,count);
-      if(fd==2){ r->eax = -1;}
       // if(fd==1||fd==2){
       //   for(int i=0;i<count;i++){
       //   _putc( *(buf+i));
