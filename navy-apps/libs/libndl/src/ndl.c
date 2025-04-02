@@ -13,23 +13,22 @@ static int canvas_w, canvas_h, screen_w, screen_h, pad_x, pad_y;
 
 int NDL_OpenDisplay(int w, int h) {
   if (!canvas) {
-    printf("opendisplay! 555\n");
     NDL_CloseDisplay();
   }
-  printf("opendisplay! 666\n");
+
   canvas_w = w;
   canvas_h = h;
   canvas = malloc(sizeof(uint32_t) * w * h);
   assert(canvas);
-  printf("opendisplay! 777\n");
 
   if (getenv("NWM_APP")) {
     has_nwm = 1;
   } else {
     has_nwm = 0;
   }
-  printf("opendisplay! 888\n");
+
   if (has_nwm) {
+    printf("opendisplay! 10101010\n");
     printf("\033[X%d;%ds", w, h); fflush(stdout);
     evtdev = stdin;
   } else {
@@ -142,6 +141,7 @@ static void get_display_info() {
     sscanf(delim + 1, "%s", value);
     if (strcmp(key, "WIDTH") == 0) sscanf(value, "%d", &screen_w);
     if (strcmp(key, "HEIGHT") == 0) sscanf(value, "%d", &screen_h);
+    printf("get display info!\n");
   }
   fclose(dispinfo);
   assert(screen_w > 0 && screen_h > 0);
