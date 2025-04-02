@@ -18,20 +18,21 @@ int main() {
     seek = ftell(fp);
     assert(n == i + 1);
   }
-  printf(" 555 !\n");
+
   fseek(fp, 0, SEEK_SET);
   for (i = 0; i < 500; i ++) {
     fprintf(fp, "%4d\n", i + 1 + 1000);
   }
-  printf(" 666 !\n");
+
   for (i = 500; i < 1000; i ++) {
     fscanf(fp, "%d", &n);
     assert(n == i + 1);
   }
-  printf(" 777 !\n");
+
   fseek(fp, 0, SEEK_SET);
   for (i = 0; i < 500; i ++) {
     fscanf(fp, "%d", &n);
+    printf("i= %d, n= %d \n",i,n);
     assert(n == i + 1 + 1000);
   }
 
