@@ -22,12 +22,11 @@ size_t events_read(void *buf, size_t len) {
     char* event = down? "kd" :"ku";
     sprintf((char*)buf,"%s %s\n",event,keyname[key]);
     return strlen((char*)buf);
-  }else{
-    //time event
-    sprintf((char*)buf,"t %u\n",_uptime());
-    return strlen(buf);
   }
-  return 0;
+  //time event
+  sprintf((char*)buf,"t %u\n",_uptime());
+  return strlen(buf);
+
 }
 
 static char dispinfo[128] __attribute__((used));
