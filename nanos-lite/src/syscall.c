@@ -27,25 +27,12 @@ _RegSet* do_syscall(_RegSet *r) {
     }
 
     case 2:{//SYS_read
-      int fd       = (int)a[1];
-      char *buf    = (char*)a[2];
-      ssize_t count = (ssize_t)a[3];
-      r->eax = fs_read(fd,buf,count);
+      r->eax = fs_read((int)a[1],(char*)a[2],(ssize_t)a[3]);
       break;
     }
 
     case 3:{//SYS_write
-      int fd       = (int)a[1];
-      const void *buf = (const void*)a[2];
-      ssize_t count = (ssize_t)a[3];
-      r->eax = fs_write(fd,buf,count);
-      // if(fd==1||fd==2){
-      //   for(int i=0;i<count;i++){
-      //   _putc( *(buf+i));
-      //   }
-      //   r->eax = (fd==1)?count :-1;
-      // }
-      
+      r->eax = fs_write((int)a[1],(const void*)a[2],(ssize_t)a[3]);
       break;
     }
 
@@ -61,10 +48,7 @@ _RegSet* do_syscall(_RegSet *r) {
 
     }
     case 8:{//SYS_lseek
-      int fd = (int)a[1];
-      off_t offset = (off_t)a[2];
-      int whence = (int)a[3];
-      r->eax = fs_lseek(fd,offset,whence);
+      r->eax = fs_lseek((int)a[1],(off_t)a[2],(int)a[3]);
       break;
     }
 
