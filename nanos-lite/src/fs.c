@@ -70,6 +70,7 @@ ssize_t fs_write(int fd, const void *buf, size_t len){
   //assert(len>=0 && len<=fs_filesz(fd));
   ramdisk_write(buf,file_table[fd].disk_offset,len);
   Log(" write success!");
+  Log("buf: %s ",(char*)buf);
   file_table[fd].open_offset += len;
   return len;
 }
