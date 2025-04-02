@@ -6,8 +6,8 @@
 #include <time.h>
 #include "syscall.h"
 
-extern char _end;
-uintptr_t programbreak  = ( uintptr_t)&_end;
+extern char end;
+uintptr_t programbreak  = ( uintptr_t)&end;
 
 // TODO: discuss with syscall interface
 #ifndef __ISA_NATIVE__
