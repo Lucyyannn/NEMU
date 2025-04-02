@@ -23,9 +23,10 @@ size_t events_read(void *buf, size_t len) {
     sprintf((char*)buf,"%s %s\n",event,keyname[key]);
     return strlen((char*)buf);
   }
-  //time event
-  sprintf((char*)buf,"t %u\n",_uptime());
-  return strlen(buf);
+  // //time event
+  // sprintf((char*)buf,"t %u\n",_uptime());
+  // return strlen(buf);
+  return 0;
 
 }
 
