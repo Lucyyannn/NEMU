@@ -2,12 +2,17 @@
 #include <assert.h>
 
 int main() {
+  printf("hi! \n");
   FILE *fp = fopen("/share/texts/num", "r+");
   assert(fp);
+
+  printf("hello! \n");
 
   fseek(fp, 0, SEEK_END);
   long size = ftell(fp);
   assert(size == 5000);
+
+  printf("how are you\n");
 
   fseek(fp, 500 * 5, SEEK_SET);
   int i, n;
