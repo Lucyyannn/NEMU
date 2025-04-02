@@ -100,7 +100,7 @@ ssize_t fs_write(int fd, const void *buf, size_t len){
       return reval;
     }
     case FD_FB:{
-      int real_len = file_table[fd].size-file_table[fd].open_offset;
+      int real_len = (int)file_table[fd].size-(int)file_table[fd].open_offset;
       if(real_len<=0){return 0;}
 
       off_t offset = file_table[fd].open_offset+file_table[fd].disk_offset;
