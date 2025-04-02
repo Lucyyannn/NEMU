@@ -11,6 +11,22 @@ static const char *keyname[256] __attribute__((used)) = {
 };
 
 size_t events_read(void *buf, size_t len) {
+  int key = _read_key();
+  //key event
+  if(key!=_KEY_NONE){
+    bool down = false;
+    if (key & 0x8000) {
+      key ^= 0x8000;// delete the down_mask, now key==index
+      down = true;
+    }
+    char* event = down? "kd" :"ku";
+    sprintf(buf,"%s %s",event,keyname[key]);
+    return strlen(buf);
+  }else{
+    //time event
+    sprintf(buf,"t %d",_uptime());
+    return strlen(buf);
+  }
   return 0;
 }
 

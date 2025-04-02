@@ -3,6 +3,7 @@ void _putc(char ch);
 off_t _lseek(int fd, off_t offset, int whence);
 void dispinfo_read(void *buf, off_t offset, size_t len);
 void fb_write(const void *buf, off_t offset, size_t len);
+size_t events_read(void *buf, size_t len) ;
 
 typedef struct {
   char *name;
@@ -67,6 +68,11 @@ ssize_t fs_read(int fd, void *buf, size_t len){
   off_t offset = file_table[fd].open_offset+file_table[fd].disk_offset;
 
   switch(fd){
+    case FD_EVENTS:{
+      size_t result_len =events_read(buf, len);
+      //file_table[fd].open_offset += result_len;
+      return result_len;
+    }
     case FD_DISPINFO:{
       dispinfo_read(buf, offset, real_len) ;
       break;
