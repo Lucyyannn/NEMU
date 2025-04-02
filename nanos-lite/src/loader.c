@@ -11,6 +11,7 @@ int fs_close(int fd);
 uintptr_t loader(_Protect *as, const char *filename) {
   int fd = fs_open("/bin/text",0,0);
   fs_read(fd,DEFAULT_ENTRY,fs_filesz(fd));
+  Log("[in loader] fd = %d",fd);
 
   fs_close(fd);
 
