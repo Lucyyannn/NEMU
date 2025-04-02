@@ -2,24 +2,25 @@
 #include <assert.h>
 
 int main() {
-  printf("hi! \n");
   FILE *fp = fopen("/share/texts/num", "r+");
   assert(fp);
-
-  printf("hello! \n");
 
   fseek(fp, 0, SEEK_END);
   long size = ftell(fp);
   assert(size == 5000);
 
-  printf("how are you\n");
+  printf("how are you 111\n");
 
   fseek(fp, 500 * 5, SEEK_SET);
+  printf("how are you 222\n");
   int i, n;
   for (i = 500; i < 1000; i ++) {
+    printf("how are you 333\n");
     fscanf(fp, "%d", &n);
+    printf("how are you 444\n");
     assert(n == i + 1);
   }
+  printf("how are you 555\n");
 
   fseek(fp, 0, SEEK_SET);
   for (i = 0; i < 500; i ++) {
