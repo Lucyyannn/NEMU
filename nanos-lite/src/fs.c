@@ -63,7 +63,7 @@ ssize_t fs_read(int fd, void *buf, size_t len){
   off_t offset = file_table[fd].disk_offset+file_table[fd].open_offset;// careful!!
   switch(fd){
     case FD_DISPINFO:{
-      dispinfo_read(buf, offset, len) ;
+      dispinfo_read(buf, file_table[fd].open_offset, len) ;
       break;
     }
     default:{
@@ -91,7 +91,7 @@ ssize_t fs_write(int fd, const void *buf, size_t len){
       return reval;
     }
     case FD_FB:{
-      off_t offset = file_table[fd].disk_offset+file_table[fd].open_offset;// careful!!
+      off_t offset = file_table[fd].open_offset;// careful!!
       fb_write(buf, offset, len);
       break;
     }
