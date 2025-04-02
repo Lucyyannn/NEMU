@@ -1,5 +1,4 @@
 #include "common.h"
-#include <stdlib.h>
 
 #define NAME(key) \
   [_KEY_##key] = #key,
@@ -22,7 +21,7 @@ static char dispinfo[128] __attribute__((used));
 
 void dispinfo_read(void *buf, off_t offset, size_t len) {
   //buf = (char*)malloc(len+1);
-  strncpy((char*)buf,dispinfo+offset,len);
+  memcpy((char*)buf,dispinfo+offset,len);
   // if(*(dispinfo+offset+len-1)!='\0'){
   //   *(buf+len)='\0';
   // }
