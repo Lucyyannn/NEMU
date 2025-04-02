@@ -13,7 +13,10 @@ int main() {
 
   fseek(fp, 500 * 5, SEEK_SET);
   printf("how are you 222\n");
-  int i, n= 0;
+  long size1 = ftell(fp);
+  printf("size1: %d\n",size1);
+  
+  int i, n;
   for (i = 500; i < 1000; i ++) {
     printf("how are you 333\n");
     fscanf(fp, "%d", &n);
