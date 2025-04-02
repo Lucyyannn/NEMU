@@ -63,8 +63,11 @@ size_t fs_filesz(int fd){
 ssize_t fs_read(int fd, void *buf, size_t len){
 
   int real_len = file_table[fd].size-file_table[fd].open_offset;
-  if(real_len<=0){return 0;}
-
+  if(real_len<=0){
+      return 0;
+  }else{
+      real_len = (real_len<len)?real_len:len;
+  }
   off_t offset = file_table[fd].open_offset+file_table[fd].disk_offset;
 
   switch(fd){
@@ -101,7 +104,11 @@ ssize_t fs_write(int fd, const void *buf, size_t len){
     }
     case FD_FB:{
       int real_len = (int)file_table[fd].size-(int)file_table[fd].open_offset;
-      if(real_len<=0){return 0;}
+      if(real_len<=0){
+        return 0;
+      }else{
+        real_len = (real_len<len)?real_len:len;
+      }
 
       off_t offset = file_table[fd].open_offset+file_table[fd].disk_offset;
       printf("len:%d   ; real_len :%d  \n",len,real_len);
@@ -110,7 +117,11 @@ ssize_t fs_write(int fd, const void *buf, size_t len){
     }
     default:{
       int real_len = file_table[fd].size-file_table[fd].open_offset;
-      if(real_len<=0){return 0;}
+      if(real_len<=0){
+        return 0;
+      }else{
+        real_len = (real_len<len)?real_len:len;
+      }
 
       off_t offset = file_table[fd].open_offset+file_table[fd].disk_offset;
       ramdisk_write(buf,offset,real_len);
