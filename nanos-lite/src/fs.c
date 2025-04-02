@@ -39,10 +39,10 @@ int fs_open(const char *pathname, int flags, int mode){
   while(fd<NR_FILES){
     if(strcmp(pathname, file_table[fd].name)==0){
       file_table[fd].open_offset = 0;
-      // Log("[in fs_open] file name: %s",pathname);
-      // Log("[in fs_open] file discripter: %d",fd);
-      // Log("[in fs_open] file size: %d",file_table[fd].size);
-      // Log("[in fs_open] disk_offset: %d",file_table[fd].disk_offset);
+      Log("[in fs_open] file name: %s",pathname);
+      Log("[in fs_open] file discripter: %d",fd);
+      Log("[in fs_open] file size: %d",file_table[fd].size);
+      Log("[in fs_open] disk_offset: %d",file_table[fd].disk_offset);
       return fd;
     }
     ++fd;
