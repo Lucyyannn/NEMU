@@ -3,9 +3,7 @@
 #define NAME(key) \
   [_KEY_##key] = #key,
 
-char *strncpy(char *dest, const char *src, size_t n);
 int sprintf(char *str, const char *format, ...);
-//void *malloc(size_t size);
 
 static const char *keyname[256] __attribute__((used)) = {
   [_KEY_NONE] = "NONE",
@@ -20,11 +18,8 @@ static char dispinfo[128] __attribute__((used));
 
 
 void dispinfo_read(void *buf, off_t offset, size_t len) {
-  //buf = (char*)malloc(len+1);
+
   memcpy((char*)buf,dispinfo+offset,len);
-  // if(*(dispinfo+offset+len-1)!='\0'){
-  //   *(buf+len)='\0';
-  // }
   return;
 }
 
