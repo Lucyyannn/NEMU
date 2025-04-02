@@ -34,6 +34,8 @@ int fs_open(const char *pathname, int flags, int mode){
   while(fd<NR_FILES){
     if(strcmp(pathname, file_table[fd].name)==0){
       file_table[fd].open_offset = 0;
+      Log("[in fs_open] file size: %d",file_table[fd].size);
+      Log("[in fs_open] disk_offset: %d",file_table[fd].disk_offset);
       return fd;
     }
     ++fd;
@@ -60,6 +62,7 @@ ssize_t fs_read(int fd, void *buf, size_t len){
 }
 
 ssize_t fs_write(int fd, const void *buf, size_t len){
+  Log("[in fs_write]  fd: %d ",fd);
   Log("[in fs_write]  write len: %d \n",len);
   Log("[in fs_write]  filesz: %d \n",fs_filesz(fd));
   assert(len>=0 && len<=fs_filesz(fd));
