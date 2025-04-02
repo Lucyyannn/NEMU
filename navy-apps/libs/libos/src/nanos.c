@@ -38,7 +38,6 @@ void *_sbrk(intptr_t increment){
     return (void*)-1;
   }
   programbreak = new_programbreak;
-  end = new_programbreak;
   return (void*)programbreak;
 }
 
