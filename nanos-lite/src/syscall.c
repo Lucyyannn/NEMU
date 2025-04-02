@@ -56,18 +56,18 @@ _RegSet* do_syscall(_RegSet *r) {
       break;
     }
 
-    // case 7:{//SYS_close
-    //   r->eax = fs_close((int)a[1]);
-    //   break;
+    case 7:{//SYS_close
+      r->eax = fs_close((int)a[1]);
+      break;
 
-    // }
-    // case 8:{//SYS_lseek
-    //   int fd = (int)a[1];
-    //   off_t offset = (off_t)a[2];
-    //   int whence = (int)a[3];
-    //   r->eax = fs_lseek(fd,offset,whence);
-    //   break;
-    // }
+    }
+    case 8:{//SYS_lseek
+      int fd = (int)a[1];
+      off_t offset = (off_t)a[2];
+      int whence = (int)a[3];
+      r->eax = fs_lseek(fd,offset,whence);
+      break;
+    }
 
     case 9:{//SYS_brk
       r->eax = mm_brk(a[1]);//always return 0
