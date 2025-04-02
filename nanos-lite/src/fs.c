@@ -51,7 +51,6 @@ int fs_open(const char *pathname, int flags, int mode){
 }
 
 int fs_close(int fd){
-  file_table[fd].open_offset = 0;
   return 0; //always succeed
 }
 
@@ -61,16 +60,19 @@ size_t fs_filesz(int fd){
 }
 
 ssize_t fs_read(int fd, void *buf, size_t len){
-  off_t offset = file_table[fd].disk_offset+file_table[fd].open_offset;// careful!!
+
+  int real_len = file_table[fd].size-file_table[fd].open_offset;
+  if(real_len<=0){return 0;}
+
+  off_t offset = file_table[fd].open_offset+file_table[fd].disk_offset;
+
   switch(fd){
     case FD_DISPINFO:{
-      Log("[in fs_read] open_offset:%d ",file_table[fd].open_offset);
-      dispinfo_read(buf, file_table[fd].open_offset, len) ;
+      dispinfo_read(buf, offset, real_len) ;
       break;
     }
     default:{
-      assert(len>=0 && len<=fs_filesz(fd));
-      ramdisk_read(buf,offset,len);
+      ramdisk_read(buf,offset,real_len);
       break;
     }
   }
@@ -93,14 +95,20 @@ ssize_t fs_write(int fd, const void *buf, size_t len){
       return reval;
     }
     case FD_FB:{
-      off_t offset = file_table[fd].open_offset;// careful!!
-      fb_write(buf, offset, len);
+      int real_len = file_table[fd].size-file_table[fd].open_offset;
+      if(real_len<=0){return 0;}
+
+      off_t offset = file_table[fd].open_offset+file_table[fd].disk_offset;
+
+      fb_write(buf, offset, real_len);
       break;
     }
     default:{
-      assert(len>=0 && len<=fs_filesz(fd));
-      off_t offset = file_table[fd].disk_offset+file_table[fd].open_offset;// careful!!
-      ramdisk_write(buf,offset,len);
+      int real_len = file_table[fd].size-file_table[fd].open_offset;
+      if(real_len<=0){return 0;}
+
+      off_t offset = file_table[fd].open_offset+file_table[fd].disk_offset;
+      ramdisk_write(buf,offset,real_len);
       break;
     }
   }
