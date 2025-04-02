@@ -13,9 +13,10 @@ static int canvas_w, canvas_h, screen_w, screen_h, pad_x, pad_y;
 
 int NDL_OpenDisplay(int w, int h) {
   if (!canvas) {
+    printf("opendisplay! 555\n");
     NDL_CloseDisplay();
   }
-
+  printf("opendisplay! 666\n");
   canvas_w = w;
   canvas_h = h;
   canvas = malloc(sizeof(uint32_t) * w * h);
