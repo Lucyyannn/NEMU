@@ -18,14 +18,7 @@ static char dispinfo[128] __attribute__((used));
 
 
 void dispinfo_read(void *buf, off_t offset, size_t len) {
-  printf("[in dispinfo_read] offset : %d \n",offset);
-  printf("[in dispinfo_read] len : %d \n",len);
-  printf("[in dispinfo_read] len(buf) : %d \n",strlen((char*)buf));
-  printf("[in dispinfo_read] dispinfo: %s \n",dispinfo);
-  
   memcpy(buf,dispinfo+offset,len);
-  printf("[in dispinfo_read] len(buf) : %d \n",strlen((char*)buf));
-  printf("[in dispinfo_read] buf: %s \n",(char*)buf);
   return;
 }
 
@@ -35,15 +28,16 @@ void fb_write(const void *buf, off_t offset, size_t len) {
   (y+h)*width +(x+w) = (offset + len);
   juxing!
    */
-  int x=0,y=0,w=0,h=0;
+  int x=0,y=0;//w=0,h=0;
   offset /=sizeof(int);
   len /=sizeof(int);
   x = offset %_screen.width;
   y = offset /_screen.width;
-  w = (offset+len) %_screen.width-x;
-  h = (offset+len) /_screen.width-y;
-  assert(w>=0 &&h>=0);
-  _draw_rect((const uint32_t*)buf,x,y,w,h);
+   _draw_rect((const uint32_t*)buf,x,y,len,1);
+  // w = (offset+len) %_screen.width-x;
+  // h = (offset+len) /_screen.width-y;
+  // assert(w>=0 &&h>=0);
+  // _draw_rect((const uint32_t*)buf,x,y,w,h);
 }
 
 void init_device() {

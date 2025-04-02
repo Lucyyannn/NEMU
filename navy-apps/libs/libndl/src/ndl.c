@@ -31,18 +31,13 @@ int NDL_OpenDisplay(int w, int h) {
     printf("\033[X%d;%ds", w, h); fflush(stdout);
     evtdev = stdin;
   } else {
-    printf("opendisplay! 10101010\n");
     get_display_info();
-    printf("opendisplay! 999\n");
     assert(screen_w >= canvas_w);
     assert(screen_h >= canvas_h);
     pad_x = (screen_w - canvas_w) / 2;
     pad_y = (screen_h - canvas_h) / 2;
-    printf("opendisplay! \n");
     fbdev = fopen("/dev/fb", "w"); assert(fbdev);
-    printf("opendisplay 222!\n");
     evtdev = fopen("/dev/events", "r"); assert(evtdev);
-    printf("opendisplay 333!\n");
   }
 }
 
@@ -136,7 +131,6 @@ static void get_display_info() {
   screen_w = screen_h = 0;
   char buf[128], key[128], value[128], *delim;
   while (fgets(buf, 128, dispinfo)) {
-    printf("dispinfo: %s \n",buf);
     *(delim = strchr(buf, ':')) = '\0';
     sscanf(buf, "%s", key);
     sscanf(delim + 1, "%s", value);
