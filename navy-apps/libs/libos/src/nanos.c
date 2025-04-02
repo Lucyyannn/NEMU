@@ -7,7 +7,7 @@
 #include "syscall.h"
 
 extern char end;
-uintptr_t programbreak  = ( uintptr_t)&end;
+//uintptr_t programbreak  = ( uintptr_t)&end;
 
 // TODO: discuss with syscall interface
 #ifndef __ISA_NATIVE__
@@ -36,11 +36,13 @@ void *_sbrk(intptr_t increment){
   // if (programbreak == 0){
   //  programbreak  = ( uintptr_t)&_end;
   // }
+  uintptr_t programbreak = end;
   uintptr_t new_programbreak = programbreak  + increment;
   if(_syscall_(SYS_brk,new_programbreak,(uintptr_t)0,(uintptr_t)0)!=0){
     return (void*)-1;
   }
-  programbreak = new_programbreak;
+  //programbreak = new_programbreak;
+  end = new_programbreak;
   return (void*)programbreak;
 
 }
