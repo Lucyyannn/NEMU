@@ -58,7 +58,7 @@ size_t fs_filesz(int fd){
 
 ssize_t fs_read(int fd, void *buf, size_t len){
   assert(len>=0 && len<=fs_filesz(fd));
-  off_t offset = file_table[fd].disk_offset+file_table[fd].open_offset;
+  off_t offset = file_table[fd].disk_offset+file_table[fd].open_offset;// careful!!
   ramdisk_read(buf,offset,len);
   file_table[fd].open_offset += len;
 
@@ -66,9 +66,9 @@ ssize_t fs_read(int fd, void *buf, size_t len){
 }
 
 ssize_t fs_write(int fd, const void *buf, size_t len){
-  Log("[in fs_write]  fd: %d ",fd);
-  Log("[in fs_write]  write len: %d \n",len);
-  Log("[in fs_write]  filesz: %d \n",fs_filesz(fd));
+  // Log("[in fs_write]  fd: %d ",fd);
+  // Log("[in fs_write]  write len: %d \n",len);
+  // Log("[in fs_write]  filesz: %d \n",fs_filesz(fd));
   if(fd==1||fd==2){//stdout stderr
     char* buffer = (char*)buf;
     for(int i=0;i<len;i++){
@@ -77,10 +77,8 @@ ssize_t fs_write(int fd, const void *buf, size_t len){
     ssize_t reval = (fd==1)?len:-1;
     return reval;
   }
-  //assert(len>=0 && len<=fs_filesz(fd));
+  assert(len>=0 && len<=fs_filesz(fd));
   ramdisk_write(buf,file_table[fd].disk_offset,len);
-  Log(" write success!");
-  Log("buf: %s ",(char*)buf);
   file_table[fd].open_offset += len;
   return len;
 }
