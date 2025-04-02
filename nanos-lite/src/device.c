@@ -33,7 +33,7 @@ void fb_write(const void *buf, off_t offset, size_t len) {
   len /=sizeof(int);
   x = offset %_screen.width;
   y = offset /_screen.width;
-   _draw_rect((const uint32_t*)buf,x,y,len,1);
+  _draw_rect((const uint32_t*)buf,x,y,len,1);
   // w = (offset+len) %_screen.width-x;
   // h = (offset+len) /_screen.width-y;
   // assert(w>=0 &&h>=0);
