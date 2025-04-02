@@ -1,5 +1,6 @@
 #include <am.h>
 #include <x86.h>
+#include <stdio.h>
 
 #define RTC_PORT 0x48   // Note that this is not standard
 #define I8042_DATA_PORT 0x60
@@ -41,9 +42,10 @@ void _draw_sync() {
 }
 
 int _read_key() {
-  int ret = _KEY_NONE;
-  if(inb(I8042_STATUS_PORT)==1){
-    ret = inl(I8042_DATA_PORT);
-  }
-  return ret;
+  // int ret = _KEY_NONE;
+  // if(inb(I8042_STATUS_PORT)==1){
+  //   ret = inl(I8042_DATA_PORT);
+  // }
+  // return ret;
+  return 3;
 }
