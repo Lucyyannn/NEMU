@@ -12,10 +12,11 @@ int main() {
   fseek(fp, 500 * 5, SEEK_SET);
   long seek1 = ftell(fp);
 
-  int i, n;
+  int i, n,seek;
   for (i = 500; i < 1000; i ++) {
     fscanf(fp, "%d", &n);
-    printf("i= %d, n= %d \n",i,n);
+    seek = ftell(fp);
+    printf("seek = %d, i= %d, n= %d \n",seek,i,n);
     //assert(n == i + 1);
   }
 
