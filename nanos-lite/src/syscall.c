@@ -26,13 +26,13 @@ _RegSet* do_syscall(_RegSet *r) {
       break;
     }
 
-    // case 2:{//SYS_read
-    //   int fd       = (int)a[1];
-    //   char *buf    = (char*)a[2];
-    //   ssize_t count = (ssize_t)a[3];
-    //   r->eax = fs_read(fd,buf,count);
-    //   break;
-    // }
+    case 2:{//SYS_read
+      int fd       = (int)a[1];
+      char *buf    = (char*)a[2];
+      ssize_t count = (ssize_t)a[3];
+      r->eax = fs_read(fd,buf,count);
+      break;
+    }
 
     case 3:{//SYS_write
       int fd       = (int)a[1];
