@@ -227,6 +227,7 @@ VIDEO_Init(
    //
    // Create the screen surface.
    //
+   Log(" 231: %d ",gpScreenReal->pitch);
 #if defined (NDS)
    gpScreenReal = SDL_SetVideoMode(293, 196, 8, SDL_SWSURFACE | SDL_FULLSCREEN);
 #elif defined (__SYMBIAN32__)
@@ -246,7 +247,7 @@ VIDEO_Init(
    gpScreenReal = SDL_SetVideoMode(320, 200, 8,
       SDL_HWSURFACE | SDL_RESIZABLE | (fFullScreen ? SDL_FULLSCREEN : 0));
 #endif
-
+Log(" 250: %d ",gpScreenReal->pitch);
    if (gpScreenReal == NULL)
    {
       //
