@@ -427,14 +427,14 @@ VIDEO_UpdateScreen(
       screenRealHeight -= offset;
       screenRealY = offset / 2;
    }
-
+   Log("in video.c,430");
    if (lpRect != NULL)
    {
       dstrect.x = (SHORT)((INT)(lpRect->x) * gpScreenReal->w / gpScreen->w);
       dstrect.y = (SHORT)((INT)(screenRealY + lpRect->y) * screenRealHeight / gpScreen->h);
       dstrect.w = (WORD)((DWORD)(lpRect->w) * gpScreenReal->w / gpScreen->w);
       dstrect.h = (WORD)((DWORD)(lpRect->h) * screenRealHeight / gpScreen->h);
-
+      Log("in video.c,437");
       SDL_SoftStretch(gpScreen, (SDL_Rect *)lpRect, gpScreenReal, &dstrect);
 
       if (SDL_MUSTLOCK(gpScreenReal))
@@ -465,7 +465,7 @@ VIDEO_UpdateScreen(
 #endif
    }
    else
-   {
+   {  Log("in video.c 468");
 	   if (g_wShakeTime != 0) 
 	   {
 		   //
@@ -475,12 +475,12 @@ VIDEO_UpdateScreen(
 		   srcrect.y = 0;
 		   srcrect.w = 320;
 		   srcrect.h = 200 - g_wShakeLevel;
-
+      Log("in video.c 478 gpScreenReal->w:%d ",gpScreenReal->w);
 		   dstrect.x = 0;
 		   dstrect.y = screenRealY;
 		   dstrect.w = 320 * gpScreenReal->w / gpScreen->w;
 		   dstrect.h = (200 - g_wShakeLevel) * screenRealHeight / gpScreen->h;
-
+Log("in video.c 483 dstrect->w: %d ",dstrect.w);
 		   if (g_wShakeTime & 1)
 		   {
 			   srcrect.y = g_wShakeLevel;
