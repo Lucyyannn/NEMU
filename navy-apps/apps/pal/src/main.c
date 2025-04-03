@@ -233,9 +233,13 @@ PAL_TrademarkScreen(
 --*/
 {
    PAL_SetPalette(3, FALSE);
+   Log("one!");
    PAL_RNGPlay(6, 0, 1000, 25);
+   Log("two!");
    UTIL_Delay(1000);
+   Log("333!");
    PAL_FadeOut(1);
+   Log("444!");
 }
 
 VOID
@@ -549,7 +553,6 @@ main_loop() {
 #endif
    PAL_Init(wScreenWidth, wScreenHeight, fFullScreen);
 
-   Log("PAL_Init success!");
 
    //
    // Show the trademark screen and splash screen
@@ -558,7 +561,7 @@ main_loop() {
    PAL_TrademarkScreen();
    Log("PAL_TrademarkScreen success!");
    PAL_SplashScreen();
-   Log("PAL_SplashScreen success!");
+  
    //
    // Run the main game routine
    //
