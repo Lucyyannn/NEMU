@@ -246,6 +246,7 @@ SDL_Surface* SDL_CreateRGBSurface(uint32_t flags, int width, int height, int dep
   s->w = width;
   s->h = height;
   s->pitch = (width * depth) >> 3;
+  printf("[in SDL_CreateRGBSurface] w: %d , h: %d , depth: %d ,pitch: %d \n",s->w,s->h,depth,s->pitch);
   s->pixels = (flags & SDL_HWSURFACE ? (void *)VMEM_ADDR : malloc(s->pitch * height));
   assert(s->pixels);
 
@@ -253,6 +254,7 @@ SDL_Surface* SDL_CreateRGBSurface(uint32_t flags, int width, int height, int dep
 }
 
 SDL_Surface* SDL_SetVideoMode(int width, int height, int bpp, uint32_t flags) {
+  printf("[in SDL_SetVideoMode] width: %d, depth: %d \n",width, bpp);
   return SDL_CreateRGBSurface(flags,  width, height, bpp,
       0x000000ff, 0x0000ff00, 0x00ff0000, 0xff000000);
 }
