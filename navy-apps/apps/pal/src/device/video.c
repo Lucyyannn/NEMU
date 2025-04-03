@@ -465,7 +465,7 @@ VIDEO_UpdateScreen(
 #endif
    }
    else
-   {  Log("in video.c 468   g_wShakeTime: %d",g_wShakeTime);
+   { 
 	   if (g_wShakeTime != 0) 
 	   {
 		   //
@@ -534,7 +534,7 @@ VIDEO_UpdateScreen(
 		   g_wShakeTime--;
 	   }
 	   else
-	   {  Log("in video.c 537   dstrect.w:%d ",gpScreenReal->w);
+	   {  
 		   dstrect.x = 0;
 		   dstrect.y = screenRealY;
 		   dstrect.w = gpScreenReal->w;
@@ -566,8 +566,6 @@ VIDEO_UpdateScreen(
 #endif
 		   SDL_RenderPresent(gpRenderer);
 #else
-         Log("in video.c 569  gpScreenReal->pitch: %d ",gpScreenReal->pitch);
-         Log("in video.c 570  gpScreenReal->w: %d , gpScreenReal->h:%d",gpScreenReal->w,gpScreenReal->h);
 		   SDL_UpdateRect(gpScreenReal, 0, 0, gpScreenReal->w, gpScreenReal->h);
 #endif
 	   }
@@ -1068,7 +1066,8 @@ VIDEO_FadeScreen(
    short             offset = 240 - 200;
    short             screenRealHeight = gpScreenReal->h;
    short             screenRealY = 0;
-
+   Log("in video.c gpScreenReal:\n");
+   Log("w: %d, gpScreenReal->w,");
    //
    // Lock surface if needed
    //

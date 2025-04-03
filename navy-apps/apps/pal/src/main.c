@@ -555,7 +555,7 @@ main_loop() {
    //
    // TODO: should we display these?
    PAL_TrademarkScreen();
-   Log("PAL_TrademarkScreen success!");
+
    PAL_SplashScreen();
   
    //
