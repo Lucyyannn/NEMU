@@ -305,7 +305,7 @@ Log(" 250: %d ",gpScreenReal->pitch);
    {
       SDL_ShowCursor(FALSE);
    }
-
+Log("in video.c 310 gpScreenReal->pitch:%d",gpScreenReal->pitch);
    return 0;
 }
 
