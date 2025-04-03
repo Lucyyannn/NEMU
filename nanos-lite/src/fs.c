@@ -40,9 +40,9 @@ int fs_open(const char *pathname, int flags, int mode){
     if(strcmp(pathname, file_table[fd].name)==0){
       file_table[fd].open_offset = 0;
       Log("[in fs_open] file name: %s",pathname);
-      Log("[in fs_open] file discripter: %d",fd);
-      Log("[in fs_open] file size: %d",file_table[fd].size);
-      Log("[in fs_open] disk_offset: %d",file_table[fd].disk_offset);
+      // Log("[in fs_open] file discripter: %d",fd);
+      // Log("[in fs_open] file size: %d",file_table[fd].size);
+      // Log("[in fs_open] disk_offset: %d",file_table[fd].disk_offset);
       return fd;
     }
     ++fd;
@@ -61,6 +61,7 @@ size_t fs_filesz(int fd){
 }
 
 ssize_t fs_read(int fd, void *buf, size_t len){
+   Log("[in fs_write]  filename: %s ",file_table[fd].name);
   //prepare
   int real_len=0;
   off_t offset=0;
@@ -93,7 +94,7 @@ ssize_t fs_read(int fd, void *buf, size_t len){
 }
 
 ssize_t fs_write(int fd, const void *buf, size_t len){
-  // Log("[in fs_write]  fd: %d ",fd);
+   Log("[in fs_write]  filename: %s ",file_table[fd].name);
   // Log("[in fs_write]  write len: %d \n",len);
   // Log("[in fs_write]  filesz: %d \n",fs_filesz(fd));
   switch(fd){
@@ -138,6 +139,7 @@ ssize_t fs_write(int fd, const void *buf, size_t len){
 
 
 off_t fs_lseek(int fd, off_t offset, int whence){
+   Log("[in fs_lseek]  filename: %s ",file_table[fd].name);
   switch(whence){
     case SEEK_SET:
       file_table[fd].open_offset=offset;
