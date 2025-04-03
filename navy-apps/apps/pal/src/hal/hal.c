@@ -195,6 +195,7 @@ void SDL_SetPalette(SDL_Surface *s, int flags, SDL_Color *colors,
 
 void SDL_UpdateRect(SDL_Surface *screen, int x, int y, int w, int h) {
   assert(screen);
+  printf("[in SDL_UpdateRect] screen->w: %d , screen->h: %d \n",screen->w,screen->h);
   printf("[in SDL_UpdateRect] screen->pitch= %d ,but W= %d \n",screen->pitch,W);
   //assert(screen->pitch == W);
 
