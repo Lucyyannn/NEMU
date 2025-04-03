@@ -566,6 +566,8 @@ VIDEO_UpdateScreen(
 #endif
 		   SDL_RenderPresent(gpRenderer);
 #else
+         Log("in video.c 569  gpScreenReal->pitch: %d ",gpScreenReal->pitch);
+         Log("in video.c 570  gpScreenReal->w: %d , gpScreenReal->h:%d",gpScreenReal->w,gpScreenReal->h);
 		   SDL_UpdateRect(gpScreenReal, 0, 0, gpScreenReal->w, gpScreenReal->h);
 #endif
 	   }
