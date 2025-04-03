@@ -467,7 +467,7 @@ VIDEO_UpdateScreen(
 #endif
    }
    else
-   { 
+   { Log("in video.c 470 gpScreenReal->pitch:%d",gpScreenReal->pitch);
 	   if (g_wShakeTime != 0) 
 	   {
 		   //
@@ -477,7 +477,7 @@ VIDEO_UpdateScreen(
 		   srcrect.y = 0;
 		   srcrect.w = 320;
 		   srcrect.h = 200 - g_wShakeLevel;
-
+Log("in video.c 480 gpScreenReal->pitch:%d",gpScreenReal->pitch);
 		   dstrect.x = 0;
 		   dstrect.y = screenRealY;
 		   dstrect.w = 320 * gpScreenReal->w / gpScreen->w;
@@ -493,7 +493,7 @@ VIDEO_UpdateScreen(
 		   }
 
 		   SDL_SoftStretch(gpScreen, &srcrect, gpScreenReal, &dstrect);
-
+Log("in video.c 496 gpScreenReal->pitch:%d",gpScreenReal->pitch);
 		   if (g_wShakeTime & 1)
 		   {
 			   dstrect.y = (screenRealY + screenRealHeight - g_wShakeLevel) * screenRealHeight / gpScreen->h;
@@ -506,7 +506,7 @@ VIDEO_UpdateScreen(
 		   dstrect.h = g_wShakeLevel * screenRealHeight / gpScreen->h;
 
 		   SDL_FillRect(gpScreenReal, &dstrect, 0);
-
+Log("in video.c 509 gpScreenReal->pitch:%d",gpScreenReal->pitch);
 		   if (SDL_MUSTLOCK(gpScreenReal))
 		   {
 			   SDL_UnlockSurface(gpScreenReal);
@@ -531,6 +531,7 @@ VIDEO_UpdateScreen(
 #endif
 		   SDL_RenderPresent(gpRenderer);
 #else
+Log("in video.c 534 gpScreenReal->pitch:%d",gpScreenReal->pitch);
 		   SDL_UpdateRect(gpScreenReal, 0, 0, gpScreenReal->w, gpScreenReal->h);
 #endif
 		   g_wShakeTime--;
@@ -543,6 +544,7 @@ VIDEO_UpdateScreen(
 		   dstrect.h = screenRealHeight;
 
 		   SDL_SoftStretch(gpScreen, NULL, gpScreenReal, &dstrect);
+         Log("in video.c 547 gpScreenReal->pitch:%d",gpScreenReal->pitch);
 
 		   if (SDL_MUSTLOCK(gpScreenReal))
 		   {
@@ -1185,7 +1187,7 @@ VIDEO_FadeScreen(
                   SDL_RenderCopy(gpRenderer, gpBackKeyMessage, NULL, NULL);
                }
             }
-            Log("in video.c 1188 gpScreenReal->pitch:%d",gpScreenReal->pitch);
+
 #endif
 			SDL_RenderPresent(gpRenderer);
 #else
