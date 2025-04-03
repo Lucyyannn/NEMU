@@ -62,8 +62,6 @@ size_t fs_filesz(int fd){
 
 ssize_t fs_read(int fd, void *buf, size_t len){
    Log("[in fs_write]  filename: %s ",file_table[fd].name);
-   assert(fd != FD_STDOUT && fd != FD_STDERR && fd != FD_STDIN);   // cases to ignore
-  assert(fd < NR_FILES);
   //prepare
   int real_len=0;
   off_t offset=0;
@@ -99,8 +97,6 @@ ssize_t fs_write(int fd, const void *buf, size_t len){
    Log("[in fs_write]  filename: %s ",file_table[fd].name);
   // Log("[in fs_write]  write len: %d \n",len);
   // Log("[in fs_write]  filesz: %d \n",fs_filesz(fd));
- assert(fd != FD_STDIN);
-  assert(fd < NR_FILES);
   switch(fd){
     case FD_STDOUT:
     case FD_STDERR:{
