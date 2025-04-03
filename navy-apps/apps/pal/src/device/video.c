@@ -1200,6 +1200,7 @@ VIDEO_FadeScreen(
             dstrect.h = screenRealHeight;
 
             SDL_SoftStretch(gpScreenBak, NULL, gpScreenReal, &dstrect);
+            Log("in video.c 1203 gpScreenReal:%d",gpScreenReal->pitch);
 #if SDL_VERSION_ATLEAST(2, 0, 0)
             SDL_UpdateTexture(gpTexture, NULL, gpScreenReal->pixels, gpScreenReal->pitch);
             SDL_RenderCopy(gpRenderer, gpTexture, NULL, NULL);
