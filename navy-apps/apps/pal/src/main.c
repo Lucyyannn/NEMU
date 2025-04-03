@@ -233,13 +233,9 @@ PAL_TrademarkScreen(
 --*/
 {
    PAL_SetPalette(3, FALSE);
-   Log("one!");
    PAL_RNGPlay(6, 0, 1000, 25);
-   Log("two!");
    UTIL_Delay(1000);
-   Log("333!");
    PAL_FadeOut(1);
-   Log("444!");
 }
 
 VOID
