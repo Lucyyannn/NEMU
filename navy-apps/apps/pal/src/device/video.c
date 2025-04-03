@@ -406,6 +406,8 @@ VIDEO_UpdateScreen(
    short           screenRealHeight = gpScreenReal->h;
    short           screenRealY = 0;
 
+   Log("in video.c 409    gp....: %d",gpScreenReal->w);
+
 #if SDL_VERSION_ATLEAST(2,0,0)
    if (g_bRenderPaused)
    {
