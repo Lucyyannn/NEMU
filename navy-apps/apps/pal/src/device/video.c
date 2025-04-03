@@ -408,6 +408,9 @@ VIDEO_UpdateScreen(
    short           screenRealY = 0;
 
    gpScreenReal->pitch = 320;
+   gpScreenReal->w=320;
+   gpScreenReal->h=200;
+   gpScreenReal->flags=1;
 
    Log("in video.c 409    gp....: %d",gpScreenReal);
 
