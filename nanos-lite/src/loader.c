@@ -1,6 +1,6 @@
 #include "common.h"
 
-#define DEFAULT_ENTRY ((void *)0x4000000)
+#define DEFAULT_ENTRY ((void *)0x8048000)
 
 int fs_open(const char *pathname, int flags, int mode);
 size_t fs_filesz(int fd);
