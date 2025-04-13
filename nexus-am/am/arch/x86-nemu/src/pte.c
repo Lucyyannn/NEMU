@@ -1,6 +1,10 @@
 #include <x86.h>
 
 #define PG_ALIGN __attribute((aligned(PGSIZE)))
+#define PAGE_SIZE 4096
+#define VADDR_DIR_OFFSET (32-10)
+#define VADDR_OFFSET_OFFSET (32-10)
+#define PTE_LEN 4
 
 static PDE kpdirs[NR_PDE] PG_ALIGN;
 static PTE kptabs[PMEM_SIZE / PGSIZE] PG_ALIGN;
@@ -66,6 +70,8 @@ void _switch(_Protect *p) {
 }
 
 void _map(_Protect *p, void *va, void *pa) {
+
+
 }
 
 void _unmap(_Protect *p, void *va) {

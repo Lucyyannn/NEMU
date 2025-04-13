@@ -1,6 +1,7 @@
 #include "common.h"
 
-#define DEFAULT_ENTRY ((void *)0x8048000)
+#define DEFAULT_ENTRY ((void *)0x4000000)
+#define PAGE_SIZE 4096
 
 int fs_open(const char *pathname, int flags, int mode);
 size_t fs_filesz(int fd);
@@ -9,10 +10,9 @@ int fs_close(int fd);
 
 
 uintptr_t loader(_Protect *as, const char *filename) {
-  int fd = fs_open("/bin/pal",0,0);
-  fs_read(fd,DEFAULT_ENTRY,fs_filesz(fd));
+  int fd = fs_open(filename,0,0);
+  fs_read(fd,(void*)DEFAULT_ENTRY,fs_filesz(fd));
 
   fs_close(fd);
-
   return (uintptr_t)DEFAULT_ENTRY;
 }
