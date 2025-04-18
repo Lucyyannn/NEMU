@@ -8,7 +8,7 @@ make_EHelper(mov) {
 make_EHelper(mov_cr){
   if(id_src->reg==0){
     operand_write(id_dest,&cpu.cr0);
-  }else if(id_src->reg==3){
+  }else if(id_src->reg==2){
     operand_write(id_dest,&cpu.cr3);
   }
   print_asm_template2(mov);
@@ -17,7 +17,7 @@ make_EHelper(mov_cr){
 make_EHelper(mov_rc){
   if(id_src->reg==0){
     cpu.cr0=id_src->val;
-  }else if(id_src->reg==3){
+  }else if(id_src->reg==2){
     cpu.cr3=id_src->val;
   }
   print_asm_template2(mov);
