@@ -44,6 +44,7 @@ paddr_t page_translate(vaddr_t vaddr,bool write){
   /*  P mode */
   Log("cr0.PG:%08X", cpu.cr0);
   if (!(cpu.cr0>>31)){
+    Log("[in page_translate] cr3: %08X, vaddr:%08X",cpu.cr3,vaddr);
     return (paddr_t)vaddr;
   }
   /* V mode */
