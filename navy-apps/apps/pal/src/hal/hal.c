@@ -135,7 +135,7 @@ void SDL_BlitSurface(SDL_Surface *src, SDL_Rect *srcrect,
 void SDL_FillRect(SDL_Surface *dst, SDL_Rect *dstrect, uint32_t color) {
   assert(dst);
   assert(color <= 0xff);
-Log("in hal.c 138  dstrect==NULL? %d",(dstrect==NULL));
+
   int dx = (dstrect == NULL ? 0 : dstrect->x);
   int dy = (dstrect == NULL ? 0 : dstrect->y);
   int w = (dstrect == NULL ? dst->w : dstrect->w);
@@ -195,8 +195,7 @@ void SDL_SetPalette(SDL_Surface *s, int flags, SDL_Color *colors,
 
 void SDL_UpdateRect(SDL_Surface *screen, int x, int y, int w, int h) {
   assert(screen);
-  printf("[in SDL_UpdateRect] screen->w: %d , screen->h: %d \n",screen->w,screen->h);
-  printf("[in SDL_UpdateRect] screen->pitch= %d ,but W= %d \n",screen->pitch,W);
+
   assert(screen->pitch == W);
 
   // this should always be true in NEMU-PAL
@@ -247,7 +246,7 @@ SDL_Surface* SDL_CreateRGBSurface(uint32_t flags, int width, int height, int dep
   s->w = width;
   s->h = height;
   s->pitch = (width * depth) >> 3;
-  printf("[in SDL_CreateRGBSurface] w: %d , h: %d , depth: %d ,pitch: %d \n",s->w,s->h,depth,s->pitch);
+
   s->pixels = (flags & SDL_HWSURFACE ? (void *)VMEM_ADDR : malloc(s->pitch * height));
   assert(s->pixels);
 
@@ -255,7 +254,7 @@ SDL_Surface* SDL_CreateRGBSurface(uint32_t flags, int width, int height, int dep
 }
 
 SDL_Surface* SDL_SetVideoMode(int width, int height, int bpp, uint32_t flags) {
-  printf("[in SDL_SetVideoMode] width: %d, depth: %d \n",width, bpp);
+
   return SDL_CreateRGBSurface(flags,  width, height, bpp,
       0x000000ff, 0x0000ff00, 0x00ff0000, 0xff000000);
 }
