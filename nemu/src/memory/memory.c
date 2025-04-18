@@ -51,14 +51,14 @@ paddr_t page_translate(vaddr_t vaddr,bool write){
   paddr_t PDE_addr = (paddr_t)(cpu.cr3 + PTE_LEN*PDX(vaddr));
   uint32_t PDE_read = paddr_read(PDE_addr,PTE_LEN);
   Log("[in page_translate] PDE_addr: %08X, PDE_read:%08X",PDE_addr,PDE_read);
-  //assert(PDE_read&PTE_P);// assert the PTE exists
+  assert(PDE_read&PTE_P);// assert the PTE exists
 
   paddr_write(PDE_addr,PTE_LEN,(PDE_read|PTE_A));//set Accessed
 
   //level 2
   paddr_t PTE_addr = PTE_ADDR(PDE_read) + PTE_LEN*PTX(vaddr);
   uint32_t PTE_read = paddr_read(PTE_addr,PTE_LEN);
-  //assert(PTE_read&PTE_P);
+  assert(PTE_read&PTE_P);
 
   uint8_t DA_bits = write?(PTE_A|PTE_D):(PTE_A);
   paddr_write(PTE_addr,PTE_LEN,(PTE_read|DA_bits));//set Accessed/Dirty
