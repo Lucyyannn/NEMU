@@ -110,7 +110,7 @@ uint32_t vaddr_read(vaddr_t addr, int len) {
 
 
 void vaddr_write(vaddr_t addr, int len, uint32_t data) {
-  int rest_size = PAGE_SIZE-1 - addr%PAGE_SIZE;
+  int rest_size = PAGE_SIZE-1 - addr%(PAGE_SIZE-1);
   if (rest_size<len) {
         int first_len = PAGE_SIZE-(addr%PAGE_SIZE);
         int second_len = len-first_len;
