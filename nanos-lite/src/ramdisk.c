@@ -13,7 +13,9 @@ extern uint8_t ramdisk_end;
 void ramdisk_read(void *buf, off_t offset, size_t len) {
   assert(offset + len <= RAMDISK_SIZE);
   memcpy(buf, &ramdisk_start + offset, len);
-  Log("loader: %s",(char*)buf);
+  uintptr_t content = (uintptr_t)buf;
+  //uint32_t content_c  = *content;
+  Log("loader: %08X",content);
 }
 
 /* write `len' bytes starting from `buf' into the `offset' of ramdisk */
