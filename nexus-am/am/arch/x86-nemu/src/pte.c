@@ -15,7 +15,7 @@ _Area segments[] = {      // Kernel memory mappings
 
 #define NR_KSEG_MAP (sizeof(segments) / sizeof(segments[0]))
 
-void _pte_init(void* (*palloc)(), void (*pfree)(void*)) {
+uint32_t _pte_init(void* (*palloc)(), void (*pfree)(void*)) {
   palloc_f = palloc;
   pfree_f = pfree;
 
@@ -46,6 +46,7 @@ void _pte_init(void* (*palloc)(), void (*pfree)(void*)) {
 
   set_cr3(kpdirs);
   set_cr0(get_cr0() | CR0_PG);
+  return (uint32_t)kpdirs;
 }
 
 void _protect(_Protect *p) {
