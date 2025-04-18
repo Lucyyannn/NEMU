@@ -101,7 +101,7 @@ int _istatus(int enable);
 // [3] Protection Extension (PTE)
 // =======================================================================
 
-uint32_t _pte_init(void*(*palloc)(), void (*pfree)(void*));
+void _pte_init(void*(*palloc)(), void (*pfree)(void*));
 void _protect(_Protect *p);
 void _release(_Protect *p);
 void _map(_Protect *p, void *va, void *pa);

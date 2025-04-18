@@ -23,7 +23,6 @@ void init_mm() {
   pf = (void *)PGROUNDUP((uintptr_t)_heap.start);
   Log("free physical pages starting from %p", pf);
 
-  uint32_t cr3=_pte_init(new_page, free_page);
-  Log("cr3: %08X",cr3);
+  _pte_init(new_page, free_page);
   Log("mm inited!");
 }

@@ -42,7 +42,7 @@ uint8_t pmem[PMEM_SIZE];
 
 paddr_t page_translate(vaddr_t vaddr,bool write){
   /*  P mode */
-  if (!cpu.PG){
+  if (!(cpu.cr0>>31)){
     return (paddr_t)vaddr;
   }
   /* V mode */
