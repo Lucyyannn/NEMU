@@ -40,11 +40,9 @@ static inline int load_default_img() {
     0xbb, 0x02, 0x00, 0x00, 0x00,        // 100012:  movl  $0x2,%ebx
     0x66, 0xc7, 0x84, 0x99, 0x00, 0xe0,  // 100017:  movw  $0x1,-0x2000(%ecx,%ebx,4)
     0xff, 0xff, 0x01, 0x00,
-    0xb8, 0x00, 0x00, 0x00, 0x00,        // 100021:  movl  $0x0,%eax
+    0xb8, 0x01, 0x00, 0x00, 0x00,        // 100021:  movl  $0x0,%eax
     0xd6,                                // 100026:  nemu_trap
   };
-  
-
 
   Log("No image is given. Use the default build-in image.");
 
@@ -84,15 +82,10 @@ static inline void load_img() {
 static inline void restart() {
   /* Set the initial instruction pointer. */
   cpu.eip = ENTRY_START;
-  cpu.eflags=0x2;
-  cpu.CS = 8;
-
-  cpu.idtr.base = 0;
-  cpu.idtr.limit = 0;
-
-  cpu.cr0 = 0x60000011;
-  cpu.cr3 = 0;
-  
+  cpu.eflags = 0x2;
+  cpu.idtr_base = 0x0;
+  cpu.idtr_limit = 0x0;
+  cpu.cs = 0x8;
 #ifdef DIFF_TEST
   init_qemu_reg();
 #endif
@@ -124,7 +117,7 @@ int init_monitor(int argc, char *argv[]) {
   init_log();
 
   /* Test the implementation of the `CPU_state' structure. */
-  reg_test();//test the regs
+  reg_test();//nemu/src/cpu/reg.c
 
 #ifdef DIFF_TEST
   /* Fork a child process to perform differential testing. */

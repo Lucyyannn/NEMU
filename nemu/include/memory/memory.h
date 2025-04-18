@@ -2,7 +2,7 @@
 #define __MEMORY_H__
 
 #include "common.h"
-
+#include "device/mmio.h"
 extern uint8_t pmem[];
 
 /* convert the guest physical address in the guest program to host virtual address in NEMU */
