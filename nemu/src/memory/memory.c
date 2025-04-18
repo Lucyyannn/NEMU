@@ -121,7 +121,6 @@ void vaddr_write(vaddr_t addr, int len, uint32_t data) {
         // paddr_write(paddr2,second_len,data2);
         // return ;
   }else {
-    Log("[in vaddr_write] vaddr: %08X ",addr);
         paddr_t paddr = page_translate(addr,true);
         paddr_write(paddr, len, data);
         return ;
