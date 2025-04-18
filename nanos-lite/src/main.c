@@ -15,6 +15,7 @@ void load_prog(const char *filename);
 int main() {
 #ifdef HAS_PTE
   init_mm();
+  Log("mm inited!");
 #endif
 
   Log("'Hello World!' from Nanos-lite");
@@ -33,6 +34,7 @@ int main() {
 
   // uint32_t entry = loader(NULL, "/bin/dummy");
   // ((void (*)(void))entry)();
+  printf("before load!\n");
 
   load_prog("/bin/dummy");
 
