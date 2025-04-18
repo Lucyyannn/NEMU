@@ -71,7 +71,7 @@ void _switch(_Protect *p) {
 
 void _map(_Protect *p, void *va, void *pa) {
   //the value of va and pa is already difinited. What I should do is to set the PDE and PTE to support the bridge
-  PDE* pde = (PDE*)p->ptr + PTE_LEN*PDX(va);
+  PDE* pde = (PDE*)(p->ptr + PTE_LEN*PDX(va));
   // (1)if PTE not exists
   if(!(*pde&PTE_P)){
     PTE* ptepage = (PTE*)palloc_f();//alloc a page for PTE
