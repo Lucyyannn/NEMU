@@ -21,7 +21,6 @@ uintptr_t loader(_Protect *as, const char *filename) {
     void* pa = new_page();
     fs_read(fd,pa,PAGE_SIZE);//load
     _map(as, va, pa);//record the reflection
-    Log("va: %08X, pa: %08X",va,pa);
     va+=PAGE_SIZE;
   }
   fs_close(fd);
