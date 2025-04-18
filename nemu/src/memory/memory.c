@@ -103,7 +103,6 @@ uint32_t vaddr_read(vaddr_t addr, int len) {
         // return readdata;
   }//data in one page
   else {
-    Log("[in vaddr_read] vaddr: %08X ",addr);
         paddr_t paddr = page_translate(addr,false);
         return paddr_read(paddr, len);
   }
