@@ -20,7 +20,7 @@ make_EHelper(mov_rc){
     cpu.cr0=id_src->val;
   }else if(id_src->reg==3){
     Log("srcval: %08X ,destval :%08X ",id_src->val,id_dest->val);
-    cpu.cr3=id_src->val;
+    cpu.cr3=id_dest->val;
   }
   print_asm_template2(mov);
 }
