@@ -89,14 +89,15 @@ ssize_t fs_read(int fd, void *buf, size_t len){
       break;
     }
   }
-  file_table[fd].open_offset += len;
-  return len;
+  file_table[fd].open_offset += real_len;
+  return real_len;
 }
 
 ssize_t fs_write(int fd, const void *buf, size_t len){
    //Log("[in fs_write]  filename: %s ",file_table[fd].name);
   // Log("[in fs_write]  write len: %d \n",len);
   // Log("[in fs_write]  filesz: %d \n",fs_filesz(fd));
+  int real_len=0;
   switch(fd){
     case FD_STDOUT:
     case FD_STDERR:{
@@ -110,7 +111,7 @@ ssize_t fs_write(int fd, const void *buf, size_t len){
       return i;
     }
     case FD_FB:{
-      int real_len = (int)file_table[fd].size-(int)file_table[fd].open_offset;
+      real_len = (int)file_table[fd].size-(int)file_table[fd].open_offset;
       if(real_len<=0){
         return 0;
       }else{
@@ -123,7 +124,7 @@ ssize_t fs_write(int fd, const void *buf, size_t len){
       break;
     }
     default:{
-      int real_len = file_table[fd].size-file_table[fd].open_offset;
+      real_len = file_table[fd].size-file_table[fd].open_offset;
       if(real_len<=0){
         return 0;
       }else{
@@ -135,8 +136,8 @@ ssize_t fs_write(int fd, const void *buf, size_t len){
       break;
     }
   }
-  file_table[fd].open_offset += len;
-  return len;
+  file_table[fd].open_offset += real_len;
+  return real_len;
 }
 
 

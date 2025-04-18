@@ -3,9 +3,18 @@
 
 #define PMEM_SIZE (128 * 1024 * 1024)
 #define PAGE_SIZE 4096
-#define VADDR_DIR_OFFSET (32-10)
-#define VADDR_OFFSET_OFFSET (32-10)
 #define PTE_LEN 4
+#define PGSHFT    12      // log2(PGSIZE)
+#define PTXSHFT   12      // Offset of PTX in a linear address
+#define PDXSHFT   22      // Offset of PDX in a linear address
+#define PDX(va)     (((uint32_t)(va) >> PDXSHFT) & 0x3ff)
+#define PTX(va)     (((uint32_t)(va) >> PTXSHFT) & 0x3ff)
+#define OFF(va)     ((uint32_t)(va) & 0xfff)
+#define PTE_ADDR(pte)   ((uint32_t)(pte) & ~0xfff)
+#define PTE_P     0x001     // Present
+#define PTE_A     0x020     // Accessed
+#define PTE_D     0x040     // Dirty
+
 
 #define pmem_rw(addr, type) *(type *)({\
     Assert(addr < PMEM_SIZE, "physical address(0x%08x) is out of bound", addr); \
@@ -31,23 +40,32 @@ uint8_t pmem[PMEM_SIZE];
 
  */
 
-// paddr_t page_translate(vaddr_t vaddr,bool write){
-//   // level 1
-//   paddr_t PDE_addr = cpu.cr3 + (vaddr>> VADDR_DIR_OFFSET);
-//   uint32_t PDE_read = paddr_read(PDE_addr,PTE_LEN);
-//   assert(PTE_read&1);
-//   paddr_t PTE_addr_base = (paddr_t)(PTE_read>>12);
-//   paddr_write(PDE_addr,1,16);//set Accessed
-//   //level 2
-//   paddr_t PTE_addr = PTE_addr_base + ((vaddr<<10)>>(32-10));
-//   uint32_t PTE_read = paddr_read(PTE_addr,PTE_LEN);
-//   assert(PTE_read&1);
-//   paddr_t PADDR_addr_base = (paddr_t)(PTE_read>>12);
-//   uint8_t DA_bits = write?48:16;
-//   paddr_write(PTE_addr,1,DA_bits);//set Accessed/Dirty
-//   //to paddr
-//   return (PADDR_addr_base+((vaddr<<VADDR_OFFSET_OFFSET)>>VADDR_OFFSET_OFFSET));
-// }
+paddr_t page_translate(vaddr_t vaddr,bool write){
+  /*  P mode */
+  if (!cpu.PG){
+    return (paddr_t)vaddr;
+  }
+  /* V mode */
+  // level 1
+  Log("[in page_translate] cr3: %08X, vaddr:%08X",cpu.cr3,vaddr);
+  paddr_t PDE_addr = (paddr_t)(cpu.cr3 + PTE_LEN*PDX(vaddr));
+  uint32_t PDE_read = paddr_read(PDE_addr,PTE_LEN);
+  Log("[in page_translate] PDE_addr: %08X, PDE_read:%08X",PDE_addr,PDE_read);
+  assert(PDE_read&PTE_P);// assert the PTE exists
+
+  paddr_write(PDE_addr,PTE_LEN,(PDE_read|PTE_A));//set Accessed
+
+  //level 2
+  paddr_t PTE_addr = PTE_ADDR(PDE_read) + PTE_LEN*PTX(vaddr);
+  uint32_t PTE_read = paddr_read(PTE_addr,PTE_LEN);
+  assert(PTE_read&PTE_P);
+
+  uint8_t DA_bits = write?(PTE_A|PTE_D):(PTE_A);
+  paddr_write(PTE_addr,sizeof(uint32_t),(PTE_read|DA_bits));//set Accessed/Dirty
+  
+  //to paddr
+  return (paddr_t)(PTE_ADDR(PTE_read)+OFF(vaddr));
+}
 
 /* Memory accessing interfaces */
 
@@ -72,14 +90,39 @@ void paddr_write(paddr_t addr, int len, uint32_t data) {
 }
 
 uint32_t vaddr_read(vaddr_t addr, int len) {
-
-  return paddr_read(addr, len);
-  
+  //data cross page
+  if ((addr/PAGE_SIZE)!=((addr+len)/PAGE_SIZE)) {
+        assert(0);
+        // int first_len = PAGE_SIZE-(addr%PAGE_SIZE);
+        // int second_len = len-fist_len;
+        // uint32_t readdata=0;
+        // paddr_t paddr1 = page_translate(addr,false);
+        // readdata = (paddr_read(paddr1,first_len)<<second_len);
+        // paddr_t paddr2 = page_translate(addr+first_len,false);
+        // readdata |= paddr_read(paddr2,second_len);
+        // return readdata;
+  }//data in one page
+  else {
+        paddr_t paddr = page_translate(addr,false);
+        return paddr_read(paddr, len);
+  }
 }
 
 void vaddr_write(vaddr_t addr, int len, uint32_t data) {
-
-    paddr_write(addr, len, data);
-    return ;
-  
+  if ((addr/PAGE_SIZE)!=((addr+len)/PAGE_SIZE)) {
+        assert(0);
+        // int first_len = PAGE_SIZE-(addr%PAGE_SIZE);
+        // int second_len = len-first_len;
+        // uint32_t data1 = data;
+        // uint32_t data2 = data<<first_len;
+        // paddr_t paddr1 = page_translate(addr1,true);
+        // paddr_write(paddr1,first_len,data1);
+        // paddr_t paddr2 = page_translate(addr1+first_len,true);
+        // paddr_write(paddr2,second_len,data2);
+        // return ;
+  }else {
+        paddr_t paddr = page_translate(addr,true);
+        paddr_write(paddr, len, data);
+        return ;
+  }
 }

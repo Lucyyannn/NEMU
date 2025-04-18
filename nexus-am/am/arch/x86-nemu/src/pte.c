@@ -2,8 +2,6 @@
 
 #define PG_ALIGN __attribute((aligned(PGSIZE)))
 #define PAGE_SIZE 4096
-#define VADDR_DIR_OFFSET (32-10)
-#define VADDR_OFFSET_OFFSET (32-10)
 #define PTE_LEN 4
 
 static PDE kpdirs[NR_PDE] PG_ALIGN;
@@ -29,7 +27,7 @@ void _pte_init(void* (*palloc)(), void (*pfree)(void*)) {
   }
 
   PTE *ptab = kptabs;
-  for (i = 0; i < NR_KSEG_MAP; i ++) {
+  for (i = 0; i < NR_KSEG_MAP; i ++) {//PGSIZE*NR_PTE=memory size of all PTs of each PD
     uint32_t pdir_idx = (uintptr_t)segments[i].start / (PGSIZE * NR_PTE);
     uint32_t pdir_idx_end = (uintptr_t)segments[i].end / (PGSIZE * NR_PTE);
     for (; pdir_idx < pdir_idx_end; pdir_idx ++) {
@@ -51,10 +49,11 @@ void _pte_init(void* (*palloc)(), void (*pfree)(void*)) {
 }
 
 void _protect(_Protect *p) {
-  PDE *updir = (PDE*)(palloc_f());
+  PDE *updir = (PDE*)(palloc_f());//alloc a Ppage for PDE
+
   p->ptr = updir;
   // map kernel space
-  for (int i = 0; i < NR_PDE; i ++) {
+  for (int i = 0; i < NR_PDE; i ++) { 
     updir[i] = kpdirs[i];
   }
 
@@ -70,8 +69,23 @@ void _switch(_Protect *p) {
 }
 
 void _map(_Protect *p, void *va, void *pa) {
+  //the value of va and pa is already difinited. What I should do is to set the PDE and PTE to support the bridge
+  PDE* pde = (PDE*)p->ptr + PTE_LEN*PDX(va);
+  // (1)if PTE not exists
+  if(!(*pde&PTE_P)){
+    PTE* ptepage = (PTE*)palloc_f();//alloc a page for PTE
+    *pde = PTE_ADDR(*ptepage)| PTE_P;// set the PTE value in PDE
 
+    PTE* pte = (PTE*)(PTE_ADDR(*pde)+PTE_LEN*PTX(va));
+    *pte = PTE_ADDR(pa) | PTE_P; //update PTE
+    return ;
 
+  }else{//(2)PTE exists
+    PTE* pte = (PTE*)(PTE_ADDR(pde)+PTE_LEN*PTX(va));
+    *pte = PTE_ADDR(pa) | PTE_P; //update PTE
+    return ;
+  }
+  return ;
 }
 
 void _unmap(_Protect *p, void *va) {
@@ -80,3 +94,4 @@ void _unmap(_Protect *p, void *va) {
 _RegSet *_umake(_Protect *p, _Area ustack, _Area kstack, void *entry, char *const argv[], char *const envp[]) {
   return NULL;
 }
+
