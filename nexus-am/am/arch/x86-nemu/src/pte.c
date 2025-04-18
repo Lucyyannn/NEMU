@@ -18,7 +18,7 @@ _Area segments[] = {      // Kernel memory mappings
 void _pte_init(void* (*palloc)(), void (*pfree)(void*)) {
   palloc_f = palloc;
   pfree_f = pfree;
-
+return ;
   int i;
 
   // make all PDEs invalid
