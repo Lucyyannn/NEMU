@@ -111,6 +111,7 @@ void vaddr_write(vaddr_t addr, int len, uint32_t data) {
   if ((addr/PAGE_SIZE)!=((addr+len)/PAGE_SIZE)) {
         int first_len = PAGE_SIZE-(addr%PAGE_SIZE);
         int second_len = len-first_len;
+        assert(second_len>0&&first_len>0);
         uint32_t data1 = (data<<(second_len*8))>>(second_len*8);
         uint32_t data2 = data>>(first_len*8);
         Log("data:%08X , data1:%08X , data2:%08X , first_len:%d ,len:%d",data,data1,data2,first_len,len);
@@ -120,7 +121,6 @@ void vaddr_write(vaddr_t addr, int len, uint32_t data) {
         paddr_write(paddr2,second_len,data2);
         return ;
   }else {
-        Log("yes!");
         paddr_t paddr = page_translate(addr,true);
         paddr_write(paddr, len, data);
         return ;
