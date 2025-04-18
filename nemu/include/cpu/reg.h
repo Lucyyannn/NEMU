@@ -60,8 +60,8 @@ typedef struct {
   rtlreg_t cr3;
   union{
     struct{
-      uint32_t PG :1;
       uint32_t    :30;
+      uint32_t PG   :1;
     };
     uint32_t cr0;
   };

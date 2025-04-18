@@ -8,7 +8,7 @@ size_t fs_filesz(int fd);
 ssize_t fs_read(int fd, void *buf, size_t len);
 int fs_close(int fd);
 void* new_page(void);
-
+void _map(_Protect *p, void *va, void *pa);
 
 uintptr_t loader(_Protect *as, const char *filename) {
   int fd = fs_open(filename,0,0);
