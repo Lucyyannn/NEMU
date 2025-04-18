@@ -33,6 +33,7 @@ int main() {
 
   // uint32_t entry = loader(NULL, "/bin/dummy");
   // ((void (*)(void))entry)();
+  assert(0);
   load_prog("/bin/dummy");
 
   panic("Should not reach here");
