@@ -47,18 +47,18 @@ paddr_t page_translate(vaddr_t vaddr,bool write){
   }
   /* V mode */
   // level 1
-  //Log("[in page_translate] cr3: %08X, vaddr:%08X",cpu.cr3,vaddr);
+  Log("[in page_translate] cr3: %08X, vaddr:%08X",cpu.cr3,vaddr);
   paddr_t PDE_addr = (paddr_t)(cpu.cr3 + PTE_LEN*PDX(vaddr));
   uint32_t PDE_read = paddr_read(PDE_addr,PTE_LEN);
-  //Log("[in page_translate] PDE_addr: %08X, PDE_read:%08X",PDE_addr,PDE_read);
-  //assert(PDE_read&PTE_P);// assert the PTE exists
+  Log("[in page_translate] PDE_addr: %08X, PDE_read:%08X",PDE_addr,PDE_read);
+  assert(PDE_read&PTE_P);// assert the PTE exists
 
   paddr_write(PDE_addr,PTE_LEN,(PDE_read|PTE_A));//set Accessed
 
   //level 2
   paddr_t PTE_addr = PTE_ADDR(PDE_read) + PTE_LEN*PTX(vaddr);
   uint32_t PTE_read = paddr_read(PTE_addr,PTE_LEN);
-  //assert(PTE_read&PTE_P);
+  assert(PTE_read&PTE_P);
 
   uint8_t DA_bits = write?(PTE_A|PTE_D):(PTE_A);
   paddr_write(PTE_addr,PTE_LEN,(PTE_read|DA_bits));//set Accessed/Dirty
@@ -113,6 +113,7 @@ void vaddr_write(vaddr_t addr, int len, uint32_t data) {
         int second_len = len-first_len;
         uint32_t data1 = data;
         uint32_t data2 = data>>first_len;
+        Log("data:%08X , data1:%08X , data2:%08X ",data,data1,data2);
         paddr_t paddr1 = page_translate(addr,true);
         paddr_write(paddr1,first_len,data1);
         paddr_t paddr2 = page_translate(addr+first_len,true);
