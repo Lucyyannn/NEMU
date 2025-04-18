@@ -47,10 +47,10 @@ paddr_t page_translate(vaddr_t vaddr,bool write){
   }
   /* V mode */
   // level 1
-  //Log("[in page_translate] cr3: %08X, vaddr:%08X",cpu.cr3,vaddr);
+  Log("[in page_translate] cr3: %08X, vaddr:%08X",cpu.cr3,vaddr);
   paddr_t PDE_addr = (paddr_t)(cpu.cr3 + PTE_LEN*PDX(vaddr));
   uint32_t PDE_read = paddr_read(PDE_addr,PTE_LEN);
-  //Log("[in page_translate] PDE_addr: %08X, PDE_read:%08X",PDE_addr,PDE_read);
+  Log("[in page_translate] PDE_addr: %08X, PDE_read:%08X",PDE_addr,PDE_read);
   assert(PDE_read&PTE_P);// assert the PTE exists
 
   paddr_write(PDE_addr,PTE_LEN,(PDE_read|PTE_A));//set Accessed
