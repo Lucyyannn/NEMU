@@ -18,14 +18,14 @@ _Area segments[] = {      // Kernel memory mappings
 void _pte_init(void* (*palloc)(), void (*pfree)(void*)) {
   palloc_f = palloc;
   pfree_f = pfree;
-return ;
+
   int i;
 
   // make all PDEs invalid
   for (i = 0; i < NR_PDE; i ++) {
     kpdirs[i] = 0;
   }
-
+return ;
   PTE *ptab = kptabs;
   for (i = 0; i < NR_KSEG_MAP; i ++) {//PGSIZE*NR_PTE=memory size of all PTs of each PD
     uint32_t pdir_idx = (uintptr_t)segments[i].start / (PGSIZE * NR_PTE);
