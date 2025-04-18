@@ -22,9 +22,8 @@ int mm_brk(uint32_t new_brk) {
   }
   else {
     if (new_brk > current->max_brk) {
-      // TODO: map memory region [current->max_brk, new_brk)
-      // into address space current->as
-      void *va_begin = (void *)((current->max_brk-1)&~0xfff) + PAGE_SIZE;
+      // map memory region [current->max_brk, new_brk)into address space current->as
+      void *va_begin = (void *)((current->max_brk-1)&~0xfff) ;//+ PAGE_SIZE;
       void *va_end = (void *)((new_brk-1)&~0xfff);
       void *va = va_begin;
       for(va = va_begin; va <= va_end; va += PAGE_SIZE){
