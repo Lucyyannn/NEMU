@@ -107,8 +107,11 @@ uint32_t vaddr_read(vaddr_t addr, int len) {
   }
 }
 // xiaoduan 
+
+
 void vaddr_write(vaddr_t addr, int len, uint32_t data) {
-  if ((addr/PAGE_SIZE)!=((addr+len)/PAGE_SIZE)) {
+  int rest_size = PAGE_SIZE - addr%PAGE_SIZE;
+  if (rest_size<len) {
         int first_len = PAGE_SIZE-(addr%PAGE_SIZE);
         int second_len = len-first_len;
         assert(second_len>0&&first_len>0);
