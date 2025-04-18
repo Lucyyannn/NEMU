@@ -45,8 +45,9 @@ void _pte_init(void* (*palloc)(), void (*pfree)(void*)) {
   }
 
   set_cr3(kpdirs);
-  set_cr0(get_cr0() | CR0_PG);
   return ;
+  set_cr0(get_cr0() | CR0_PG);
+  
 }
 
 void _protect(_Protect *p) {
