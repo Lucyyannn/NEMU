@@ -90,10 +90,13 @@ void paddr_write(paddr_t addr, int len, uint32_t data) {
 }
 
 uint32_t vaddr_read(vaddr_t addr, int len) {
+   int rest_size = 4096 - addr%4096;
   //data cross page
-  if ((addr/PAGE_SIZE)!=((addr+len)/PAGE_SIZE)) {
-        int first_len = PAGE_SIZE-(addr%PAGE_SIZE);
+  if (rest_size<len) {
+        int first_len = rest_size;
         int second_len = len-first_len;
+        assert(first_len>0&&second_len>0);
+
         uint32_t readdata=0;
         paddr_t paddr1 = page_translate(addr,false);
         readdata = paddr_read(paddr1,first_len);//lower bits
@@ -115,6 +118,7 @@ void vaddr_write(vaddr_t addr, int len, uint32_t data) {
         int first_len = rest_size;
         int second_len = len-first_len;
         assert(second_len>0&&first_len>0);
+        
         uint32_t data1 = (data<<(second_len*8))>>(second_len*8);
         uint32_t data2 = data>>(first_len*8);
         Log("data:%08X , data1:%08X , data2:%08X , first_len:%d ,len:%d",data,data1,data2,first_len,len);
