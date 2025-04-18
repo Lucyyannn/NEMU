@@ -37,8 +37,9 @@ void *_sbrk(intptr_t increment){
   if(_syscall_(SYS_brk,new_programbreak,(uintptr_t)0,(uintptr_t)0)!=0){
     return (void*)-1;
   }
+  uintptr_t old = programbreak;
   programbreak = new_programbreak;
-  return (void*)programbreak;
+  return (void*)old;
 }
 
 int _read(int fd, void *buf, size_t count) {

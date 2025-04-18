@@ -63,16 +63,17 @@ make_EHelper(leave) {
   print_asm("leave");
 }
 
+//cltd and cwtl : uint32_t : cannot judge its sign by <0 / >0
 make_EHelper(cltd) {
   if (decoding.is_operand_size_16) {
-    if(reg_w(0)<0){
+    if((int)reg_w(0)<0){
       cpu.gpr[2]._16 = 0xFFFF;
     }else{
       cpu.gpr[2]._16 = 0;
     }
   }
   else {
-    if(reg_l(0)<0){
+    if((int)reg_l(0)<0){
       cpu.edx=0xFFFFFFFF;
     }else{
       cpu.edx=0;
@@ -87,7 +88,7 @@ make_EHelper(cwtl) {
     TODO();
   }
   else {
-    if(reg_w(0)<0){
+    if((int)reg_w(0)<0){
       cpu.gpr[2]._16 = 0xFFFF;
     }else{
       cpu.gpr[2]._16 = 0;
