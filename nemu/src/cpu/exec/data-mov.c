@@ -11,17 +11,17 @@ make_EHelper(mov_cr){
   }else if(id_src->reg==3){
     operand_write(id_dest,&cpu.cr3);
   }
-  print_asm_template2(movrc);
+  print_asm_template2(mov);
 }
 
 make_EHelper(mov_rc){
   if(id_dest->reg==0){
     cpu.cr0=id_src->val;
-  }else if(id_src->reg==3){
+  }else if(id_dest->reg==3){
     Log("the value to set cr3: %08X ",id_src->val);
     cpu.cr3=id_src->val;
   }
-  print_asm_template2(movcr);
+  print_asm_template2(mov);
 }
 
 
