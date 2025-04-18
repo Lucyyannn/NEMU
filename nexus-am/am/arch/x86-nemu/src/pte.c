@@ -82,7 +82,7 @@ void _map(_Protect *p, void *va, void *pa) {
     return ;
 
   }else{//(2)PTE exists
-    PTE* pte = (PTE*)(PTE_ADDR(pde)+PTE_LEN*PTX(va));
+    PTE* pte = (PTE*)(PTE_ADDR(*pde)+PTE_LEN*PTX(va));
     *pte = PTE_ADDR(pa) | PTE_P; //update PTE
     return ;
   }
