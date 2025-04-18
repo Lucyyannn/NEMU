@@ -61,7 +61,7 @@ paddr_t page_translate(vaddr_t vaddr,bool write){
   assert(PTE_read&PTE_P);
 
   uint8_t DA_bits = write?(PTE_A|PTE_D):(PTE_A);
-  paddr_write(PTE_addr,sizeof(uint32_t),(PTE_read|DA_bits));//set Accessed/Dirty
+  paddr_write(PTE_addr,PTE_LEN,(PTE_read|DA_bits));//set Accessed/Dirty
   
   //to paddr
   return (paddr_t)(PTE_ADDR(PTE_read)+OFF(vaddr));
@@ -121,6 +121,7 @@ void vaddr_write(vaddr_t addr, int len, uint32_t data) {
         // paddr_write(paddr2,second_len,data2);
         // return ;
   }else {
+    Log("[in vaddr_write] vaddr: %08X ",addr);
         paddr_t paddr = page_translate(addr,true);
         paddr_write(paddr, len, data);
         return ;
