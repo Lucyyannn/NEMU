@@ -17,10 +17,10 @@ make_EHelper(mov_cr){
 make_EHelper(mov_rc){
   Log("id_dest->reg: %d, id_src->reg: %d",id_dest->reg,id_src->reg);
   if(id_src->reg==0){
-    cpu.cr0=id_dest->val;
+    cpu.cr0=id_src->val;
   }else if(id_src->reg==3){
-    //Log("the value to set cr3: %08X ",id_src->val);
-    cpu.cr3=id_dest->val;
+    Log("the value to set cr3: %08X ",id_src->val);
+    cpu.cr3=id_src->val;
   }
   print_asm_template2(mov);
 }
