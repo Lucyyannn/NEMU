@@ -24,6 +24,7 @@ void load_prog(const char *filename) {
   stack.end = stack.start + sizeof(pcb[i].stack);
 
   pcb[i].tf = _umake(&pcb[i].as, stack, stack, (void *)entry, NULL, NULL);
+  Log("pcb[%d]: cr3: %08X, tf: %08X",i,(uintptr_t)pcb[i].as.ptr,(uintptr_t)pcb[i].tf);
 }
 
 static int ratio = 0;
@@ -34,7 +35,7 @@ _RegSet* schedule(_RegSet *prev) {
   // always select pcb[0] as the new process
   // take 0 and 1 
 
-  Log(" a schedule!");
+ // Log(" a schedule!");
   current = &pcb[0];
   _switch(&pcb[0].as);
   return (pcb[0].tf);
