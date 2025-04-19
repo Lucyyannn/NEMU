@@ -137,7 +137,7 @@ int init_monitor(int argc, char *argv[]) {
   init_regex();
 
   /* Initialize the watchpoint pool. */
-  init_wp_pool();
+ // init_wp_pool();
 
   /* Initialize devices. */
   init_device();
