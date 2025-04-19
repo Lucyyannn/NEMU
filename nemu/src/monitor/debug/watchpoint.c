@@ -1,8 +1,11 @@
 #include "monitor/watchpoint.h"
 #include "monitor/expr.h"
+#include "monitor/monitor.h"
 
-WP wp_pool[NR_WP];
-WP *head, *free_;
+#define NR_WP 32
+
+static WP wp_pool[NR_WP];
+static WP *head, *free_;
 
 void init_wp_pool() {
   int i;
@@ -17,43 +20,73 @@ void init_wp_pool() {
 }
 
 /* TODO: Implement the functionality of watchpoint */
-WP* new_wp(){
-  assert(free_!=NULL);
-  WP* wp=free_;
-  free_ = free_->next;
-  wp->next = NULL;
 
-  wp->next = head;
-  head = wp;
-  return head;
-};
-void free_wp(WP *wp){
-  assert(head!=NULL);
-  if(head->next==NULL){
-    if(head->NO==wp->NO){
-      head = NULL;
-    }else{
-      assert(0);
-    }
-  }else{
-    if(head->NO==wp->NO){
-      head = head->next;
-    }else{
-      WP* curr_pre = head;
-      WP* curr = head->next;
-      while(curr!=NULL){
-        if(curr->NO==wp->NO){
-          curr_pre->next = curr->next;
-          break;
-        }else{
-          curr_pre = curr;
-          curr = curr->next;
-        }
-      }
-      assert(curr!=NULL);
-    }
+// add a new node to the list, at the beginning
+void add_to_list(WP* list,WP* newnode){
+  if(list==NULL){
+    list=newnode;
+    list->next=NULL;
+    return;
   }
-  wp->next = free_;
-  free_ = wp;
-};
+  newnode->next=list;
+  list=newnode;
+  return;
+}
+
+// release a node from free_ at the beginning
+WP* new_wp(){
+  if(free_!=NULL){
+    WP* des=free_; // release from free_
+    free_=free_->next;
+
+    des->next=head;//add to head
+    head=des;
+
+    return des;
+  }
+  assert(0);
+}
+// wp-->free_
+void free_wp(int number){
+  WP* temp = head;
+  // if wp is the head
+  if(temp->NO==number){
+    head=head->next;// release
+    add_to_list(free_,temp);//add
+    return;
+  }
+  //else
+  WP* pre = head;
+  temp=temp->next;
+  while(temp!=NULL){
+    if(temp->NO==number){
+      pre->next=temp->next;//release
+      add_to_list(free_,temp);//add
+      return ;
+    }
+    // ++ 
+    pre=temp;
+    temp=temp->next;
+  }
+  panic("the wp to free cannot be found!");
+  return ;
+}
+
+//print the information of all the watchpoints, to debug
+void print_wp_pool_info(){
+  printf("watchpoints: \n");
+  if(w_nr==0){
+    printf("No watchpoints.\n");
+    return ;
+  }
+  for(int i=0;i<w_nr;++i){
+    bool success=true;
+    uint32_t value = expr(w_tokens[i],&success);
+    printf("NO: %d , EXPRESSION: %s , value: %d ,",i,w_tokens[i],value);
+    printf("hex: 0X%08X \n",value);
+  } 
+  return ;
+}
+
+
 

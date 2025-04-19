@@ -1,4 +1,3 @@
-
 #include "nemu.h"
 #include "device/mmio.h"
 
@@ -43,7 +42,7 @@ uint8_t pmem[PMEM_SIZE];
 
 paddr_t page_translate(vaddr_t vaddr,bool write){
   /*  P mode */
-  if (!(cpu.cr0>>31)){
+  if (!cpu.PG){
     return (paddr_t)vaddr;
   }
   /* V mode */
