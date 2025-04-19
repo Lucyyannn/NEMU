@@ -27,7 +27,9 @@ void load_prog(const char *filename) {
   Log("pcb[%d]: cr3: %08X, tf: %08X",i,(uintptr_t)pcb[i].as.ptr,(uintptr_t)pcb[i].tf);
 }
 
+int current_game = 0;
 //static int ratio = 0;
+
 _RegSet* schedule(_RegSet *prev) {
   // save the context pointer
   current->tf = prev;
@@ -36,7 +38,7 @@ _RegSet* schedule(_RegSet *prev) {
   // take 0 and 1 
 
  // Log(" a schedule!");
-  current = (current==&pcb[0])?&pcb[1]:&pcb[0];
+  current = (current==&pcb[current_game])?&pcb[1]:&pcb[current_game];
   _switch(&current->as);
 
   //Log("pcb[0] cr3: %08X, tf: %08X",(uintptr_t)pcb[0].as.ptr,(uintptr_t)pcb[0].tf);
@@ -44,30 +46,4 @@ _RegSet* schedule(_RegSet *prev) {
 
   return (current->tf);
 
-
-  // TODO: switch to the new address space,
-  // then return the new context
-  // if(current==&pcb[0]){
-  //   if(ratio==100000){ratio=0;}
-  //   ++ratio;
-  //   _switch(&pcb[0].as);
-  //   return (pcb[0].tf);
-  // }else if(current==&pcb[1]){
-  //   _switch(&pcb[1].as);
-  //   return (pcb[1].tf);
-  // }
-
-
-  // current =((current == &pcb[0]) ? &pcb[1] : &pcb[0]);
-
-  // // TODO: switch to the new address space,
-  // // then return the new context
-  // if(current==&pcb[0]){
-  //   _switch(&pcb[0].as);
-  //   return (pcb[0].tf);
-  // }else if(current==&pcb[1]){
-  //   _switch(&pcb[1].as);
-  //   return (pcb[1].tf);
-  // }
-  return NULL;
 }
