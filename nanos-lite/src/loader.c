@@ -20,7 +20,7 @@ uintptr_t loader(_Protect *as, const char *filename) {
   for(int i=0;i<page_num;i++){
     void* pa = new_page();
     fs_read(fd,pa,PAGE_SIZE);//load
-    Log("load file: %s , at physical addr: %08X",filename,pa);
+    //Log("load file: %s , at physical addr: %08X",filename,pa);
     _map(as, va, pa);//record the reflection
     va+=PAGE_SIZE;
   }
