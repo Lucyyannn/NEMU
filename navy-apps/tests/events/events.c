@@ -16,7 +16,7 @@ int main(){
         }
       }
 
-      printf("receive event: %s\n", buf);
+      printf("receive event: %s", buf);
       j = 0;
     }
   }

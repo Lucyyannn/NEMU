@@ -111,6 +111,17 @@ PAL_Init(
    {
       TerminateOnError("Could not initialize Video: %d.\n", e);
    }
+   // Log("float start!");
+   // int mhy1,mhy2,mhy3;
+   // mhy1=-0;
+   // mhy2=4;
+   // mhy3=-2;
+   // FLOAT f1,f2,f3;
+   // f1=int2F(mhy1);
+   // f2=int2F(mhy2);
+   // f3=int2F(mhy3);
+   // Log("%x",int2F(0));
+   // Log("%x",int2F(-0));
 
    Log("VIDEO_Init success");
    SDL_WM_SetCaption("Loading...", NULL);
@@ -148,7 +159,6 @@ PAL_Init(
    PAL_InitResources();
    Log("PAL_InitResources success");
    SOUND_OpenAudio();
-
 
 #ifdef PAL_WIN95
 #ifdef _DEBUG
@@ -555,9 +565,8 @@ main_loop() {
    //
    // TODO: should we display these?
    PAL_TrademarkScreen();
-
    PAL_SplashScreen();
-  
+
    //
    // Run the main game routine
    //

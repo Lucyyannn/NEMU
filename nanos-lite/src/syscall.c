@@ -1,65 +1,55 @@
 #include "common.h"
 #include "syscall.h"
-#include "fs.h"
 
-int mm_brk(uint32_t new_brk) ;
+
+uintptr_t sys_none(){
+  return 1;
+}
+
+uintptr_t sys_exit(int status){
+  _halt(status);
+  panic("Not reach here!");
+  return 1;
+}
+
+int mm_brk(uint32_t new_brk);
+
+int fs_open(const char *pathname, int flags, int mode);
+ssize_t fs_read(int fd, void *buf, size_t len);
 ssize_t fs_write(int fd, const void *buf, size_t len);
 off_t fs_lseek(int fd, off_t offset, int whence);
-ssize_t fs_read(int fd, void *buf, size_t len);
-int fs_open(const char *pathname, int flags, int mode);
 int fs_close(int fd);
 
 _RegSet* do_syscall(_RegSet *r) {
   uintptr_t a[4];
   a[0] = SYSCALL_ARG1(r);
-  a[1] = SYSCALL_ARG2(r);
-  a[2] = SYSCALL_ARG3(r);
-  a[3] = SYSCALL_ARG4(r);
-
   switch (a[0]) {
-    case 0://SYS_none
-      r->eax = 1;
+    case SYS_none:
+      SYSCALL_ARG1(r) = sys_none();
       break;
-
-    case 1:{//SYS_open
-      r->eax = fs_open((const char*)a[1],(int)a[2],(int)a[3]);
+    case SYS_open:
+      SYSCALL_ARG1(r) = fs_open((char*)SYSCALL_ARG2(r),SYSCALL_ARG3(r),SYSCALL_ARG4(r));
       break;
-    }
-
-    case 2:{//SYS_read
-      r->eax = fs_read((int)a[1],(char*)a[2],(ssize_t)a[3]);
+    case SYS_read:
+      SYSCALL_ARG1(r) = fs_read(SYSCALL_ARG2(r),(void*)SYSCALL_ARG3(r),SYSCALL_ARG4(r));
       break;
-    }
-
-    case 3:{//SYS_write
-      r->eax = fs_write((int)a[1],(const void*)a[2],(ssize_t)a[3]);
+    case SYS_write:
+      SYSCALL_ARG1(r) = fs_write(SYSCALL_ARG2(r),(void*)SYSCALL_ARG3(r),SYSCALL_ARG4(r));
       break;
-    }
-
-    case 4:{//SYS_exit
-      _halt(a[1]); 
-      r->eax = 1;
+    case SYS_exit:
+      SYSCALL_ARG1(r) = sys_exit(SYSCALL_ARG2(r));
       break;
-    }
-
-    case 7:{//SYS_close
-      r->eax = fs_close((int)a[1]);
+    case SYS_close:
+      SYSCALL_ARG1(r) = fs_close(SYSCALL_ARG2(r));
       break;
-
-    }
-    case 8:{//SYS_lseek
-      r->eax = fs_lseek((int)a[1],(off_t)a[2],(int)a[3]);
+    case SYS_lseek:
+      SYSCALL_ARG1(r) = fs_lseek(SYSCALL_ARG2(r),SYSCALL_ARG3(r),SYSCALL_ARG4(r));
       break;
-    }
-
-    case 9:{//SYS_brk
-      r->eax = mm_brk(a[1]);//always return 0
+    case SYS_brk:
+      SYSCALL_ARG1(r) = mm_brk(SYSCALL_ARG2(r));
       break;
-    }
-
-    default: 
-      panic("Unhandled syscall ID = %d", a[0]);
+    default: panic("Unhandled syscall ID = %d", a[0]);
   }
-
-  return NULL;
+  return r;
 }
+
