@@ -25,7 +25,7 @@ void load_prog(const char *filename) {
 
   pcb[i].tf = _umake(&pcb[i].as, stack, stack, (void *)entry, NULL, NULL);
 }
-
+static int ratio = 0;
 _RegSet* schedule(_RegSet *prev) {
   // save the context pointer
   current->tf = prev;
@@ -33,7 +33,7 @@ _RegSet* schedule(_RegSet *prev) {
   // always select pcb[0] as the new process
   // take 0 and 1 
 
-  int ratio = 0;
+  
   current = &pcb[0];
 
   // TODO: switch to the new address space,
