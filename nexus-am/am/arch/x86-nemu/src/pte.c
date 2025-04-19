@@ -77,12 +77,12 @@ void _map(_Protect *p, void *va, void *pa) {
     PTE* ptepage = (PTE*)palloc_f();//alloc a page for PTE
     *pde = PTE_ADDR(*ptepage)| PTE_P;// set the PTE value in PDE
 
-    PTE* pte = (PTE*)(PTE_ADDR(*pde)+ PTE_LEN*PTX(va));
+    PTE* pte = ptepage + PTX(va);
     *pte = PTE_ADDR(pa) | PTE_P; //update PTE
     return ;
 
   }else{//(2)PTE exists
-    PTE* pte = (PTE*)(PTE_ADDR(*pde)+PTE_LEN*PTX(va));
+    PTE* pte = (PTE*)PTE_ADDR(*pde)+PTX(va);
     *pte = PTE_ADDR(pa) | PTE_P; //update PTE
     return ;
   }
