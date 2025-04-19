@@ -24,23 +24,24 @@ void rtl_setcc(rtlreg_t* dest, uint8_t subcode) {
       rtl_get_ZF(dest);
       break;
     case CC_BE:
-      rtl_get_ZF(&t0);
-      rtl_get_CF(&t1);
-      *dest = t0 | t1;
+      rtl_get_CF(&t2);
+      rtl_get_ZF(&t3);
+      rtl_or(dest,&t2,&t3);
       break;
     case CC_S:
       rtl_get_SF(dest);
       break;
     case CC_L:
-      rtl_get_SF(&t0);
-      rtl_get_OF(&t1);
-      *dest = (t0 != t1);
+      rtl_get_SF(&t2);
+      rtl_get_OF(&t3);
+      rtl_xor(dest,&t2,&t3);
       break;
-    case CC_LE: //less or equal : ZF==1 || SF!=OF
-      rtl_get_SF(&t0);
-      rtl_get_OF(&t1);
-      rtl_get_ZF(&t2);
-      *dest = ((t2==1)||(t0 != t1));
+    case CC_LE:
+      rtl_get_SF(&t2);
+      rtl_get_OF(&t3);
+      rtl_xor(dest,&t2,&t3);
+      rtl_get_ZF(&t3);
+      rtl_or(dest,dest,&t3);
       break;
     default: panic("should not reach here");
     case CC_P: panic("n86 does not have PF");

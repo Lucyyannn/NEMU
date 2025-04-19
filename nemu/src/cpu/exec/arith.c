@@ -1,134 +1,114 @@
 #include "cpu/exec.h"
 
 make_EHelper(add) {
-  rtl_add(&t2, &id_dest->val, &id_src->val);//t2=dest+src
-  rtl_sltu(&t3, &t2, &id_dest->val);//t3=1(t2<dest, ji carry), otherwise 0
-  operand_write(id_dest, &t2);//WB
-  
-  rtl_update_ZFSF(&t2, id_dest->width);
+  rtl_add(&t2,&id_dest->val,&id_src->val);
+  rtl_sltu(&t3, &t2, &id_dest->val);
   rtl_set_CF(&t3);
-  
 
-  rtl_xor(&t0, &id_dest->val, &id_src->val);//requirement 1: have the same sign
+  operand_write(id_dest, &t2);
+  rtl_update_ZFSF(&t2, id_dest->width);
+
+  rtl_xor(&t0, &id_dest->val, &id_src->val);
   rtl_not(&t0);
-  rtl_xor(&t1, &id_dest->val, &t2);//requirement 2: dest and sum have different sign
-  rtl_and(&t0, &t0, &t1);//both 1 and 2 satisfied
+  rtl_xor(&t1, &id_dest->val, &t2);
+  rtl_and(&t0, &t0, &t1);
   rtl_msb(&t0, &t0, id_dest->width);
   rtl_set_OF(&t0);
-  
   print_asm_template2(add);
 }
 
 make_EHelper(sub) {
-  rtl_sub(&t2, &id_dest->val, &id_src->val);//t2=dest-src
-  rtl_sltu(&t3, &id_dest->val, &t2); //t3=1 if jiewei else 0
-  operand_write(id_dest, &t2);//WB
-
-  rtl_update_ZFSF(&t2, id_dest->width);
+  rtl_sub(&t2, &id_dest->val, &id_src->val);
+  rtl_sltu(&t3, &id_dest->val, &t2);
   rtl_set_CF(&t3);
 
-  rtl_xor(&t0, &id_dest->val, &id_src->val);// msb(t0)=1 if dest and src have different sign (r1)
-  rtl_xor(&t1, &id_dest->val, &t2);//msb(t1)=1 if dest and t2 have different sign (r2)
-  rtl_and(&t0, &t0, &t1);//both 1 and 2 satisfied
+  operand_write(id_dest, &t2);
+  rtl_update_ZFSF(&t2, id_dest->width);
+
+  rtl_xor(&t0, &id_dest->val, &id_src->val);
+  rtl_xor(&t1, &id_dest->val, &t2);
+  rtl_and(&t0, &t0, &t1);
   rtl_msb(&t0, &t0, id_dest->width);
   rtl_set_OF(&t0);
-
   print_asm_template2(sub);
 }
 
 make_EHelper(cmp) {
-  rtl_sub(&t2,&id_dest->val,&id_src->val);// t2 stores the result
-  
-  rtl_update_ZFSF(&t2, id_dest->width);
-
-  rtl_sltu(&t3, &id_dest->val, &t2); //t3=1 if jiewei else 0
+  rtl_sub(&t2, &id_dest->val, &id_src->val);
+  rtl_sltu(&t3, &id_dest->val, &t2);
   rtl_set_CF(&t3);
 
-  //OF: the first code is above
-  rtl_xor(&t0, &id_dest->val, &id_src->val);// msb(t0)=1 if dest and src have different sign (r1)
-  rtl_xor(&t1, &id_dest->val, &t2);//msb(t1)=1 if dest and t2 have different sign (r2)
-  rtl_and(&t0, &t0, &t1);//both 1 and 2 satisfied
+  rtl_update_ZFSF(&t2, id_dest->width);
+
+  rtl_xor(&t0, &id_dest->val, &id_src->val);
+  rtl_xor(&t1, &id_dest->val, &t2);
+  rtl_and(&t0, &t0, &t1);
   rtl_msb(&t0, &t0, id_dest->width);
   rtl_set_OF(&t0);
-
-
   print_asm_template2(cmp);
 }
 
 make_EHelper(inc) {
-  rtl_addi(&t2,&id_dest->val,1);
-  rtl_sltu(&t3, &t2, &id_dest->val);
-  operand_write(id_dest,&t2);
-
+  t3 = 1;
+  rtl_add(&t2,&id_dest->val,&t3);
+  operand_write(id_dest, &t2);
   rtl_update_ZFSF(&t2, id_dest->width);
 
-  rtl_set_CF(&t3);
-
-  rtl_msb(&t0,&id_dest->val,id_dest->width);
-  rtl_msb(&t1,&t0,id_dest->width);
-  if(t0==0&&t1==1){
-    rtl_set_OF(&t0);
-  }
+  rtl_xor(&t0, &id_dest->val, &t3);
+  rtl_not(&t0);
+  rtl_xor(&t1, &id_dest->val, &t2);
+  rtl_and(&t0, &t0, &t1);
+  rtl_msb(&t0, &t0, id_dest->width);
+  rtl_set_OF(&t0);
 
   print_asm_template1(inc);
 }
 
 make_EHelper(dec) {
-  rtl_subi(&t2,&id_dest->val,1);
-  rtl_sltu(&t3, &id_dest->val,&t2);
-  operand_write(id_dest,&t2);
-
+  t3 = 1;
+  rtl_sub(&t2, &id_dest->val, &t3);
+  operand_write(id_dest, &t2);
   rtl_update_ZFSF(&t2, id_dest->width);
 
-  rtl_set_CF(&t3);
-
-  rtl_msb(&t0,&id_dest->val,id_dest->width);
-  rtl_msb(&t1,&t0,id_dest->width);
-  if(t0==1&&t1==0){
-    rtl_set_OF(&t1);
-  }
+  rtl_xor(&t0, &id_dest->val, &t3);
+  rtl_xor(&t1, &id_dest->val, &t2);
+  rtl_and(&t0, &t0, &t1);
+  rtl_msb(&t0, &t0, id_dest->width);
+  rtl_set_OF(&t0);
 
   print_asm_template1(dec);
 }
 
 make_EHelper(neg) {
-  int rmval=id_dest->val;
-  int negval = -rmval;
-  t2 = negval;
+  rtl_neq0(&t3,&id_dest->val);
+  rtl_set_CF(&t3);
+
+  rtl_mv(&t2,&id_dest->val);
+  t2 = 0-t2;
   operand_write(id_dest,&t2);
-
-  //set SF ZF
   rtl_update_ZFSF(&t2,id_dest->width);
-  //set CF
-  t0 = (rmval==0)?0:1;
-  rtl_set_CF(&t0);
-  //set OF  OF= (msb(result)==msb(val))
-  rtl_msb(&t1,&t2,id_dest->width);
-  rtl_msb(&t0,&id_dest->val,id_dest->width);
-  t0 = (t1==t0);
-  rtl_set_OF(&t0);
-  
-
+  rtl_xor(&t2,&t2,&id_dest->val);
+  rtl_not(&t2);
+  rtl_and(&t2,&t2,&t3);
+  rtl_set_OF(&t2);
   print_asm_template1(neg);
 }
 
+make_EHelper(adc) {
+  rtl_add(&t2, &id_dest->val, &id_src->val);
+  rtl_sltu(&t3, &t2, &id_dest->val);
+  rtl_get_CF(&t1);
+  rtl_add(&t2, &t2, &t1);
+  operand_write(id_dest, &t2);
 
-// if t2<dest, carry
-make_EHelper(adc) {//dest+src+CF
-  rtl_add(&t2, &id_dest->val, &id_src->val);//t2=dest+src
-  rtl_sltu(&t3, &t2, &id_dest->val);//t3=1(t2<dest, ji carry), otherwise 0
-  rtl_get_CF(&t1);//t1(CF)
-  rtl_add(&t2, &t2, &t1);//t2=t2+t1
-  operand_write(id_dest, &t2);//WB
-  
   rtl_update_ZFSF(&t2, id_dest->width);
-  // then: t2=id_dest= dest+src+CF
-  rtl_sltu(&t0, &t2, &id_dest->val);//t0=1 or 0 [0]  //now id_dest->val!=id_dest
-  rtl_or(&t0, &t3, &t0);//t0 = t3|t0
+
+  rtl_sltu(&t0, &t2, &id_dest->val);
+  rtl_or(&t0, &t3, &t0);
   rtl_set_CF(&t0);
 
   rtl_xor(&t0, &id_dest->val, &id_src->val);
-  rtl_not(&t0); // if dest and src have the same sign, the msb(t0)==1
+  rtl_not(&t0);
   rtl_xor(&t1, &id_dest->val, &t2);
   rtl_and(&t0, &t0, &t1);
   rtl_msb(&t0, &t0, id_dest->width);
@@ -138,11 +118,11 @@ make_EHelper(adc) {//dest+src+CF
 }
 
 make_EHelper(sbb) {
-  rtl_sub(&t2, &id_dest->val, &id_src->val);//t2=dest-src
-  rtl_sltu(&t3, &id_dest->val, &t2); //t3=1 if jiewei else 0
+  rtl_sub(&t2, &id_dest->val, &id_src->val);
+  rtl_sltu(&t3, &id_dest->val, &t2);
   rtl_get_CF(&t1);
   rtl_sub(&t2, &t2, &t1);
-  operand_write(id_dest, &t2);//WB
+  operand_write(id_dest, &t2);
 
   rtl_update_ZFSF(&t2, id_dest->width);
 
@@ -150,9 +130,9 @@ make_EHelper(sbb) {
   rtl_or(&t0, &t3, &t0);
   rtl_set_CF(&t0);
 
-  rtl_xor(&t0, &id_dest->val, &id_src->val);// msb(t0)=1 if dest and src have different sign (r1)
-  rtl_xor(&t1, &id_dest->val, &t2);//msb(t1)=1 if dest and t2 have different sign (r2)
-  rtl_and(&t0, &t0, &t1);//both 1 and 2 satisfied
+  rtl_xor(&t0, &id_dest->val, &id_src->val);
+  rtl_xor(&t1, &id_dest->val, &t2);
+  rtl_and(&t0, &t0, &t1);
   rtl_msb(&t0, &t0, id_dest->width);
   rtl_set_OF(&t0);
 
