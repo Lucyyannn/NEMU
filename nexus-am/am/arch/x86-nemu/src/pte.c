@@ -124,7 +124,7 @@ _RegSet *_umake(_Protect *p, _Area ustack, _Area kstack,
   // tf->error_code=0;
   tf->eip=(uintptr_t)entry;
   tf->cs=8;
-  tf->eflags=0x2;
+  tf->eflags=(1<<9)+2;
 
   return tf;
 }
