@@ -31,10 +31,17 @@ _RegSet* schedule(_RegSet *prev) {
   current->tf = prev;
 
   // always select pcb[0] as the new process
-  current = &pcb[0];
+  // take 0 and 1 
+  current = (current == &pcb[0] ? &pcb[1] : &pcb[0]);
 
   // TODO: switch to the new address space,
   // then return the new context
-  _switch(&pcb[0].as);
-  return (pcb[0].tf);
+  if(current==&pcb[0]){
+    _switch(&pcb[0].as);
+    return (pcb[0].tf);
+  }else if(current==&pcb[1]){
+    _switch(&pcb[1].as);
+    return (pcb[1].tf);
+  }
+  return NULL;
 }
