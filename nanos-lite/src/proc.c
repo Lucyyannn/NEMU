@@ -37,6 +37,8 @@ _RegSet* schedule(_RegSet *prev) {
   current = &pcb[0];
   _switch(&pcb[0].as);
   return (pcb[0].tf);
+
+  
   // TODO: switch to the new address space,
   // then return the new context
   if(current==&pcb[0]){
