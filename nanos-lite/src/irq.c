@@ -12,10 +12,8 @@ static _RegSet* do_event(_Event e, _RegSet* r) {
     case _EVENT_TRAP:
       printf(" There is an event trap.\n");
       return schedule(r); 
-    case 3:
-      printf("I'm 3");
-      break;
     default: 
+      return schedule(r);
       panic("Unhandled event ID = %d", e.event);
   }
 
