@@ -33,8 +33,9 @@ int main() {
 
   // uint32_t entry = loader(NULL, "/bin/dummy");
   // ((void (*)(void))entry)();
-  load_prog("/bin/text");
-  load_prog("/bin/videotest");
+  load_prog("/bin/hello");
+  load_prog("/bin/pal");
+ // load_prog("/bin/videotest");
   //load_prog("/bin/pal");
   
   _trap();
