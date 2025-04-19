@@ -5,11 +5,11 @@ void diff_test_skip_nemu();
 
 make_EHelper(lidt) {
   if(id_dest->width==2){
-    cpu.idtr.limit = vaddr_read(id_dest->addr,2);
-    cpu.idtr.base  = vaddr_read(id_dest->addr+2,3);
+    cpu.idtr_limit = vaddr_read(id_dest->addr,2);
+    cpu.idtr_base  = vaddr_read(id_dest->addr+2,3);
   }else if(id_dest->width==4){
-    cpu.idtr.limit = vaddr_read(id_dest->addr,2);
-    cpu.idtr.base = vaddr_read(id_dest->addr+2,4);
+    cpu.idtr_limit = vaddr_read(id_dest->addr,2);
+    cpu.idtr_base = vaddr_read(id_dest->addr+2,4);
   }
 
   print_asm_template1(lidt);
@@ -30,7 +30,7 @@ make_EHelper(mov_cr2r) {
   diff_test_skip_qemu();
 #endif
 }
-
+void raise_intr(uint8_t NO, vaddr_t ret_addr);
 make_EHelper(int) {
   raise_intr(id_dest->val,decoding.seq_eip);
 
@@ -44,7 +44,8 @@ make_EHelper(int) {
 make_EHelper(iret) {
   rtl_pop(&decoding.jmp_eip);
   decoding.is_jmp = 1;
-  rtl_pop(&cpu.CS);
+  rtl_pop(&t2);
+  cpu.cs=t2;
   rtl_pop(&cpu.eflags);
 
   print_asm("iret");
