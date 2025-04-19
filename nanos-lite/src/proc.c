@@ -33,12 +33,12 @@ _RegSet* schedule(_RegSet *prev) {
   // always select pcb[0] as the new process
   // take 0 and 1 
   int ratio = 0;
-  current = ((current == &pcb[0]&&ratio==100) ? &pcb[1] : &pcb[0]);
+  current = ((current == &pcb[0]&&ratio==100000) ? &pcb[1] : &pcb[0]);
 
   // TODO: switch to the new address space,
   // then return the new context
   if(current==&pcb[0]){
-    if(ratio==100){ratio=0;}
+    if(ratio==100000){ratio=0;}
     ++ratio;
     _switch(&pcb[0].as);
     return (pcb[0].tf);
