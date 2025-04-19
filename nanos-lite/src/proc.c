@@ -39,7 +39,7 @@ _RegSet* schedule(_RegSet *prev) {
   current = &pcb[0];
   _switch(&pcb[0].as);
 
-  Log("pcb[0] cr3: %08X, tf: %08X",(uintptr_t)pcb[0].as.ptr,(uintptr_t)pcb[0].tf);
+ // Log("pcb[0] cr3: %08X, tf: %08X",(uintptr_t)pcb[0].as.ptr,(uintptr_t)pcb[0].tf);
 
   return (pcb[0].tf);
 
