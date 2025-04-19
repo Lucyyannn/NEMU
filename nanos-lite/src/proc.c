@@ -28,22 +28,22 @@ void load_prog(const char *filename) {
 }
 
 int current_game = 0;
-//static int ratio = 0;
+static int ratio = 0;
 
 _RegSet* schedule(_RegSet *prev) {
   // save the context pointer
   current->tf = prev;
 
-  // always select pcb[0] as the new process
-  // take 0 and 1 
-
- // Log(" a schedule!");
-  current = (current==&pcb[current_game])?&pcb[1]:&pcb[current_game];
+  if(current==&pcb[current_game]){
+    if(ratio==99){
+      current=&pcb[1];
+    }
+    ratio=(ratio+1)%100;
+  }else if(current==&pcb[1]){
+    current=&pcb[current_game];
+  }else{
+    assert(0);
+  }
   _switch(&current->as);
-
-  //Log("pcb[0] cr3: %08X, tf: %08X",(uintptr_t)pcb[0].as.ptr,(uintptr_t)pcb[0].tf);
-  //Log("pcb[1] cr3: %08X, tf: %08X",(uintptr_t)pcb[1].as.ptr,(uintptr_t)pcb[1].tf);
-
   return (current->tf);
-
 }
