@@ -12,7 +12,6 @@ void load_addr(vaddr_t *eip, ModR_M *m, Operand *rm) {
   if (m->R_M == R_ESP) {
     SIB s;
     s.val = instr_fetch(eip, 1);
-
     base_reg = s.base;
     scale = s.ss;
 
@@ -25,7 +24,6 @@ void load_addr(vaddr_t *eip, ModR_M *m, Operand *rm) {
 
   if (m->mod == 0) {
     if (base_reg == R_EBP) { base_reg = -1; }
-    
     else { disp_size = 0; }
   }
   else if (m->mod == 1) { disp_size = 1; }
@@ -51,6 +49,7 @@ void load_addr(vaddr_t *eip, ModR_M *m, Operand *rm) {
   char disp_buf[16];
   char base_buf[8];
   char index_buf[8];
+
   if (disp_size != 0) {
     /* has disp */
     sprintf(disp_buf, "%s%#x", (disp < 0 ? "-" : ""), (disp < 0 ? -disp : disp));
@@ -78,30 +77,16 @@ void load_addr(vaddr_t *eip, ModR_M *m, Operand *rm) {
   rm->type = OP_TYPE_MEM;
 }
 
-/*
-typedef union {
-  struct {
-    uint8_t R_M		:3;
-    uint8_t reg		:3;
-    uint8_t mod		:2;
-  };
-  struct {
-    uint8_t dont_care	:3;
-    uint8_t opcode		:3;
-  };
-  uint8_t val;
-} ModR_M;
- */
 void read_ModR_M(vaddr_t *eip, Operand *rm, bool load_rm_val, Operand *reg, bool load_reg_val) {
   ModR_M m;
   m.val = instr_fetch(eip, 1);
   decoding.ext_opcode = m.opcode;
   if (reg != NULL) {
     reg->type = OP_TYPE_REG;
-    reg->reg = m.reg;// the regno of the cr
+    reg->reg = m.reg;
     if (load_reg_val) {
       rtl_lr(&reg->val, reg->reg, reg->width);
-    }//for cr3/cr0, the value to set ,is not src->val(=src->reg)
+    }
 
 #ifdef DEBUG
     snprintf(reg->str, OP_STR_SIZE, "%%%s", reg_name(reg->reg, reg->width));
