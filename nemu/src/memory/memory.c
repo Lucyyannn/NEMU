@@ -94,6 +94,7 @@ uint32_t vaddr_read(vaddr_t addr, int len) {
    int rest_size = 4096 - addr%4096;
   //data cross page
   if (rest_size<len) {
+    assert(0);
         int first_len = rest_size;
         int second_len = len-first_len;
         assert(first_len>0&&second_len>0);
@@ -116,6 +117,7 @@ uint32_t vaddr_read(vaddr_t addr, int len) {
 void vaddr_write(vaddr_t addr, int len, uint32_t data) {
   int rest_size = 4096 - addr%4096;
   if (rest_size<len) {
+    assert(0);
         int first_len = rest_size;
         int second_len = len-first_len;
         assert(second_len>0&&first_len>0);
