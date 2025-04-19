@@ -37,12 +37,12 @@ _RegSet* schedule(_RegSet *prev) {
 
  // Log(" a schedule!");
   current = &pcb[0];
-  _switch(&pcb[0].as);
+  _switch(current->as.ptr);
 
   Log("pcb[0] cr3: %08X, tf: %08X",(uintptr_t)pcb[0].as.ptr,(uintptr_t)pcb[0].tf);
   Log("pcb[1] cr3: %08X, tf: %08X",(uintptr_t)pcb[1].as.ptr,(uintptr_t)pcb[1].tf);
 
-  return (pcb[0].tf);
+  return (current->tf);
 
 
   // TODO: switch to the new address space,
