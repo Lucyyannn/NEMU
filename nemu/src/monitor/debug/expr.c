@@ -4,44 +4,104 @@
  * Type 'man regex' for more information about POSIX regex functions.
  */
 #include <sys/types.h>
+#include <string.h>
 #include <regex.h>
-#include <stdlib.h>
-enum {
-  TK_NOTYPE = 256, TK_EQ, TK_NUM,TK_HEX,TK_REG,TK_NE,TK_AND,TK_OR,TK_NOT,
-  /* TODO: Add more token types */
-  TK_NEG,TK_DEREF
-};
 
-//int 10
-//+-*/
-//()
-// 
+// additional functions
+long long powcomp(int base, int exponent){
+  long long res=1;
+  for(int i=0;i<exponent;++i){
+    res*=base;
+  }
+  return res;
+}
+
+void cpy(char** dest, char* src){
+  if(src==NULL){panic("the string to copy should not be null!\n");}
+  assert(strlen(src)>0);
+  int n=strlen(src);
+  *dest = (char*)malloc((n+1)*sizeof(char));
+  for(int i=0;i<n;++i){
+    (*dest)[i]=*(src+i);
+  }
+  (*dest)[n]='\0';
+  
+  return;
+}
+
+void ncpy(char** dest, char* src, int n){
+  if(src==NULL){panic("the string to copy should not be null!\n");}
+  assert(strlen(src)>=n);
+  *dest = (char*)malloc((n+1)*sizeof(char));
+  for(int i=0;i<n;++i){
+    (*dest)[i]=*(src+i);
+  }
+
+  (*dest)[n]='\0';
+  
+  return ;
+}
+
+//token type
+enum {
+  TK_NOTYPE = 256, 
+  TK_PLUS,  // +
+  TK_SUB,   // -
+  TK_MULTI, // *
+  TK_DIV,   // /
+  TK_MOD,   // %
+  TK_LPARENTHESIS, // (
+  TK_RPARENTHESIS, // )
+  TK_REGISTER,
+  TK_NUMBER,
+  TK_EQ,    // ==
+  TK_NEQ,   // !=
+  TK_LEQ,   // <=
+  TK_BEQ,   // >=
+  TK_AND,   // &&
+  TK_OR,    //or
+  TK_U,     // unary -
+  TK_P      //deref *
+};
+//precedence level
+enum {
+  OP_LV0 = 0 ,    // number , register
+  OP_LV1 = 10 ,   // ()
+  OP_LV2_1 = 21 , // deference, *
+  OP_LV2_2 = 22 , // unary,     - 
+  OP_LV3 = 30 ,   // *  /   %
+  OP_LV4 = 40 ,   // + , − 
+  OP_LV7 = 70 ,   // == , != ,>= ,<=
+  OP_LV11 = 110 , // &&
+  OP_LV12 = 120 , // ||
+
+ } ;
+
 static struct rule {
   char *regex;
   int token_type;
-} rules[] = {
-
-  /* TODO: Add more rules.
-   * Pay attention to the precedence level of different rules.
-   */
-
+}  rules[] = {
   {" +", TK_NOTYPE},    // spaces
-  {"\\+", '+'},         // plus
-  {"\\-", '-'},         // sub
-  {"\\*", '*'},         // mul
-  {"\\/", '/'},         // div
-  {"\\(", '('},
-  {"\\)", ')'},
-  {"0x[0-9a-fA-F]+",TK_HEX},
-  {"[0-9]+", TK_NUM},
-  {"\\$[A-Za-z0-9]+",TK_REG},
-  {"==", TK_EQ},         // equal
-  {"!=", TK_NE},
-  {"&&", TK_AND},
-  {"\\|\\|", TK_OR},
-  {"!",TK_NOT},
-  {"\\-", TK_NEG},
-  {"\\*", TK_DEREF}
+
+  {"\\+", TK_PLUS},         // plus
+  {"\\-",TK_SUB},          //sub
+  {"\\*",TK_MULTI},          //multi
+  {"/",TK_DIV},            //div
+  {"%",TK_MOD},            //mod
+  {"\\(",TK_LPARENTHESIS},
+  {"\\)",TK_RPARENTHESIS},
+
+  {"\\$[a-zA-Z]+",TK_REGISTER},   
+  {"0[xX][0-9a-fA-F]+",TK_NUMBER},//hex
+  {"(0|[1-9][0-9]*)",TK_NUMBER},  //dec
+  
+  {"==", TK_EQ},       
+  {"!=",TK_NEQ},        
+  {"<=",TK_LEQ},
+  {">=",TK_BEQ},
+
+  {"&&",TK_AND},        //and
+  {"\\|\\|",TK_OR}      //or
 };
 
 #define NR_REGEX (sizeof(rules) / sizeof(rules[0]) )
@@ -57,7 +117,7 @@ void init_regex() {
   int ret;
 
   for (i = 0; i < NR_REGEX; i ++) {
-    ret = regcomp(&re[i], rules[i].regex, REG_EXTENDED);
+    ret = regcomp(&re[i], rules[i].regex, REG_EXTENDED); //compile the regexes
     if (ret != 0) {
       regerror(ret, &re[i], error_msg, 128);
       panic("regex compilation failed: %s\n%s", error_msg, rules[i].regex);
@@ -65,37 +125,64 @@ void init_regex() {
   }
 }
 
+
 typedef struct token {
   int type;
-  char str[32];
+  char *str;
+  int value;
+  int precedence;
 } Token;
 
-Token tokens[32];
-int nr_token;
+Token tokens[32];// the tokens that have already been recognized
+int nr_token;    //the number of tokens above
 
-static bool is_binary_op(int k){
-  if(k==0){
-    return false;
+int hex_to_num(char numstr){
+  if(numstr>='0'&&numstr<='9'){
+    return (numstr-'0');
   }
-  if(tokens[k-1].type==TK_NUM||tokens[k-1].type==TK_HEX||tokens[k-1].type==TK_REG||tokens[k-1].type==')'){
-    return true;
+  if(numstr>='a'&&numstr<='f'){
+    return (numstr-'a'+10);
   }
-  return false;
+  if(numstr>='A'&&numstr<='F'){
+    return (numstr-'A'+10);
+  }
+  assert(0);
+  return 0;
 }
 
-static bool is_oprand(int k){
-  return tokens[k].type==TK_NUM||tokens[k].type==TK_HEX||tokens[k].type==TK_REG;
-}
-static bool is_single_opcode(int k){
-  return tokens[k].type==TK_NOT||tokens[k].type==TK_NEG||tokens[k].type==TK_DEREF;
+int comp_value_by_string(char* number,int length){
+  int value=0;
+  int start_p=0,end_p=length-1;
+  //hex
+  if((end_p+1)>2&&(*(number+1)=='x'||*(number+1)=='X')){
+    start_p=2;
+    for(int i=end_p;i>=start_p;i--){
+      uint32_t temp=hex_to_num(number[i]);
+      value+=temp*powcomp(16,(end_p-i));
+    }
+    return value;
+  }
+  //dec
+  else{
+    for(int i=end_p;i>=start_p;i--){
+      int temp = number[i]-'0';
+      value+=temp*powcomp(10,(end_p-i));
+    }
+    return value;
+  }
+
+  assert(0);
+  return 0;
 }
 
 static bool make_token(char *e) {
   int position = 0;
   int i;
-  regmatch_t pmatch;
-
+  regmatch_t pmatch;// to locate
+  // pmatch.rm_so, pmatch._rm_eo
   nr_token = 0;
+  int value=0;
+  char *substr ="\0";
 
   while (e[position] != '\0') {
     /* Try all rules one by one. */
@@ -105,270 +192,304 @@ static bool make_token(char *e) {
         int substr_len = pmatch.rm_eo;
 
         Log("match rules[%d] = \"%s\" at position %d with len %d: %.*s",
-            i, rules[i].regex, position, substr_len, substr_len, substr_start);
+            i, rules[i].regex, position, substr_len,substr_len,substr_start);
         position += substr_len;
 
-        /* TODO: Now a new token is recognized with rules[i]. Add codes
-         * to record the token in the array `tokens'. For certain types
-         * of tokens, some extra actions should be performed.
-         */
 
         switch (rules[i].token_type) {
-          case '+':
-            assert(nr_token<32);
-            tokens[nr_token++].type = '+';
+          case TK_PLUS://+
+            tokens[nr_token].type = rules[i].token_type;
+            tokens[nr_token].precedence = OP_LV4;
+            cpy(&tokens[nr_token].str,"+\0"); 
+            ++nr_token;
             break;
-          case '-':
-            assert(nr_token<32);
-            tokens[nr_token++].type = '-';
-            break;
-          case '*':
-            assert(nr_token<32);
-            tokens[nr_token++].type = '*';
-            break;
-          case '/':
-            assert(nr_token<32);
-            tokens[nr_token++].type = '/';
-            break;
-          case '(':
-            assert(nr_token<32);
-            tokens[nr_token++].type = '(';
-            break;
-          case ')':
-            assert(nr_token<32);
-            tokens[nr_token++].type = ')';
-            break;
-          case TK_NOTYPE:
-            break;
-          case TK_NUM:
-            assert(nr_token<32);
-            tokens[nr_token].type = TK_NUM;
-            if(substr_len<sizeof(tokens[nr_token].str)){
-              strncpy(tokens[nr_token].str,substr_start,substr_len);
-              tokens[nr_token].str[substr_len]='\0';
-              nr_token++;
+          case TK_SUB:
+            //unary
+            if(nr_token==0||(nr_token>0&&tokens[nr_token-1].precedence!=OP_LV0
+                                       &&tokens[nr_token-1].precedence!=OP_LV1)){
+              tokens[nr_token].type = TK_U;
+              tokens[nr_token].precedence = OP_LV2_2;
             }else{
-              assert(0);
+            // -
+              tokens[nr_token].type = rules[i].token_type;
+              tokens[nr_token].precedence = OP_LV4;
             }
+            cpy(&tokens[nr_token].str,"-\0");
+            ++nr_token;
+            break;
+          case TK_MULTI:
+            //deref
+            if(nr_token==0||(nr_token>0&&tokens[nr_token-1].precedence!=OP_LV0
+                                        &&tokens[nr_token-1].precedence!=OP_LV1)){
+              tokens[nr_token].type = TK_P;
+              tokens[nr_token].precedence = OP_LV2_1;
+            }else{
+            // *
+              tokens[nr_token].type = rules[i].token_type;
+              tokens[nr_token].precedence = OP_LV3;
+            }
+            cpy(&tokens[nr_token].str,"*\0");
+            ++nr_token;
+            break;
+          case TK_DIV://  /
+            tokens[nr_token].type = rules[i].token_type;
+            tokens[nr_token].precedence = OP_LV3;
+            cpy(&tokens[nr_token].str,"/\0");
+            ++nr_token;
+            break;
+          case TK_MOD://  %
+            tokens[nr_token].type = rules[i].token_type;
+            tokens[nr_token].precedence = OP_LV3;
+            cpy(&tokens[nr_token].str,"%\0");
+            ++nr_token;
+            break;
+          case TK_LPARENTHESIS:// (
+            tokens[nr_token].type = rules[i].token_type;
+            tokens[nr_token].precedence = OP_LV1;
+            cpy(&tokens[nr_token].str,"(\0");
+            ++nr_token;
+            break;
+          case TK_RPARENTHESIS:// )
+            tokens[nr_token].type = rules[i].token_type;
+            tokens[nr_token].precedence = OP_LV1;
+            cpy(&tokens[nr_token].str,")\0");
+            ++nr_token;
+            break;
+          case TK_REGISTER:// register
+            ncpy(&substr,substr_start+1,substr_len-1);
+            value=get_reg_value(substr);
+            tokens[nr_token].type = rules[i].token_type;
+            tokens[nr_token].precedence = OP_LV0;
+            tokens[nr_token].value=value;
+            ncpy(&tokens[nr_token].str,substr_start,substr_len);
+            ++nr_token;
+            break;
+          case TK_NUMBER: // number   hex or dec
+            ncpy(&substr,substr_start,substr_len);
+            value=comp_value_by_string(substr_start,substr_len);
+            tokens[nr_token].type = rules[i].token_type;
+            tokens[nr_token].precedence = OP_LV0;
+            tokens[nr_token].value = value;
+            ncpy(&tokens[nr_token].str,substr_start,substr_len);
+            ++nr_token;
             break;
           case TK_EQ:
-            assert(nr_token<32);
-            tokens[nr_token++].type = TK_EQ;
+            tokens[nr_token].type = rules[i].token_type;
+            tokens[nr_token].precedence = OP_LV7;
+            cpy(&tokens[nr_token].str,"==\0");
+            ++nr_token;
             break;
-          case TK_NE:
-            assert(nr_token<32);
-            tokens[nr_token++].type = TK_NE;
+          case TK_NEQ:
+            tokens[nr_token].type = rules[i].token_type;
+            tokens[nr_token].precedence = OP_LV7;
+            cpy(&tokens[nr_token].str,"!=\0");
+            ++nr_token;
+            break;
+          case TK_LEQ:
+            tokens[nr_token].type = rules[i].token_type;
+            tokens[nr_token].precedence = OP_LV7;
+            cpy(&tokens[nr_token].str,">=\0");
+            ++nr_token;
+            break;
+          case TK_BEQ:
+            tokens[nr_token].type = rules[i].token_type;
+            tokens[nr_token].precedence = OP_LV7;
+            cpy(&tokens[nr_token].str,"<=\0");
+            ++nr_token;
             break;
           case TK_AND:
-            assert(nr_token<32);
-            tokens[nr_token++].type = TK_AND;
+            tokens[nr_token].type = rules[i].token_type;
+            tokens[nr_token].precedence = OP_LV11;
+            cpy(&tokens[nr_token].str,"&&\0");
+            ++nr_token;
             break;
           case TK_OR:
-            assert(nr_token<32);
-            tokens[nr_token++].type = TK_OR;
+            tokens[nr_token].type = rules[i].token_type;
+            tokens[nr_token].precedence = OP_LV12;
+            cpy(&tokens[nr_token].str,"||\0");
+            ++nr_token;
             break;
-          case TK_NOT:
-            assert(nr_token<32);
-            tokens[nr_token++].type = TK_NOT;
+          default:
             break;
-          case TK_HEX://0x is in str!
-            assert(nr_token<32);
-            tokens[nr_token].type = TK_HEX;
-            if(substr_len<sizeof(tokens[nr_token].str)){
-              strncpy(tokens[nr_token].str,substr_start,substr_len);
-              tokens[nr_token].str[substr_len]='\0';
-              nr_token++;
-            }else{
-              assert(0);
-            }
-            break;
-          case TK_REG://$ is not in str!
-            assert(nr_token<32);
-            tokens[nr_token].type = TK_REG;
-            if(substr_len<sizeof(tokens[nr_token].str)){
-              strncpy(tokens[nr_token].str,substr_start+1,substr_len-1);
-              tokens[nr_token].str[substr_len-1]='\0';
-              nr_token++;
-            }else{
-              assert(0);
-            }
-            break;
-          default:assert(0);
         }
         break;
       }
     }
-
+    // recognize failed
     if (i == NR_REGEX) {
       printf("no match at position %d\n%s\n%*.s^\n", position, e, position, "");
       return false;
-    }
-  }
-  //NEG + DEREF
-  for(int k=0;k<nr_token;k++){
-    if(tokens[k].type=='-'){
-      if(!is_binary_op(k)){
-        tokens[k].type = TK_NEG;
-      }
-    }
-    if(tokens[k].type=='*'){
-      if(!is_binary_op(k)){
-        tokens[k].type = TK_DEREF;
-      }
     }
   }
 
   return true;
 }
 
-static bool check_parentheses(int b,int e){
-  int cnt = 0;
-  int i=b;
-  if(tokens[i].type=='('){
-    cnt++;
-  }
-  i++;
-  while(cnt>0&&i<=e){
-    if(tokens[i].type=='('){
-      cnt++;
-    }
-    else if(tokens[i].type==')'){
-      cnt--;
-    }
-    i++;
-  }
-  assert(cnt==0);
-  if(i==e+1){
-    return true;
+bool checkparenthesis(int p, int q){
+  // (    )
+  if(tokens[p].type==TK_LPARENTHESIS&&
+    tokens[q].type==TK_RPARENTHESIS){
+      // if ( , depth++; if ) , depth--
+      // only when depth==0 at last, it's true
+      int depth=0;
+      for(int i=p+1;i<q;++i){
+        if(tokens[i].type==TK_LPARENTHESIS){
+          ++depth;
+        }else if(tokens[i].type==TK_RPARENTHESIS){
+          --depth;
+          if(depth<0){
+            return false;
+          }
+        }
+      }
+      if(depth==0){
+        return true;
+      }
   }
   return false;
 }
-
-static int find_dominant(int b,int e){
-  int curr_dominant_level=-1;
-  int curr_index=-1;
-  int i=b;
-  while(i<=e){
-    if(is_oprand(i)){
-      i++;
-    }else if(tokens[i].type=='('){
-      int cnt=1;
-      i++;
-      while(cnt>0&&i<=e){
-        if(tokens[i].type=='('){
-          cnt++;
-        }
-        else if(tokens[i].type==')'){
-          cnt--;
-        }
-        i++;
+// p: start position
+// q: end position
+int eval(int p, int q){
+  //[1]
+  if(p>q){
+    panic("It's impossible that p>q.");
+  //[2]
+  }else if(p==q){
+    // only number or register possible
+    assert(tokens[p].precedence==OP_LV0);
+    return tokens[p].value;
+  //[3]
+  }else if(checkparenthesis(p,q)){
+    // ( sub_expr )  --> cut off the ()
+    return eval(p+1,q-1);
+  //[4]
+  }else{
+    // look for the dominant operator
+    int d=p;//position of the dominant operator
+    int op = 0;
+    int depth=0;
+    bool begin_by_sign=false;
+    int l_limit=1;
+    int r_limit=1;
+    for(int i=p;i<=q;++i){
+      //[4.1]
+      // identify the ()
+      if(tokens[i].type==TK_LPARENTHESIS){
+        ++depth;
+      }else if(tokens[i].type==TK_RPARENTHESIS){
+        --depth;
       }
-      assert(cnt==0);
-    }else if(is_single_opcode(i)){
-      if(curr_index==-1){
-        curr_dominant_level=0;
-        curr_index = i;
-      }
-      i++;
-    }else{
-      if(tokens[i].type==TK_OR){
-        curr_dominant_level=5;
-        curr_index = i;
-      }else if(tokens[i].type==TK_AND&&curr_dominant_level<5){
-        curr_dominant_level=4;
-        curr_index = i;
-      }else if((tokens[i].type==TK_EQ||tokens[i].type==TK_NE)&&curr_dominant_level<4){
-        curr_dominant_level=3;
-        curr_index = i;
-      }else if((tokens[i].type=='+'||tokens[i].type=='-')&&curr_dominant_level<3){
-        curr_dominant_level=2;
-        curr_index = i;
-      }else if((tokens[i].type=='*'||tokens[i].type=='/')&&curr_dominant_level<2){
-        curr_dominant_level=1;
-        curr_index = i;
-      }
-      i++;
-    }
-  }
-  return curr_index;
-}
-
-static uint32_t eval(int b,int e){
-  if(b > e){
-    printf("Bad Expression!\n");
-    assert(0);
-  }else if(b == e){
-    switch (tokens[b].type){
-      case TK_NUM:{
-        char *endptr;
-        uint32_t num = strtol(tokens[b].str,&endptr,10);
-        assert(*endptr=='\0');
-        return num;
-      }
-      case TK_HEX:{
-        char *endptr;
-        uint32_t num = strtol(tokens[b].str,&endptr,16);
-        assert(*endptr=='\0');
-        return num;
-      }
-      case TK_REG:
-        for(int i=0;i<8;i++){
-          for(int j=1;j<=4;j*=2){
-            if(strcmp(reg_name(i,j),tokens[b].str)==0){
-              switch (j) {
-                case 4: return reg_l(i);
-                case 1: return reg_b(i);
-                case 2: return reg_w(i);
-                default:;
-              }
+      //[4.2]
+      // only for +-*/%, and not in ()
+      else if(depth==0){
+        //[4.2.1]
+        if(tokens[i].precedence>=OP_LV2_2&&tokens[i].precedence<=OP_LV4){
+          d=i;
+          // identify the continuous +/- , and cut
+          int j=i;
+          int plusnum=0,subnum=0;
+          for(j=i;(tokens[j].precedence==OP_LV2_2||tokens[j].precedence==OP_LV4)&&j<=q;++j){
+            // compute the num of + or -
+            if(tokens[j].type==TK_PLUS){
+              ++plusnum;
+            }else if(tokens[j].type==TK_SUB||tokens[j].type==TK_U){
+              ++subnum;
             }
           }
+          // [4.2.1](1) if this time is +/-
+          if(j>i){
+            if(subnum==0||(subnum!=0&&subnum%2==0)){op=TK_PLUS;}
+            else {op=TK_SUB;}
+            r_limit=j-i;
+            i=j-1;
+          }
+          // [4.2.1](2) if this time is */% ,  
+          else if(tokens[i].precedence==OP_LV3&&(op==0||tokens[d].precedence==OP_LV3)){
+            op=tokens[i].type;
+            r_limit=1;
+          }
+          // [4.2.1](3)
+          else{
+            panic("Any other possibilities ?\n");
+          }
         }
-        if(strcmp("eip",tokens[b].str)==0)
-          return cpu.eip;
-        else if(strcmp("eflags",tokens[b].str)==0)
-          return cpu.eflags;
-      default:assert(0);
-    }
-  }else if(check_parentheses(b,e)){
-    return eval(b+1,e-1);
-  }else{
-    int d = find_dominant(b,e);
-    if(tokens[d].type==TK_NOT||tokens[d].type==TK_NEG||tokens[d].type==TK_DEREF){
-      uint32_t val = eval(d+1,e);
-      switch(tokens[d].type){
-        case TK_NEG:return -val;
-        case TK_DEREF:return vaddr_read(val,4);
-        case TK_NOT:return !val;
-        default:assert(0);
+        // [4.2.2] deref
+        else if(tokens[i].precedence==OP_LV2_1){
+          //tackle the * only when there is only a *xx
+          if(i==p){
+            int j=i;
+            for(j=i;tokens[j].precedence==OP_LV2_1;++j){;}
+            assert(tokens[j].precedence==OP_LV0);
+            int addr=tokens[j].value; int k=j-i;//num of *
+            int result=0;
+            for(int t=0;t<k;++t){
+              result = vaddr_read(addr,4);
+              addr = result;
+            }
+            return result;
+            
+          }else{
+            Log("A deref sign, digard.");
+          }
+        }
+        
       }
-    }else{
-      uint32_t val1 = eval(b,d-1);
-      uint32_t val2 = eval(d+1,e);
-      switch(tokens[d].type){
-        case '+':return val1+val2;
-        case '-':return val1-val2;
-        case '*':return val1*val2;
-        case '/':
-          assert(val2!=0);
-          return val1/val2;
-        case TK_EQ:return val1==val2;
-        case TK_NE:return val1!=val2;
-        case TK_AND:return val1&&val2;
-        case TK_OR:return val1||val2;
-        default:assert(0);
-      } 
     }
+    assert(depth==0);
+    //compute substr and combine
+    printf("p~q: %d, %d, %d , %d, %d \n",p, d-l_limit,d, d+r_limit,q);
+    if(d==p){begin_by_sign=true;}
+    int val1 = begin_by_sign?0:eval(p,d-l_limit);
+    int val2 = eval(d+r_limit,q);
+    switch(op){
+      case TK_PLUS:
+        return val1+val2;
+      case TK_SUB:
+        return val1-val2;
+      case TK_MULTI:
+        return val1*val2;
+      case TK_DIV:
+        assert(val2!=0);
+        return val1/val2;
+      case TK_MOD:
+        assert(val2!=0);
+        return val1%val2;
+      default:
+        assert(0);
+    }
+
   }
+  assert(0);
+  return 0;
 }
-uint32_t expr(char *e, bool *success) {
+
+
+int expr(char *e, bool *success) {
   if (!make_token(e)) {
     *success = false;
     return 0;
   }
 
-  /* TODO: Insert codes to evaluate the expression. */
-  uint32_t ret = eval(0,nr_token-1);
-  *success = true;
-  return ret;
+  if(nr_token==0){
+    return 0;
+  }
+  int p=0,q=nr_token-1;
+
+  int res=eval(p,q);
+  return res;
 }
+
+// (0)all the results are uint32_t
+// (1)tell apart the two possibilities of returning false
+// (2)about -x
+// (3)pay attention to the priority and the associativity
+// (4)to add entirely
+
+// 1.define the rules                          ~
+// 2.regular expressiong --> identify tokens   ~
+// 3.make token()                              ~
+// 4.eval(recursive computing)                 ~                       
+// 5.expand expressions to P30,especially '*'  ~
+
+// with '-'

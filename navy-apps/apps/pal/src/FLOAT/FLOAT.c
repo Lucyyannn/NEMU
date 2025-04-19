@@ -3,11 +3,13 @@
 #include <assert.h>
 
 FLOAT F_mul_F(FLOAT a, FLOAT b) {
-  return (a>>8)*(b>>8);
+  assert(0);
+  return 0;
 }
 
 FLOAT F_div_F(FLOAT a, FLOAT b) {
-  return (a/b)<<16;
+  assert(0);
+  return 0;
 }
 
 FLOAT f2F(float a) {
@@ -20,35 +22,14 @@ FLOAT f2F(float a) {
    * stack. How do you retrieve it to another variable without
    * performing arithmetic operations on it directly?
    */
-  int* p1 = (int*)&a;
-  int i1 = *p1;
-  if(i1==0x0||i1==0x80000000){
-    return 0;
-  }
-  int b1 = (i1&(0x7fffff)|(0x800000))<<7;
-  int e1 = ((i1>>23)&0xff)-127;
-  int s1 = (i1>>31)&1;
-  int idx = 18;
-  if(e1>0){
-    if(e1<=14){
-      idx+=e1;
-    }else{
-      idx = 32;
-    }
-  }else{
-    b1>>(-e1);
-  }
-  int res = (b1>>(32-idx));
-  if(s1) res = -res;
-  return res;
+
+  assert(0);
+  return 0;
 }
 
 FLOAT Fabs(FLOAT a) {
-  if(a>>31){
-    return -a;
-  }else{
-    return a;
-  }
+  assert(0);
+  return 0;
 }
 
 /* Functions below are already implemented */

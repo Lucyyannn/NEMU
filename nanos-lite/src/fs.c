@@ -1,10 +1,16 @@
 #include "fs.h"
+void _putc(char ch);
+off_t _lseek(int fd, off_t offset, int whence);
+void dispinfo_read(void *buf, off_t offset, size_t len);
+void fb_write(const void *buf, off_t offset, size_t len);
+size_t events_read(void *buf, size_t len) ;
 
 typedef struct {
   char *name;
   size_t size;
-  off_t disk_offset;
-  off_t open_offset;
+  off_t disk_offset;  
+  off_t open_offset;  // 文件被打开之后的读写指针
+
 } Finfo;
 
 enum {FD_STDIN, FD_STDOUT, FD_STDERR, FD_FB, FD_EVENTS, FD_DISPINFO, FD_NORMAL};
@@ -14,110 +20,143 @@ static Finfo file_table[] __attribute__((used)) = {
   {"stdin (note that this is not the actual stdin)", 0, 0},
   {"stdout (note that this is not the actual stdout)", 0, 0},
   {"stderr (note that this is not the actual stderr)", 0, 0},
-  [FD_FB] = {"/dev/fb", 0, 0},//VGA write lseek
-  [FD_EVENTS] = {"/dev/events", 0, 0},//read
-  [FD_DISPINFO] = {"/proc/dispinfo", 128, 0},//read
+  [FD_FB] = {"/dev/fb", 0, 0},
+  [FD_EVENTS] = {"/dev/events", 0, 0},
+  [FD_DISPINFO] = {"/proc/dispinfo", 128, 0},
 #include "files.h"
 };
 
 #define NR_FILES (sizeof(file_table) / sizeof(file_table[0]))
+#define FB_FD 3
 
-size_t fs_filesz(int fd){
-  return file_table[fd].size;
-};
+void init_fs() {
+  file_table[FB_FD].size = _screen.width*_screen.height*sizeof(int);
+}
 
-int fs_open(const char *pathname, int flags, int mode){//flags mode unuse!
-  for(int i=0;i<NR_FILES;i++){
-    if(strcmp(file_table[i].name,pathname)==0){
-      file_table[i].open_offset=0;
-      return i;
+
+int fs_open(const char *pathname, int flags, int mode){
+  int fd=0;
+  while(fd<NR_FILES){
+    if(strcmp(pathname, file_table[fd].name)==0){
+      file_table[fd].open_offset = 0;
+      //Log("[in fs_open] file name: %s",pathname);
+      // Log("[in fs_open] file discripter: %d",fd);
+      // Log("[in fs_open] file size: %d",file_table[fd].size);
+      // Log("[in fs_open] disk_offset: %d",file_table[fd].disk_offset);
+      return fd;
     }
+    ++fd;
   }
   assert(0);
   return -1;
-};
+}
 
-void ramdisk_read(void *buf, off_t offset, size_t len);
-void ramdisk_write(const void *buf, off_t offset, size_t len);
+int fs_close(int fd){
+  return 0; //always succeed
+}
 
-ssize_t dispinfo_read(void *buf, off_t offset, size_t len);
-ssize_t events_read(void *buf, size_t len);
-
-ssize_t fb_write(const void *buf, off_t offset, size_t len);
-
-ssize_t sys_write(int fd,char* buf,size_t count){
-  int i;
-  for(i=0;i<count;i++){
-    _putc(*(buf+i));
-  }
-  return i;
+size_t fs_filesz(int fd){
+  assert(fd>=0&&fd<NR_FILES);
+  return file_table[fd].size;
 }
 
 ssize_t fs_read(int fd, void *buf, size_t len){
-  //ignore stdin stdout stderr
-  assert(fd>=0&&fd<NR_FILES);
-  if(fd==FD_DISPINFO){
-    int read_bytes = dispinfo_read(buf,file_table[fd].open_offset,len);
-    file_table[fd].open_offset+=read_bytes;
-    return read_bytes;
-  }else if(fd==FD_EVENTS){
-    return events_read(buf,len);
+   //Log("[in fs_write]  filename: %s ",file_table[fd].name);
+  //prepare
+  int real_len=0;
+  off_t offset=0;
+  if(fd!=FD_EVENTS){
+    real_len = file_table[fd].size-file_table[fd].open_offset;
+    if(real_len<=0){
+        return 0;
+    }else{
+        real_len = (real_len<len)?real_len:len;
+    }
+    offset = file_table[fd].open_offset+file_table[fd].disk_offset;
   }
-  size_t file_sz    = file_table[fd].size;
-  off_t offset      = file_table[fd].disk_offset;
-  off_t open_offset = file_table[fd].open_offset;
-  size_t read_len = ((file_sz-open_offset)>len?len:(file_sz-open_offset));
-  ramdisk_read(buf,offset+open_offset,read_len);
-  file_table[fd].open_offset += read_len;
-  return read_len;
-};
+  
+  //handle
+  switch(fd){
+    case FD_EVENTS:{
+      return events_read(buf, len);
+    }
+    case FD_DISPINFO:{
+      dispinfo_read(buf, offset, real_len) ;
+      break;
+    }
+    default:{
+      ramdisk_read(buf,offset,real_len);
+      break;
+    }
+  }
+  file_table[fd].open_offset += real_len;
+  return real_len;
+}
 
 ssize_t fs_write(int fd, const void *buf, size_t len){
-  assert(fd>=0&&fd<NR_FILES);
-  if(fd==1||fd==2){
-    return sys_write(fd,(char*)buf,len);
-  }else if(fd==FD_FB){
-    int write_bytes = fb_write(buf,file_table[fd].open_offset,len);
-    file_table[fd].open_offset+=write_bytes;
-    return write_bytes;
+   //Log("[in fs_write]  filename: %s ",file_table[fd].name);
+  // Log("[in fs_write]  write len: %d \n",len);
+  // Log("[in fs_write]  filesz: %d \n",fs_filesz(fd));
+  int real_len=0;
+  switch(fd){
+    case FD_STDOUT:
+    case FD_STDERR:{
+      char* buffer = (char*)buf;
+      int i=0;
+      for(i=0;i<len;i++){
+        _putc( *(buffer+i));
+      }
+      //ssize_t reval = (fd==1)?len:-1;
+      //return reval;
+      return i;
+    }
+    case FD_FB:{
+      real_len = (int)file_table[fd].size-(int)file_table[fd].open_offset;
+      if(real_len<=0){
+        return 0;
+      }else{
+        real_len = (real_len<len)?real_len:len;
+      }
+
+      off_t offset = file_table[fd].open_offset+file_table[fd].disk_offset;
+      //printf("len:%d   ; real_len :%d  \n",len,real_len);
+      fb_write(buf, offset, real_len);
+      break;
+    }
+    default:{
+      real_len = file_table[fd].size-file_table[fd].open_offset;
+      if(real_len<=0){
+        return 0;
+      }else{
+        real_len = (real_len<len)?real_len:len;
+      }
+
+      off_t offset = file_table[fd].open_offset+file_table[fd].disk_offset;
+      ramdisk_write(buf,offset,real_len);
+      break;
+    }
   }
-  size_t file_sz    = file_table[fd].size;
-  off_t offset      = file_table[fd].disk_offset;
-  off_t open_offset = file_table[fd].open_offset;
-  size_t write_len = ((file_sz-open_offset)>len?len:(file_sz-open_offset));
-  ramdisk_write(buf,offset+open_offset,write_len);
-  file_table[fd].open_offset += write_len;
-  return write_len;
-};
-off_t fs_lseek(int fd, off_t offset, int whence){
-  assert(fd>=0&&fd<NR_FILES);
-  if(whence==SEEK_SET){
-    file_table[fd].open_offset = offset;
-  }else if(whence==SEEK_CUR){
-    file_table[fd].open_offset += offset;
-  }else if(whence==SEEK_END){
-    file_table[fd].open_offset = file_table[fd].size + offset;
-  }else{
-    assert(0);
-    return -1;
-  }
-  if(file_table[fd].open_offset > file_table[fd].size){
-    file_table[fd].open_offset = file_table[fd].size;
-  }
-  return file_table[fd].open_offset;
-};
-int fs_close(int fd){
-  return 0;
-};
-
-
-
-void init_fs() {
-  // TODO: initialize the size of /dev/fb
-  int vga_w = _screen.width;
-  int vga_h = _screen.height;
-  Log("%d*%d",vga_w,vga_h);
-  file_table[FD_FB].size = vga_h*vga_w*4;
-  
-
+  file_table[fd].open_offset += real_len;
+  return real_len;
 }
+
+
+off_t fs_lseek(int fd, off_t offset, int whence){
+   //Log("[in fs_lseek]  filename: %s ",file_table[fd].name);
+  switch(whence){
+    case SEEK_SET:
+      file_table[fd].open_offset=offset;
+      break;
+    case SEEK_CUR:
+      file_table[fd].open_offset+=offset;
+      break;
+    case SEEK_END:
+      file_table[fd].open_offset=offset+file_table[fd].size;
+      break;
+    default:
+      assert(0);
+    }
+  return file_table[fd].open_offset;
+}
+
+

@@ -5,12 +5,12 @@
 #include <assert.h>
 #include <time.h>
 #include "syscall.h"
-// !!!
-// TODO: discuss with syscall interface
-#ifndef __ISA_NATIVE__
 
 extern char end;
-static uintptr_t program_break = &end;
+uintptr_t programbreak  = ( uintptr_t)&end;
+
+// TODO: discuss with syscall interface
+#ifndef __ISA_NATIVE__
 
 // FIXME: this is temporary
 
@@ -25,34 +25,34 @@ void _exit(int status) {
 }
 
 int _open(const char *path, int flags, mode_t mode) {
-  return _syscall_(SYS_open, path, flags, mode);
+  return _syscall_(SYS_open,(uintptr_t)path, (uintptr_t)flags,(uintptr_t)mode);
 }
 
 int _write(int fd, void *buf, size_t count){
-  return _syscall_(SYS_write, fd, buf, count);
+  return _syscall_(SYS_write,(uintptr_t)fd, (uintptr_t)buf,(uintptr_t)count);
 }
 
-void* _sbrk(intptr_t increment){
-  uintptr_t new_addr = program_break+increment;
-  int ret = _syscall_(SYS_brk, new_addr, 0, 0);
-  if(ret==0){
-    uintptr_t old = program_break;
-    program_break = new_addr;
-    return (void*)old; 
+void *_sbrk(intptr_t increment){
+  uintptr_t new_programbreak = programbreak  + increment;
+  if(_syscall_(SYS_brk,new_programbreak,(uintptr_t)0,(uintptr_t)0)!=0){
+    return (void*)-1;
   }
-  return (void *)-1;
+  uintptr_t old= programbreak;
+  programbreak = new_programbreak;
+  return (void*)old;
 }
 
 int _read(int fd, void *buf, size_t count) {
-  return _syscall_(SYS_read, fd, buf, count);
+  return _syscall_(SYS_read,(uintptr_t)fd, (uintptr_t)buf,(uintptr_t)count);
 }
 
 int _close(int fd) {
-  return _syscall_(SYS_close, fd, 0, 0);
+  return _syscall_(SYS_close, (uintptr_t)fd,(uintptr_t)0,(uintptr_t)0);
+
 }
 
 off_t _lseek(int fd, off_t offset, int whence) {
-  return _syscall_(SYS_lseek, fd, offset, whence);
+  return _syscall_(SYS_lseek,(uintptr_t)fd,(uintptr_t)offset,(uintptr_t)whence);
 }
 
 // The code below is not used by Nanos-lite.
