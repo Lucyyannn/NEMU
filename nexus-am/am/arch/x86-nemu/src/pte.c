@@ -114,8 +114,8 @@ _RegSet *_umake(_Protect *p, _Area ustack, _Area kstack,
   _RegSet* tf = (_RegSet*)(StartStack - TF_SPACE/sizeof(int));
   tf->edi=0;
   tf->esi=0;
-  tf->ebp=0;
-  tf->esp=0;
+  // tf->ebp=0;
+  // tf->esp=0;
   tf->ebx=0;
   tf->edx=0;
   tf->ecx=0;
