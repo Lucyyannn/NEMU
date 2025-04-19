@@ -111,20 +111,21 @@ _RegSet *_umake(_Protect *p, _Area ustack, _Area kstack,
   *((int*)(--StartStack))=0;
   
   //(2) init trapframe
-  _RegSet* tf = (_RegSet*)(StartStack - TF_SPACE/sizeof(int));
-  // tf->edi=0;
-  // tf->esi=0;
-  // tf->ebp=0;
-  // tf->esp=0;
-  // tf->ebx=0;
-  // tf->edx=0;
-  // tf->ecx=0;
-  // tf->eax=0;
-  // tf->irq=0;
-  // tf->error_code=0;
+  //_RegSet* tf = (_RegSet*)(StartStack - TF_SPACE/sizeof(int));
+  _RegSet* tf = (_RegSet*)(ustack.end-16-TF_SPACE);
+  tf->edi=0;
+  tf->esi=0;
+  tf->ebp=0;
+  tf->esp=0;
+  tf->ebx=0;
+  tf->edx=0;
+  tf->ecx=0;
+  tf->eax=0;
+  tf->irq=0;
+  tf->error_code=0;
   tf->eip=(uintptr_t)entry;
   tf->cs=8;
-  tf->eflags=(1<<9)+2;
+  tf->eflags=0x2;
 
   return tf;
 }
