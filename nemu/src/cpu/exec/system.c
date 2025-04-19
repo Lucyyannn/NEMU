@@ -5,9 +5,9 @@ void diff_test_skip_nemu();
 void raise_intr(uint8_t NO, vaddr_t ret_addr);
 
 make_EHelper(lidt) {
-  cpu.idtr.limit = vaddr_read(id_dest->addr,2);
-  cpu.idtr.base = vaddr_read(id_dest->addr+4,2)<<16;
-  cpu.idtr.base += vaddr_read(id_dest->addr+2,2);
+  cpu.idtr_limit = vaddr_read(id_dest->addr,2);
+  cpu.idtr_base = vaddr_read(id_dest->addr+4,2)<<16;
+  cpu.idtr_base += vaddr_read(id_dest->addr+2,2);
   print_asm_template1(lidt);
 }
 
@@ -40,7 +40,7 @@ make_EHelper(iret) {
   rtl_pop(&t2);
   decoding.jmp_eip = t2;
   rtl_pop(&t2);
-  cpu.CS = t2;
+  cpu.cs = t2;
   rtl_pop(&t2);
   cpu.eflags = t2;
   decoding.is_jmp = 1;

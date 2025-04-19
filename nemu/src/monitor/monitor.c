@@ -83,12 +83,12 @@ static inline void restart() {
   /* Set the initial instruction pointer. */
   cpu.eip = ENTRY_START;
   cpu.eflags = 0x2;
-  cpu.idtr.base = 0x0;
-  cpu.idtr.limit = 0x0;
-  cpu.CS = 0x8;
+  cpu.idtr_base = 0x0;
+  cpu.idtr_limit = 0x0;
+  cpu.cs = 0x8;
   cpu.cr0 = 0x60000011;
   cpu.cr3 = 0x0;
-//  cpu.INTR = 0;
+  cpu.INTR = 0;
 #ifdef DIFF_TEST
   init_qemu_reg();
 #endif
@@ -137,7 +137,7 @@ int init_monitor(int argc, char *argv[]) {
   init_regex();
 
   /* Initialize the watchpoint pool. */
- // init_wp_pool();
+  init_wp_pool();
 
   /* Initialize devices. */
   init_device();
