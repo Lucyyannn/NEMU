@@ -47,10 +47,10 @@ paddr_t page_translate(vaddr_t vaddr,bool write){
   }
   /* V mode */
   // level 1
-  //Log("[in page_translate] cr3: %08X, vaddr:%08X",cpu.cr3,vaddr);
+  Log("[in page_translate] cr3: %08X, vaddr:%08X",cpu.cr3,vaddr);
   paddr_t PDE_addr = (paddr_t)(cpu.cr3 + PTE_LEN*PDX(vaddr));
   uint32_t PDE_read = paddr_read(PDE_addr,PTE_LEN);
-  //Log("[in page_translate] PDE_addr: %08X, PDE_read:%08X",PDE_addr,PDE_read);
+  Log("[in page_translate] PDE_addr: %08X, PDE_read:%08X",PDE_addr,PDE_read);
   assert(PDE_read&PTE_P);// assert the PTE exists
 
   paddr_write(PDE_addr,PTE_LEN,(PDE_read|PTE_A));//set Accessed
@@ -94,7 +94,6 @@ uint32_t vaddr_read(vaddr_t addr, int len) {
    int rest_size = 4096 - addr%4096;
   //data cross page
   if (rest_size<len) {
-    assert(0);
         int first_len = rest_size;
         int second_len = len-first_len;
         assert(first_len>0&&second_len>0);
@@ -117,7 +116,6 @@ uint32_t vaddr_read(vaddr_t addr, int len) {
 void vaddr_write(vaddr_t addr, int len, uint32_t data) {
   int rest_size = 4096 - addr%4096;
   if (rest_size<len) {
-    assert(0);
         int first_len = rest_size;
         int second_len = len-first_len;
         assert(second_len>0&&first_len>0);
