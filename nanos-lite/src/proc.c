@@ -30,7 +30,7 @@ static int cnt = 0;
 int curr_game = 0;
 _RegSet* schedule(_RegSet *prev) {
   current->tf = prev;
-  cnt=(cnt+1)%100;
+  cnt=(cnt+1)%10;
   if(cnt!=0){
     current = &pcb[curr_game];
   }else{
