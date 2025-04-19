@@ -10,11 +10,12 @@ static _RegSet* do_event(_Event e, _RegSet* r) {
       Log("event timer!");
       return schedule(r);
     case _EVENT_SYSCALL:
+      Log("syscall!");
       do_syscall(r);
-      break;
-      //return schedule(r);
+      //break;
+      return schedule(r);
     case _EVENT_TRAP:
-      printf(" There is an event trap.\n");
+      Log(" There is an event trap.");
       return schedule(r); 
     default: 
       panic("Unhandled event ID = %d", e.event);
