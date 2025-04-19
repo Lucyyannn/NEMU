@@ -25,6 +25,7 @@ void load_prog(const char *filename) {
 
   pcb[i].tf = _umake(&pcb[i].as, stack, stack, (void *)entry, NULL, NULL);
 }
+
 static int ratio = 0;
 _RegSet* schedule(_RegSet *prev) {
   // save the context pointer
@@ -34,9 +35,9 @@ _RegSet* schedule(_RegSet *prev) {
   // take 0 and 1 
 
   
-  current = &pcb[1];
-  _switch(&pcb[1].as);
-  return (pcb[1].tf);
+  current = &pcb[0];
+  _switch(&pcb[0].as);
+  return (pcb[0].tf);
 
 
   // TODO: switch to the new address space,
