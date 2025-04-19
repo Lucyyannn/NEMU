@@ -127,8 +127,8 @@ _RegSet *_umake(_Protect *p, _Area ustack, _Area kstack,
   tf->error_code=0;
   tf->eip=(uintptr_t)entry;
   tf->cs=8;
-  tf->eflags=0x2;
-
+  tf->eflags=0x0202;// enable time intr
+//  0000 0010 0000 0010
   return tf;
 }
 
