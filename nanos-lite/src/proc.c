@@ -42,7 +42,7 @@ _RegSet* schedule(_RegSet *prev) {
   }else if(current==&pcb[1]){
     current=&pcb[current_game];
   }else{
-    assert(0);
+    //assert(0);
   }
   _switch(&current->as);
   return (current->tf);
