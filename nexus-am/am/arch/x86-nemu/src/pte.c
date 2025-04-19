@@ -69,25 +69,25 @@ void _switch(_Protect *p) {
   set_cr3(p->ptr);
 }
 
-// void _map(_Protect *p, void *va, void *pa) {
-//   //the value of va and pa is already difinited. What I should do is to set the PDE and PTE to support the bridge
-//   PDE* pde = (PDE*)p->ptr + PDX(va);
-//   // (1)if PTE not exists
-//   if(!(*pde&PTE_P)){
-//     PTE* ptepage = (PTE*)palloc_f();//alloc a page for PTE
-//     *pde = PTE_ADDR(*ptepage)| PTE_P;// set the PTE value in PDE
+void _map(_Protect *p, void *va, void *pa) {
+  //the value of va and pa is already difinited. What I should do is to set the PDE and PTE to support the bridge
+  PDE* pde = (PDE*)p->ptr + PDX(va);
+  // (1)if PTE not exists
+  if(!(*pde&PTE_P)){
+    PTE* ptepage = (PTE*)palloc_f();//alloc a page for PTE
+    *pde = PTE_ADDR(*ptepage)| PTE_P;// set the PTE value in PDE
 
-//     PTE* pte = (PTE*)(PTE_ADDR(*pde)+ PTE_LEN*PTX(va));
-//     *pte = PTE_ADDR(pa) | PTE_P; //update PTE
-//     return ;
+    PTE* pte = (PTE*)(PTE_ADDR(*pde)+ PTE_LEN*PTX(va));
+    *pte = PTE_ADDR(pa) | PTE_P; //update PTE
+    return ;
 
-//   }else{//(2)PTE exists
-//     PTE* pte = (PTE*)(PTE_ADDR(*pde)+PTE_LEN*PTX(va));
-//     *pte = PTE_ADDR(pa) | PTE_P; //update PTE
-//     return ;
-//   }
-//   return ;
-// }
+  }else{//(2)PTE exists
+    PTE* pte = (PTE*)(PTE_ADDR(*pde)+PTE_LEN*PTX(va));
+    *pte = PTE_ADDR(pa) | PTE_P; //update PTE
+    return ;
+  }
+  return ;
+}
 
 
 void _unmap(_Protect *p, void *va) {
@@ -134,37 +134,27 @@ _RegSet *_umake(_Protect *p, _Area ustack, _Area kstack,
 
 
 
-void* _map(_Protect *p, void *va,int* cnt) {
-  PDE *dir = (PDE*)(p->ptr);//get the PDE 
-  dir += PDX(va);
-  PTE* uppte=NULL; 
-  if(*dir&PTE_P){ 
-    uppte = (PTE*)PTE_ADDR(*dir);
-  }else{//not exist!
-    uppte = (PTE*)(palloc_f());
-    *dir = ((uint32_t)uppte&(~0xfff))|PTE_P;
-    *cnt+=1;
-  }
-  uppte += PTX(va);
-  void* pa=NULL;
-  if(*uppte&PTE_P){
-    pa = (void*)PTE_ADDR(*uppte);
-  }else{//not exist!
-    pa = (void*)(palloc_f());
-    *uppte = ((uint32_t)pa&(~0xfff))|PTE_P;
-    *cnt+=1;
-  }
-  pa += OFF(va);
-  return pa;
-}
-
-// _RegSet *_umake(_Protect *p, _Area ustack, _Area kstack, void *entry, char *const argv[], char *const envp[]) {
-//   *((char**)(ustack.end -4))=NULL;
-//   *((char**)(ustack.end -8))=NULL;
-//   *((int*)(ustack.end -12))=0;
-//   _RegSet* rs = (_RegSet*)(ustack.end - 12 - sizeof(_RegSet));
-//   rs->cs = 0x8;
-//   rs->eip = (uintptr_t)entry;
-//   rs->eflags = (1<<9)+2;
-//   return rs;
+// void* _map(_Protect *p, void *va,int* cnt) {
+//   PDE *dir = (PDE*)(p->ptr);//get the PDE 
+//   dir += PDX(va);
+//   PTE* uppte=NULL; 
+//   if(*dir&PTE_P){ 
+//     uppte = (PTE*)PTE_ADDR(*dir);
+//   }else{//not exist!
+//     uppte = (PTE*)(palloc_f());
+//     *dir = ((uint32_t)uppte&(~0xfff))|PTE_P;
+//     *cnt+=1;
+//   }
+//   uppte += PTX(va);
+//   void* pa=NULL;
+//   if(*uppte&PTE_P){
+//     pa = (void*)PTE_ADDR(*uppte);
+//   }else{//not exist!
+//     pa = (void*)(palloc_f());
+//     *uppte = ((uint32_t)pa&(~0xfff))|PTE_P;
+//     *cnt+=1;
+//   }
+//   pa += OFF(va);
+//   return pa;
 // }
+
