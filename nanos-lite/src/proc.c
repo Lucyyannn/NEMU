@@ -37,13 +37,13 @@ _RegSet* schedule(_RegSet *prev) {
   if(current==&pcb[current_game]){
     if(ratio==99){
       current=&pcb[1];
+      _switch(&current->as);
     }
     ratio=(ratio+1)%100;
-  }else if(current==&pcb[1]){
+  }else {
     current=&pcb[current_game];
-  }else{
-    //assert(0);
+    _switch(&current->as);
   }
-  _switch(&current->as);
+  
   return (current->tf);
 }
