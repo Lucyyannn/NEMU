@@ -277,9 +277,9 @@ void exec_wrapper(bool print_flag) {
   difftest_step(eip);
 #endif
 
-  if(cpu.INTR & cpu.IF){
-    cpu.INTR = 0;
-    raise_intr(TIMER_IRQ,cpu.eip);
-    update_eip();
-  }
+  // if(cpu.INTR & cpu.IF){
+  //   cpu.INTR = 0;
+  //   raise_intr(TIMER_IRQ,cpu.eip);
+  //   update_eip();
+  // }
 }
