@@ -1,6 +1,6 @@
 #include "game.h"
 
-//#define SCREEN_STRETCH
+#define SCREEN_STRETCH
 
 static uint32_t canvas[H][W];
 
