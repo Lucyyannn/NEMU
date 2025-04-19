@@ -9,8 +9,8 @@
 
 #define WP_NUMBER 100
 
-static int wp_cnt=1;
-static WP* wp_runs[WP_NUMBER+1];
+// static int wp_cnt=1;
+// static WP* wp_runs[WP_NUMBER+1];
 
 void cpu_exec(uint64_t);
 
@@ -58,59 +58,59 @@ static int cmd_si(char *args) {
 }
 
 static int cmd_info(char *args) {
-  char *arg = strtok(NULL, " ");
-  if(arg!=NULL){
-    if(strcmp("r",arg)==0){
-      for(int i=0;i<8;i++){
-        printf("%s : 0x%08x\n",regsl[i],reg_l(i));
-      }
-      printf("eip : 0x%08x\n",cpu.eip);
-      printf("cr0 : 0x%08x\n",cpu.cr0);
-      printf("cr3 : 0x%08x\n",cpu.cr3);
-      printf("idtr_base: 0x%08x idtr_limit: 0x%04x\n",cpu.idtr_base,cpu.idtr_limit);
-      printf("eflags:O-%x|I-%x|S-%x|Z-%x|C-%x\n",cpu.OF,cpu.IF,cpu.SF,cpu.ZF,cpu.CF);
-    }else if(strcmp("w",arg)==0){
-      for(int i=1;i<=WP_NUMBER;i++){
-        if(wp_runs[i]!=NULL){
-          printf("The watchpoint %u. expr:%s value:0x%x\n",wp_runs[i]->NO,wp_runs[i]->expr,wp_runs[i]->value);
-        }
-      }
-    }else{
-      printf("Unknown sub-command '%s'\n", arg);
-    }
-  }else{
-    printf("No sub-command\n");
-  }
+  // char *arg = strtok(NULL, " ");
+  // if(arg!=NULL){
+  //   if(strcmp("r",arg)==0){
+  //     for(int i=0;i<8;i++){
+  //       printf("%s : 0x%08x\n",regsl[i],reg_l(i));
+  //     }
+  //     printf("eip : 0x%08x\n",cpu.eip);
+  //     printf("cr0 : 0x%08x\n",cpu.cr0);
+  //     printf("cr3 : 0x%08x\n",cpu.cr3);
+  //     printf("idtr_base: 0x%08x idtr_limit: 0x%04x\n",cpu.idtr_base,cpu.idtr_limit);
+  //     printf("eflags:O-%x|I-%x|S-%x|Z-%x|C-%x\n",cpu.OF,cpu.IF,cpu.SF,cpu.ZF,cpu.CF);
+  //   }else if(strcmp("w",arg)==0){
+  //     for(int i=1;i<=WP_NUMBER;i++){
+  //       if(wp_runs[i]!=NULL){
+  //         printf("The watchpoint %u. expr:%s value:0x%x\n",wp_runs[i]->NO,wp_runs[i]->expr,wp_runs[i]->value);
+  //       }
+  //     }
+  //   }else{
+  //     printf("Unknown sub-command '%s'\n", arg);
+  //   }
+  // }else{
+  //   printf("No sub-command\n");
+  // }
   return 0;
 }
 
 
 static int cmd_x(char *args) {
-  char *arg_N = strtok(NULL, " ");
-  char *arg_EXPR = strtok(NULL, "\n");
-  if(arg_N==NULL){
-    printf("No N arg\n");
-  }
-  if(arg_EXPR==NULL){
-    printf("No EXPR arg\n");
-  }
-  if(arg_N!=NULL&&arg_EXPR!=NULL){
-    char *endptr1;
-    int N = strtol(arg_N,&endptr1,10);
+  // char *arg_N = strtok(NULL, " ");
+  // char *arg_EXPR = strtok(NULL, "\n");
+  // if(arg_N==NULL){
+  //   printf("No N arg\n");
+  // }
+  // if(arg_EXPR==NULL){
+  //   printf("No EXPR arg\n");
+  // }
+  // if(arg_N!=NULL&&arg_EXPR!=NULL){
+  //   char *endptr1;
+  //   int N = strtol(arg_N,&endptr1,10);
 
-    bool flag;
-    uint32_t val=expr(arg_EXPR,&flag);
-    if(*endptr1 != '\0'||!flag){
-      printf("The x cmd incurs a fault!\n");
-    }else{
-      uint32_t value = vaddr_read(val,4);
-      for(int i=1;i<=N;i++){
-        printf("0x%x-0x%x : %08x\n",val+3,val,value);
-        val+=4;
-        value = vaddr_read(val,4);
-      }
-    }
-  }
+  //   bool flag;
+  //   uint32_t val=expr(arg_EXPR,&flag);
+  //   if(*endptr1 != '\0'||!flag){
+  //     printf("The x cmd incurs a fault!\n");
+  //   }else{
+  //     uint32_t value = vaddr_read(val,4);
+  //     for(int i=1;i<=N;i++){
+  //       printf("0x%x-0x%x : %08x\n",val+3,val,value);
+  //       val+=4;
+  //       value = vaddr_read(val,4);
+  //     }
+  //   }
+  // }
   return 0;
 }
 
@@ -126,33 +126,33 @@ static int cmd_p(char *args){
 }
 
 static void init_wp_runs(){
-  for(int i=0;i<WP_NUMBER;i++){
-    wp_runs[i]=NULL;
-  }
+  // for(int i=0;i<WP_NUMBER;i++){
+  //   wp_runs[i]=NULL;
+  // }
 }
 
 static int cmd_w(char *args){
-  assert(wp_cnt<=WP_NUMBER);
-  bool flag;
-  WP* wp = new_wp();
-  wp->NO = wp_cnt;
-  wp->expr = strdup(args);
-  wp->value = expr(wp->expr,&flag);
-  assert(flag);
-  wp_runs[wp_cnt++]=wp;
-  printf("The watchpoint %u has built. expr:%s value:0x%x\n",wp->NO,wp->expr,wp->value);
+  // assert(wp_cnt<=WP_NUMBER);
+  // bool flag;
+  // WP* wp = new_wp();
+  // wp->NO = wp_cnt;
+  // wp->expr = strdup(args);
+  // wp->value = expr(wp->expr,&flag);
+  // assert(flag);
+  // wp_runs[wp_cnt++]=wp;
+  // printf("The watchpoint %u has built. expr:%s value:0x%x\n",wp->NO,wp->expr,wp->value);
   return 0;
 }
 
 static int cmd_d(char *args){
-  int NO;
-  char *endptr;
-  NO = strtol(args,&endptr,10);
-  assert(*endptr == '\0');
-  assert(wp_runs[NO]!=NULL);
-  free_wp(wp_runs[NO]);
-  wp_runs[NO]=NULL;
-  printf("The watchpoint %u has removed.\n",NO);
+  // int NO;
+  // char *endptr;
+  // NO = strtol(args,&endptr,10);
+  // assert(*endptr == '\0');
+  // assert(wp_runs[NO]!=NULL);
+  // free_wp(wp_runs[NO]);
+  // wp_runs[NO]=NULL;
+  // printf("The watchpoint %u has removed.\n",NO);
   return 0; 
 }
 

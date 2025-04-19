@@ -6,12 +6,12 @@ void raise_intr(uint8_t NO, vaddr_t ret_addr) {
    * That is, use ``NO'' to index the IDT.
    */
   
-  t2 = cpu.cs;
+  t2 = cpu.CS;
   rtl_push(&cpu.eflags);
   cpu.IF = 0;
   rtl_push(&t2);
   rtl_push(&ret_addr);
-  vaddr_t idx = cpu.idtr_base+ NO*8;
+  vaddr_t idx = cpu.idtr.base+ NO*8;
   t2 = vaddr_read(idx,4);
   t3 = vaddr_read(idx+4,4);
   decoding.jmp_eip =(t3&0xffff0000) + (t2&0x0000ffff);
@@ -19,5 +19,5 @@ void raise_intr(uint8_t NO, vaddr_t ret_addr) {
 }
 
 void dev_raise_intr() {
-  cpu.INTR = 1;
+  //cpu.intr = 1;
 }
