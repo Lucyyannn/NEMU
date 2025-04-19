@@ -112,7 +112,8 @@ _RegSet *_umake(_Protect *p, _Area ustack, _Area kstack,
   
   //(2) init trapframe
   //_RegSet* tf = (_RegSet*)(StartStack - TF_SPACE/sizeof(int));
-  _RegSet* tf = (_RegSet*)(ustack.end-16-TF_SPACE);
+  //_RegSet* tf = (_RegSet*)(ustack.end-sizeof(uintptr_t)*4-TF_SPACE);
+  _RegSet* tf = (_RegSet*)(StartStack-TF_SPACE);
   tf->edi=0;
   tf->esi=0;
   tf->ebp=0;
