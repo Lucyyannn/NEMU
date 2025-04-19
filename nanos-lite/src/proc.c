@@ -34,8 +34,9 @@ _RegSet* schedule(_RegSet *prev) {
   // take 0 and 1 
 
   
-  current = ((current == &pcb[0]&&ratio==100000) ? &pcb[1] : &pcb[0]);
-
+  current = &pcb[0];
+  _switch(&pcb[0].as);
+  return (pcb[0].tf);
   // TODO: switch to the new address space,
   // then return the new context
   if(current==&pcb[0]){
