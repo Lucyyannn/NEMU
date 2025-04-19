@@ -8,7 +8,7 @@
 #define KEYBOARD_IRQ 1
 
 static uint32_t *i8042_data_port_base;
-static uint8_t *i8042_status_port_base;
+static uint8_t *i8042_status_port_base; 
 
 #define _KEYS(_) \
   _(ESCAPE) _(F1) _(F2) _(F3) _(F4) _(F5) _(F6) _(F7) _(F8) _(F9) _(F10) _(F11) _(F12) \
