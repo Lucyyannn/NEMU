@@ -34,7 +34,7 @@ _RegSet* schedule(_RegSet *prev) {
   // always select pcb[0] as the new process
   // take 0 and 1 
 
-  
+  Log(" a schedule!");
   current = &pcb[0];
   _switch(&pcb[0].as);
   return (pcb[0].tf);
