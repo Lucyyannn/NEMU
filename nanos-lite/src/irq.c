@@ -2,6 +2,7 @@
 #include "syscall.h"
 
 _RegSet* do_syscall(_RegSet *r);
+_RegSet* schedule(_RegSet *prev);
 
 static _RegSet* do_event(_Event e, _RegSet* r) {
   switch (e.event) {
@@ -10,7 +11,7 @@ static _RegSet* do_event(_Event e, _RegSet* r) {
       break;
     case _EVENT_TRAP:
       printf(" There is an event trap.\n");
-      break;
+      return schedule(r); 
     default: 
       panic("Unhandled event ID = %d", e.event);
   }

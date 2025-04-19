@@ -92,7 +92,40 @@ void _map(_Protect *p, void *va, void *pa) {
 void _unmap(_Protect *p, void *va) {
 }
 
-_RegSet *_umake(_Protect *p, _Area ustack, _Area kstack, void *entry, char *const argv[], char *const envp[]) {
-  return NULL;
+_RegSet *_umake(_Protect *p, _Area ustack, _Area kstack, 
+              void *entry, char *const argv[], char *const envp[]) {
+                /*
+                 stack frame : high address
+                                              return value
+                                              argv n
+                                              argv n-1
+                                              ...
+                                              argv 1
+                               low            old ebp
+                 */
+  //(1) set the stack of _start
+  uintptr_t StartStack = (uintptr_t)ustack.end;
+  *(uintptr_t*)StartStack=0; //return value
+  *((char**)(--StartStack)) = NULL;//arguments
+  *((char**)(--StartStack))=NULL;
+  *((int*)(--StartStack))=0;
+  
+  //(2) init trapframe
+  _RegSet* tf = (_RegSet*)(StartStack - TF_SPACE/sizeof(int));
+  tf->edi=0;
+  tf->esi=0;
+  tf->ebp=0;
+  tf->esp=0;
+  tf->ebx=0;
+  tf->edx=0;
+  tf->ecx=0;
+  tf->eax=0;
+  tf->irq=0;
+  tf->error_code=0;
+  tf->eip=(uintptr_t)entry;
+  tf->cs=8;
+  tf->eflags=0x2;
+
+  return tf;
 }
 
