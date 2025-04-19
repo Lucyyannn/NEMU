@@ -20,6 +20,12 @@ static bool is_skip_nemu;
 void diff_test_skip_qemu() { is_skip_qemu = true; }
 void diff_test_skip_nemu() { is_skip_nemu = true; }
 
+#define test(name) \
+  if(r.concat(,name)!=cpu.concat(,name)){\
+    printf("%s is error at 0x%08x! QEMU:0x%08x NEMU:0x%08x\n",#name,r.eip,r.concat(,name),cpu.concat(,name));\
+    diff = true;\
+  };
+
 #define regcpy_from_nemu(regs) \
   do { \
     regs.eax = cpu.eax; \
@@ -149,44 +155,15 @@ void difftest_step(uint32_t eip) {
 
   // TODO: Check the registers state with QEMU.
   // Set `diff` as `true` if they are not the same.
-  
-  if(r.eax != cpu.eax){
-    diff=true;
-    printf("at eip : 0X%08X \n",cpu.eip);
-    printf("DIFF: r.eax=0X%08X,  cpu.eax=0X%08X\n",r.eax,cpu.eax);
-  }else if(r.ecx != cpu.ecx){
-    diff=true;
-    printf("at eip : 0X%08X \n",cpu.eip);
-    printf("DIFF: r.ecx=0X%08X,  cpu.ecx=0X%08X\n",r.ecx,cpu.ecx);
-  }else if(r.edx != cpu.edx){
-    diff=true;
-    printf("at eip : 0X%08X \n",cpu.eip);
-    printf("DIFF: r.edx=0X%08X,  cpu.edx=0X%08X\n",r.edx,cpu.edx);
-  }else if(r.ebx != cpu.ebx){
-    diff=true;
-    printf("at eip : 0X%08X \n",cpu.eip);
-    printf("DIFF: r.ebx=0X%08X,  cpu.ebx=0X%08X\n",r.ebx,cpu.ebx);
-  }else if(r.esp != cpu.esp){
-    diff=true;
-    printf("at eip : 0X%08X \n",cpu.eip);
-    printf("DIFF: r.esp=0X%08X,  cpu.esp=0X%08X\n",r.esp,cpu.esp);
-  }else if(r.ebp != cpu.ebp){
-    diff=true;
-    printf("at eip : 0X%08X \n",cpu.eip);
-    printf("DIFF: r.ebp=0X%08X,  cpu.ebp=0X%08X\n",r.ebp,cpu.ebp);
-  }else if(r.esi != cpu.esi){
-    diff=true;
-    printf("at eip : 0X%08X \n",cpu.eip);
-    printf("DIFF: r.esi=0X%08X,  cpu.esi=0X%08X\n",r.esi,cpu.esi);
-  }else if(r.edi != cpu.edi){
-    diff=true;
-    printf("at eip : 0X%08X \n",cpu.eip);
-    printf("DIFF: r.edi=0X%08X,  cpu.edi=0X%08X\n",r.edi,cpu.edi);
-  }else if(r.eip != cpu.eip){
-    diff=true;
-    printf("at eip : 0X%08X \n",cpu.eip);
-    printf("DIFF: r.eip=0X%08X,  cpu.eip=0X%08X\n",r.eip,cpu.eip);
-  }else {}
+  test(eip);
+  test(eax);
+  test(ebx);
+  test(ecx);
+  test(edx);
+  test(esp);
+  test(ebp);
+  test(edi);
+  test(esi);
 
   if (diff) {
     nemu_state = NEMU_END;
