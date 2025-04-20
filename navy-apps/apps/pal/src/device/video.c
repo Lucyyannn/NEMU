@@ -227,7 +227,6 @@ VIDEO_Init(
    //
    // Create the screen surface.
    //
-
 #if defined (NDS)
    gpScreenReal = SDL_SetVideoMode(293, 196, 8, SDL_SWSURFACE | SDL_FULLSCREEN);
 #elif defined (__SYMBIAN32__)
@@ -407,16 +406,6 @@ VIDEO_UpdateScreen(
    short           screenRealHeight = gpScreenReal->h;
    short           screenRealY = 0;
 
-   gpScreenReal->pitch = 320;
-   gpScreenReal->w=320;
-   gpScreenReal->h=200;
-   gpScreenReal->flags=1;
-
-<<<<<<< HEAD
-
-=======
->>>>>>> pa4
-
 #if SDL_VERSION_ATLEAST(2,0,0)
    if (g_bRenderPaused)
    {
@@ -476,7 +465,7 @@ VIDEO_UpdateScreen(
 #endif
    }
    else
-   { 
+   {
 	   if (g_wShakeTime != 0) 
 	   {
 		   //
@@ -540,23 +529,18 @@ VIDEO_UpdateScreen(
 #endif
 		   SDL_RenderPresent(gpRenderer);
 #else
-
 		   SDL_UpdateRect(gpScreenReal, 0, 0, gpScreenReal->w, gpScreenReal->h);
 #endif
 		   g_wShakeTime--;
 	   }
 	   else
-	   {  
+	   {
 		   dstrect.x = 0;
 		   dstrect.y = screenRealY;
 		   dstrect.w = gpScreenReal->w;
 		   dstrect.h = screenRealHeight;
 
 		   SDL_SoftStretch(gpScreen, NULL, gpScreenReal, &dstrect);
-<<<<<<< HEAD
-   
-=======
->>>>>>> pa4
 
 		   if (SDL_MUSTLOCK(gpScreenReal))
 		   {
@@ -1198,7 +1182,6 @@ VIDEO_FadeScreen(
                   SDL_RenderCopy(gpRenderer, gpBackKeyMessage, NULL, NULL);
                }
             }
-
 #endif
 			SDL_RenderPresent(gpRenderer);
 #else
@@ -1214,7 +1197,6 @@ VIDEO_FadeScreen(
             dstrect.h = screenRealHeight;
 
             SDL_SoftStretch(gpScreenBak, NULL, gpScreenReal, &dstrect);
-           
 #if SDL_VERSION_ATLEAST(2, 0, 0)
             SDL_UpdateTexture(gpTexture, NULL, gpScreenReal->pixels, gpScreenReal->pitch);
             SDL_RenderCopy(gpRenderer, gpTexture, NULL, NULL);

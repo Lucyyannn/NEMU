@@ -38,14 +38,12 @@ static inline make_DopHelper(SI) {
    *
    op->simm = ???
    */
-  if(op->width==4){
-    op->simm = instr_fetch(eip,op->width);
-  }else if(op->width==1){
-    int8_t simm_val=instr_fetch(eip, op->width);
-    int32_t result = simm_val;
-    op->simm = result;
-  }else{}
-  
+  if(op->width==1){
+    op->simm = (int8_t)instr_fetch(eip,1);
+  }else{
+    op->simm = instr_fetch(eip,4);
+  }
+
   rtl_li(&op->val, op->simm);
 
 #ifdef DEBUG
@@ -95,6 +93,7 @@ static inline make_DopHelper(r) {
  * Rd
  * Sw
  */
+ // read 1 byte! set ext_opcode,reg,r/m.And SIB read 1 byte!
 static inline void decode_op_rm(vaddr_t *eip, Operand *rm, bool load_rm_val, Operand *reg, bool load_reg_val) {
   read_ModR_M(eip, rm, load_rm_val, reg, load_reg_val);
 }

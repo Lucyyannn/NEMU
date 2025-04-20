@@ -12,13 +12,9 @@ void _map(_Protect *p, void *va, void *pa);
 
 uintptr_t loader(_Protect *as, const char *filename) {
   int fd = fs_open(filename,0,0);
-<<<<<<< HEAD
-  fs_read(fd,DEFAULT_ENTRY,fs_filesz(fd));
-=======
   size_t filesz = fs_filesz(fd);
   int page_num = filesz/PAGE_SIZE; //total_pages+rest_content
   if(filesz%PAGE_SIZE>0){page_num+=1;}
->>>>>>> pa4
 
   void* va = DEFAULT_ENTRY;//load the program by DEFAULT_ENTRY in vitual logic
   for(int i=0;i<page_num;i++){

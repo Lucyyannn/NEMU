@@ -30,10 +30,6 @@ int main() {
 #endif
 
   init_fs();
-<<<<<<< HEAD
-  uint32_t entry = loader(NULL, "/bin/pal");
-  ((void (*)(void))entry)();
-=======
 
   // uint32_t entry = loader(NULL, "/bin/dummy");
   // ((void (*)(void))entry)();
@@ -42,7 +38,6 @@ int main() {
   load_prog("/bin/videotest");
   
   _trap();
->>>>>>> pa4
 
   panic("Should not reach here");
 }

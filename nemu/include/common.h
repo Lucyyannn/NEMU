@@ -1,6 +1,5 @@
 #ifndef __COMMON_H__
 #define __COMMON_H__
-
 //#define DEBUG
 //#define DIFF_TEST
 

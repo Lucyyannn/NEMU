@@ -6,9 +6,8 @@
 enum { R_EAX, R_ECX, R_EDX, R_EBX, R_ESP, R_EBP, R_ESI, R_EDI };
 enum { R_AX, R_CX, R_DX, R_BX, R_SP, R_BP, R_SI, R_DI };
 enum { R_AL, R_CL, R_DL, R_BL, R_AH, R_CH, R_DH, R_BH };
-// enum { CF=0,ZF=6,SF=7,IF=9,OF=11}; //eflags 
 
-/* TODO: Re-organize the `CPU_state' structure to match the register
+/* TODO:Re-organize the `CPU_state' structure to match the register
  * encoding scheme in i386 instruction format. For example, if we
  * access cpu.gpr[3]._16, we will get the `bx' register; if we access
  * cpu.gpr[1]._8[1], we will get the 'ch' register. Hint: Use `union'.
@@ -16,57 +15,50 @@ enum { R_AL, R_CL, R_DL, R_BL, R_AH, R_CH, R_DH, R_BH };
  */
 
 typedef struct {
-
-  union{
-    union {
-      uint32_t _32;
-      uint16_t _16;
-      uint8_t _8[2];
-    } gpr[8];
-    
-      /* Do NOT change the order of the GPRs' definitions. */
-
-      /* In NEMU, rtlreg_t is exactly uint32_t. This makes RTL instructions
-      * in PA2 able to directly access these registers.
-      */
+  union {
     struct {
       rtlreg_t eax, ecx, edx, ebx, esp, ebp, esi, edi;
     };
+    struct {
+      union {
+        uint32_t _32;
+        uint16_t _16;
+        struct {
+          uint8_t _8[2];
+        };
+      } gpr[8];
+    };
   };
-  
-  vaddr_t eip;
+
+  /* Do NOT change the order of the GPRs' definitions. */
+
+  /* In NEMU, rtlreg_t is exactly uint32_t. This makes RTL instructions
+   * in PA2 able to directly access these registers.
+   */
   union {
     struct {
-      uint32_t CF  :1;//0
-      uint32_t     :5;
-      uint32_t ZF  :1;//6
-      uint32_t SF  :1;//7
-      uint32_t     :1;
-      uint32_t IF  :1;//9
-      uint32_t     :1;
-      uint32_t OF  :1;//11
-      uint32_t     :20;
+      bool CF	  :1;
+      bool a_t	:1;
+      bool a_x1	:4;
+      bool ZF   :1;
+      bool SF   :1;
+      bool a_x2 :1;
+      bool IF   :1;
+      bool a_x3 :1;
+      bool OF   :1;
+      uint32_t a_x4 :20;
     };
-    uint32_t eflags;
-  };  
-
-  rtlreg_t CS;
-
-  struct {
-    uint16_t limit;
-    uint32_t base;
-  } idtr;
-
-  rtlreg_t cr3;
-  union{
-    struct{
-      uint32_t      :31;
-      uint32_t PG   :1;
-    };
-    uint32_t cr0;
+    rtlreg_t eflags;
   };
+  struct {
+    uint32_t idtr_base;
+    uint16_t idtr_limit;
+  };
+  uint16_t cs;
+  vaddr_t eip;
+  rtlreg_t cr0;
+  rtlreg_t cr3;
   bool INTR;
-
 } CPU_state;
 
 extern CPU_state cpu;
@@ -93,11 +85,5 @@ static inline const char* reg_name(int index, int width) {
     default: assert(0);
   }
 }
-
-// for debug
-void print_reg_info();
-// get reg value by name
-uint32_t get_reg_value(char* name);
-
 
 #endif
