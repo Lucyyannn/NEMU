@@ -37,7 +37,11 @@ void *_sbrk(intptr_t increment){
   if(_syscall_(SYS_brk,new_programbreak,(uintptr_t)0,(uintptr_t)0)!=0){
     return (void*)-1;
   }
+<<<<<<< HEAD
   uintptr_t old = programbreak;
+=======
+  uintptr_t old= programbreak;
+>>>>>>> pa4
   programbreak = new_programbreak;
   return (void*)old;
 }

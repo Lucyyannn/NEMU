@@ -11,8 +11,8 @@ struct _RegSet {
   int irq;
   uintptr_t error_code;
   uintptr_t eip, cs, eflags;
-
 };
+#define TF_SPACE sizeof(_RegSet)
 
 #define SYSCALL_ARG1(r) (r->eax)
 #define SYSCALL_ARG2(r) (r->ebx)

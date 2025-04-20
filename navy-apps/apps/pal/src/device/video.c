@@ -412,7 +412,10 @@ VIDEO_UpdateScreen(
    gpScreenReal->h=200;
    gpScreenReal->flags=1;
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> pa4
 
 #if SDL_VERSION_ATLEAST(2,0,0)
    if (g_bRenderPaused)
@@ -550,7 +553,10 @@ VIDEO_UpdateScreen(
 		   dstrect.h = screenRealHeight;
 
 		   SDL_SoftStretch(gpScreen, NULL, gpScreenReal, &dstrect);
+<<<<<<< HEAD
    
+=======
+>>>>>>> pa4
 
 		   if (SDL_MUSTLOCK(gpScreenReal))
 		   {

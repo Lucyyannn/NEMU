@@ -15,17 +15,35 @@ void load_prog(const char *filename) {
   uintptr_t entry = loader(&pcb[i].as, filename);
 
   // TODO: remove the following three lines after you have implemented _umake()
-  _switch(&pcb[i].as);
-  current = &pcb[i];
-  ((void (*)(void))entry)();
+  // _switch(&pcb[i].as);
+  // current = &pcb[i];
+  // ((void (*)(void))entry)();
 
   _Area stack;
   stack.start = pcb[i].stack;
   stack.end = stack.start + sizeof(pcb[i].stack);
 
   pcb[i].tf = _umake(&pcb[i].as, stack, stack, (void *)entry, NULL, NULL);
+  Log("pcb[%d]: cr3: %08X, tf: %08X",i,(uintptr_t)pcb[i].as.ptr,(uintptr_t)pcb[i].tf);
 }
 
+int current_game = 0;
+static int ratio = 0;
+
 _RegSet* schedule(_RegSet *prev) {
-  return NULL;
+  // save the context pointer
+  current->tf = prev;
+
+  if(current==&pcb[current_game]){
+    if(ratio==99){
+      current=&pcb[1];
+      _switch(&current->as);
+    }
+    ratio=(ratio+1)%100;
+  }else {
+    current=&pcb[current_game];
+    _switch(&current->as);
+  }
+  
+  return (current->tf);
 }
