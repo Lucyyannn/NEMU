@@ -104,8 +104,8 @@ int _istatus(int enable);
 void _pte_init(void*(*palloc)(), void (*pfree)(void*));
 void _protect(_Protect *p);
 void _release(_Protect *p);
-// void _map(_Protect *p, void *va, void *pa);
-void* _map(_Protect *p, void *va, int *cnt);
+void _map(_Protect *p, void *va, void *pa);
+//void* _map(_Protect *p, void *va, int *cnt);
 
 void _unmap(_Protect *p, void *va);
 void _switch(_Protect *p);

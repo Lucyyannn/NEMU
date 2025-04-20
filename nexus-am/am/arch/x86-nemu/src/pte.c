@@ -134,27 +134,38 @@ _RegSet *_umake(_Protect *p, _Area ustack, _Area kstack,
 
 
 
-void* _map(_Protect *p, void *va,int* cnt) {
-  PDE *dir = (PDE*)(p->ptr);//get the PDE 
-  dir += PDX(va);
-  PTE* uppte=NULL; 
-  if(*dir&PTE_P){ 
-    uppte = (PTE*)PTE_ADDR(*dir);
-  }else{//not exist!
-    uppte = (PTE*)(palloc_f());
-    *dir = ((uint32_t)uppte&(~0xfff))|PTE_P;
-    *cnt+=1;
-  }
-  uppte += PTX(va);
-  void* pa=NULL;
-  if(*uppte&PTE_P){
-    pa = (void*)PTE_ADDR(*uppte);
-  }else{//not exist!
-    pa = (void*)(palloc_f());
-    *uppte = ((uint32_t)pa&(~0xfff))|PTE_P;
-    *cnt+=1;
-  }
-  pa += OFF(va);
-  return pa;
-}
+// void* _map(_Protect *p, void *va,int* cnt) {
+//   PDE *dir = (PDE*)(p->ptr);//get the PDE 
+//   dir += PDX(va);
+//   PTE* uppte=NULL; 
+//   if(*dir&PTE_P){ 
+//     uppte = (PTE*)PTE_ADDR(*dir);
+//   }else{//not exist!
+//     uppte = (PTE*)(palloc_f());
+//     *dir = ((uint32_t)uppte&(~0xfff))|PTE_P;
+//     *cnt+=1;
+//   }
+//   uppte += PTX(va);
+//   void* pa=NULL;
+//   if(*uppte&PTE_P){
+//     pa = (void*)PTE_ADDR(*uppte);
+//   }else{//not exist!
+//     pa = (void*)(palloc_f());
+//     *uppte = ((uint32_t)pa&(~0xfff))|PTE_P;
+//     *cnt+=1;
+//   }
+//   pa += OFF(va);
+//   return pa;
+// }
 
+void _map(_Protect *p, void *va, void *pa) {
+  PDE *pde = ((PDE *)p->ptr) + PDX(va);
+  PTE *ptab;
+  if ((*pde & PTE_P) == 0) {
+    ptab = (PTE *)(palloc_f());
+    *pde = ((uint32_t)ptab & ~0xfff) | PTE_P;   
+  }
+  else 
+    ptab = (PTE *)PTE_ADDR(*pde);
+  ptab[PTX(va)] = ((uint32_t)pa & ~0xfff) | PTE_P;
+}
