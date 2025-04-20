@@ -22,7 +22,7 @@ size_t events_read(void *buf, size_t len) {
     }
     char* event = down? "kd" :"ku";
     sprintf((char*)buf,"%s %s\n",event,keyname[key]);
-    if(down && key==12){
+    if(down && (key==_KEY_F12)){
       current_game=(current_game==0)?2:0;
     }
     return strlen((char*)buf);
