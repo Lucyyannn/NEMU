@@ -1,12 +1,13 @@
 #include "nemu.h"
-#include <stdlib.h>
 #include <time.h>
-//Readed!
+#include <stdlib.h>
+
 CPU_state cpu;
 
 const char *regsl[] = {"eax", "ecx", "edx", "ebx", "esp", "ebp", "esi", "edi"};
 const char *regsw[] = {"ax", "cx", "dx", "bx", "sp", "bp", "si", "di"};
 const char *regsb[] = {"al", "cl", "dl", "bl", "ah", "ch", "dh", "bh"};
+
 
 void reg_test() {
   srand(time(0));
@@ -15,7 +16,7 @@ void reg_test() {
   cpu.eip = eip_sample;
 
   int i;
-  for (i = R_EAX; i <= R_EDI; i ++) {//枚举8个寄存器
+  for (i = R_EAX; i <= R_EDI; i ++) {
     sample[i] = rand();
     reg_l(i) = sample[i];
     assert(reg_w(i) == (sample[i] & 0xffff));
@@ -30,6 +31,7 @@ void reg_test() {
   assert(reg_b(R_DL) == (sample[R_EDX] & 0xff));
   assert(reg_b(R_DH) == ((sample[R_EDX] >> 8) & 0xff));
 
+
   assert(sample[R_EAX] == cpu.eax);
   assert(sample[R_ECX] == cpu.ecx);
   assert(sample[R_EDX] == cpu.edx);
@@ -41,3 +43,60 @@ void reg_test() {
 
   assert(eip_sample == cpu.eip);
 }
+
+// compare two char*
+uint32_t strcomp(char* a,const char* b){
+  //get length
+  int i=strlen(a);
+  int j=strlen(b);
+  // compare length
+  if(i!=j){
+    return -1;
+  }
+  //compare content
+  for(i=0;i<=j;++i){
+    if(*(a+i)!=*(b+i)){return -1;}
+  }
+  return 0;
+}
+
+
+void print_reg_info(){
+  for(int i=0;i<8;i++){
+    printf("| %s  ",reg_name(i,4));
+    printf("%08X     ",reg_l(i));
+    printf("| %s  ",reg_name(i,2));
+    printf("%08X     ",reg_w(i));
+    printf("| %s  ",reg_name(i,1));
+    printf("%08X      |\n",reg_b(i));
+  }
+  printf("pc     %08X\n",cpu.eip);
+  return ;
+}
+
+// get reg value by name
+uint32_t get_reg_value(char* name){
+  uint32_t result = 0;
+  for(int i=0;i<8;i++){
+    if(strcomp(name,regsl[i])==0){
+      result = reg_l(i);
+      return result;
+    }
+  }
+  for(int i=0;i<8;i++){
+    if(strcomp(name,regsw[i])==0){
+      result = reg_w(i);
+      return result;
+    }
+  }
+  for(int i=0;i<8;i++){
+    if(strcomp(name,regsb[i])==0){
+      result = reg_b(i);
+      return result;
+    }
+  }
+  printf("At last\n");
+  assert(0);
+  return 0;
+}
+
