@@ -15,46 +15,46 @@ void free_page(void *p) {
   panic("not implement yet");
 }
 
-// /* The brk() system call handler. */
-// int mm_brk(uint32_t new_brk) {
-//   if (current->cur_brk == 0) {
-//     current->cur_brk = current->max_brk = new_brk;
-//   }
-//   else {
-//     if (new_brk > current->max_brk) {
-//       // map memory region [current->max_brk, new_brk)into address space current->as
-//       void *va_begin = (void *)((current->max_brk-1)&~0xfff) + PAGE_SIZE;
-//       void *va_end = (void *)((new_brk-1)&~0xfff);
-//       void* va=va_begin;
-//       for(va = va_begin; va <= va_end; va += PAGE_SIZE){
-//         void* pa = new_page();
-//         _map(&current->as, (void*)va, pa);
-//       }
-//       current->max_brk = new_brk;
-//     }
-//     current->cur_brk = new_brk;
-//   }
-
-//   return 0;
-// }
-
+/* The brk() system call handler. */
 int mm_brk(uint32_t new_brk) {
-  //printf("cur_brk: %x, max_brk: %x, new_brk: %x\n", current->cur_brk, current->max_brk, new_brk);
-  if (current->cur_brk == 0)
+  if (current->cur_brk == 0) {
     current->cur_brk = current->max_brk = new_brk;
+  }
   else {
     if (new_brk > current->max_brk) {
-      void *va_begin = (void *)((current->max_brk - 1) & ~0xfff) + PGSIZE;
-      void *va_end = (void *)((new_brk - 1) & ~0xfff);
-      void *va;
-      for (va = va_begin; va <= va_end; va += PGSIZE)
-        _map(&current->as, va, new_page());
+      // map memory region [current->max_brk, new_brk)into address space current->as
+      void *va_begin = (void *)((current->max_brk-1)&~0xfff) + PAGE_SIZE;
+      void *va_end = (void *)((new_brk-1)&~0xfff);
+      void* va=va_begin;
+      for(va = va_begin; va <= va_end; va += PAGE_SIZE){
+        void* pa = new_page();
+        _map(&current->as, (void*)va, pa);
+      }
       current->max_brk = new_brk;
     }
     current->cur_brk = new_brk;
-  }  
+  }
+
   return 0;
 }
+
+// int mm_brk(uint32_t new_brk) {
+//   //printf("cur_brk: %x, max_brk: %x, new_brk: %x\n", current->cur_brk, current->max_brk, new_brk);
+//   if (current->cur_brk == 0)
+//     current->cur_brk = current->max_brk = new_brk;
+//   else {
+//     if (new_brk > current->max_brk) {
+//       void *va_begin = (void *)((current->max_brk - 1) & ~0xfff) + PGSIZE;
+//       void *va_end = (void *)((new_brk - 1) & ~0xfff);
+//       void *va;
+//       for (va = va_begin; va <= va_end; va += PGSIZE)
+//         _map(&current->as, va, new_page());
+//       current->max_brk = new_brk;
+//     }
+//     current->cur_brk = new_brk;
+//   }  
+//   return 0;
+// }
 
 
 void init_mm() {
