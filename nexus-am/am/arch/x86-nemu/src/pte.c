@@ -88,17 +88,6 @@ void _map(_Protect *p, void *va, void *pa) {
   }
   return ;
 }
-// void _map(_Protect *p, void *va, void *pa) {
-//   PDE *pde = ((PDE *)p->ptr) + PDX(va);
-//   PTE *ptab;
-//   if ((*pde & PTE_P) == 0) {
-//     ptab = (PTE *)(palloc_f());
-//     *pde = ((uint32_t)ptab & ~0xfff) | PTE_P;   
-//   }
-//   else 
-//     ptab = (PTE *)PTE_ADDR(*pde);
-//   ptab[PTX(va)] = ((uint32_t)pa & ~0xfff) | PTE_P;
-// }
 
 void _unmap(_Protect *p, void *va) {
 }

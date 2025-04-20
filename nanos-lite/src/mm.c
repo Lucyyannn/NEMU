@@ -23,9 +23,12 @@ int mm_brk(uint32_t new_brk) {
   else {
     if (new_brk > current->max_brk) {
       // map memory region [current->max_brk, new_brk)into address space current->as
-      void *va_begin = (void *)((current->max_brk-1)&~0xfff) + PAGE_SIZE;
-      void *va_end = (void *)((new_brk-1)&~0xfff);
-      void* va=va_begin;
+    //  void *va_begin = (void *)((current->max_brk-1)&~0xfff) + PAGE_SIZE;
+    //  void *va_end = (void *)((new_brk-1)&~0xfff);
+    //  void* va=va_begin;
+        uintptr_t va_begin = PGROUNDUP(current->max_brk);
+        uintptr_t va_end = PGROUNDDOWN(new_brk-1);
+        uintptr_t va = va_begin;
       for(va = va_begin; va <= va_end; va += PAGE_SIZE){
         void* pa = new_page();
         _map(&current->as, (void*)va, pa);
