@@ -10,7 +10,6 @@ static _RegSet* do_event(_Event e, _RegSet* r) {
       Log("event timer!");
       return schedule(r);
     case _EVENT_SYSCALL:
-      Log("syscall!");
       do_syscall(r);
       //break;
       return schedule(r);
