@@ -111,8 +111,6 @@ uint32_t vaddr_read(vaddr_t addr, int len) {
   }
 }
 // xiaoduan 
-
-
 void vaddr_write(vaddr_t addr, int len, uint32_t data) {
   int rest_size = 4096 - addr%4096;
   if (rest_size<len) {
@@ -133,3 +131,4 @@ void vaddr_write(vaddr_t addr, int len, uint32_t data) {
         return ;
   }
 }
+
