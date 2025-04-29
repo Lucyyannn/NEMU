@@ -75,34 +75,6 @@ make_group(gp7,
     EMPTY, EMPTY, EMPTY, EX(lidt),
     EMPTY, EMPTY, EMPTY, EMPTY)
 
-/* 
-Data Movement Instructions: 
-  (mov-345)!, (push-367!, (pop-361, 
-  leave-329, cltd(在i386手册中为cdq)-290, 
-  movsx-350, movzx-351
-  pusha
-
-Binary Arithmetic Instructions: 
-  (add-261, inc-303!, (sub-404!, 
-  dec-293!, cmp-287, neg-354, 
-  adc-260, sbb-386!, mul-352!, 
-  imul-300, div-294, idiv-298
-
-Logical Instructions: 
-  not-356, and-262, or-357!, 
-  (xor-411!, sal(shl)-383, shr-383, 
-  sar-383, setcc-389!, test-405
-
-Control Transfer Instructions: 
-  jmp-319, jcc-316!, (call-275, (ret-378
-
-Miscellaneous Instructions: 
-  lea-327, nop-355
-
-Extra:RCL/RCR/ROL/ROR 372,out 358,in 302
-       lidt 330,int 306
-       iret 311
-*/
 
 opcode_entry opcode_table [512] = {
   /* 0x00 */	IDEXW(G2E,add,1), IDEX(G2E,add), IDEXW(E2G,add,1), IDEX(E2G,add),

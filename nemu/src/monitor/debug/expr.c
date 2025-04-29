@@ -430,7 +430,7 @@ int eval(int p, int q){
             return result;
             
           }else{
-            Log("A deref sign, digard.");
+            Log("A deref sign, disgard.");
           }
         }
         
