@@ -45,19 +45,12 @@ void dispinfo_read(void *buf, off_t offset, size_t len) {
 }
 
 void fb_write(const void *buf, off_t offset, size_t len) {
-  /*
-  y*width +x = offset;
-  (y+h)*width +(x+w) = (offset + len);
-  juxing!
-   */
   int x=0,y=0;
-  offset /=sizeof(int);
-  len /=sizeof(int);
+  offset /=sizeof(uint32_t);
+  len /=sizeof(uint32_t);
   x = offset %_screen.width;
   y = offset /_screen.width;
   _draw_rect((const uint32_t*)buf,x,y,len,1);
-  // w = (offset+len) %_screen.width-x;
-  // h = (offset+len) /_screen.width-y;
 
 }
 
