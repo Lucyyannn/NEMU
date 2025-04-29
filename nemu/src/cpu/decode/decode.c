@@ -266,7 +266,7 @@ make_DHelper(a2O) {
   decode_op_O(eip, id_dest, false);
 }
 
-make_DHelper(J) {
+make_DHelper(J) { //rel is the relative address, relative to current eip
   decode_op_SI(eip, id_dest, false);
   // the target address can be computed in the decode stage
   decoding.jmp_eip = id_dest->simm + *eip;

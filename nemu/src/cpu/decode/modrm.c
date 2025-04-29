@@ -1,14 +1,26 @@
 #include "cpu/exec.h"
 #include "cpu/rtl.h"
 
+/*typedef union {
+  struct {
+    uint8_t base	:3;
+    uint8_t index	:3;
+    uint8_t ss		:2;
+  };
+  uint8_t val;
+} SIB;
+
+ */
+
 void load_addr(vaddr_t *eip, ModR_M *m, Operand *rm) {
   assert(m->mod != 3);
 
   int32_t disp = 0;
   int disp_size = 4;
   int base_reg = -1, index_reg = -1, scale = 0;
-  rtl_li(&rm->addr, 0);
+  rtl_li(&rm->addr, 0);// init rm->addr by 0
 
+  //[1] have SIB, read another byte, otherwise  m->R_M
   if (m->R_M == R_ESP) {
     SIB s;
     s.val = instr_fetch(eip, 1);
@@ -22,7 +34,7 @@ void load_addr(vaddr_t *eip, ModR_M *m, Operand *rm) {
     /* no SIB */
     base_reg = m->R_M;
   }
-
+  //[2]mod determines disp_size
   if (m->mod == 0) {
     if (base_reg == R_EBP) { base_reg = -1; }
     
@@ -96,6 +108,7 @@ void read_ModR_M(vaddr_t *eip, Operand *rm, bool load_rm_val, Operand *reg, bool
   ModR_M m;
   m.val = instr_fetch(eip, 1);
   decoding.ext_opcode = m.opcode;
+  // [1] deal with reg
   if (reg != NULL) {
     reg->type = OP_TYPE_REG;
     reg->reg = m.reg;// the regno of the cr
@@ -107,7 +120,9 @@ void read_ModR_M(vaddr_t *eip, Operand *rm, bool load_rm_val, Operand *reg, bool
     snprintf(reg->str, OP_STR_SIZE, "%%%s", reg_name(reg->reg, reg->width));
 #endif
   }
-
+  //[2] deal with rm:
+  //         if mod==3. rm is reg, the regno is up to r_m
+  //         else       rm is memory,  call load_addr to compute the address (with SIB)
   if (m.mod == 3) {
     rm->type = OP_TYPE_REG;
     rm->reg = m.R_M;
