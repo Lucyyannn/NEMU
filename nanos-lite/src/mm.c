@@ -29,7 +29,6 @@ int mm_brk(uint32_t new_brk) {
       for(uintptr_t va = va_begin; va <= va_end; va += PAGE_SIZE){
         void* pa = new_page();
         _map(&current->as, (void*)va, pa);
-        Log("reflect: va:%08X",(uintptr_t)va);
       }
       current->max_brk = new_brk;
     }
