@@ -23,6 +23,7 @@ int mm_brk(uint32_t new_brk) {
   else {
     if (new_brk > current->max_brk) {
       // map memory region [current->max_brk, new_brk)into address space current->as
+      Log("[mm_brk] max_brk: %08X, new_brk-1: %08X",current->max_brk,new_brk-1);
         uintptr_t va_begin = PGROUNDUP(current->max_brk);
         uintptr_t va_end = PGROUNDDOWN(new_brk);
       for(uintptr_t va = va_begin; va <= va_end; va += PAGE_SIZE){
