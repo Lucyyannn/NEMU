@@ -1,17 +1,19 @@
-# ICS2017 Programming Assignment
-
-This project is the programming assignment of the class ICS(Introduction to Computer System) in Department of Computer Science and Technology, Nanjing University.
-
-For the guide of this programming assignment,
-refer to http://nju-ics.gitbooks.io/ics2017-programming-assignment/content/
-
-To initialize, run
-```bash
-bash init.sh
-```
-
-The following subprojects/components are included. Some of them are not fully implemented.
+这是一个C语言编写的NEMU模拟器，框架参考自：
 * [NEMU](https://github.com/NJU-ProjectN/nemu)
-* [Nexus-am](https://github.com/NJU-ProjectN/nexus-am)
-* [Nanos-lite](https://github.com/NJU-ProjectN/nanos-lite)
-* [Navy-apps](https://github.com/NJU-ProjectN/navy-apps)
+
+### 开发环境
+- 操作系统：GNU/Linux
+- CPU架构：IA-32
+- 编译器：GCC
+
+### 核心实现
+- 简易调试器：
+    参照gdb，支持单步执行、表达式求值、监视点、扫描内存等操作。
+- 冯诺依曼计算机系统 : 
+    依据i386手册，编写x86指令子集(n86)的指令周期支持。
+- 异常控制流：
+    异常中断全流程构建，支持文件系统，构建程序加载器。
+- 并发支持：
+    支持虚拟内存、二级页表的分页机制，支持分时多任务运行。
+- 浮点数支持：
+    binary scaling方法，用整数模拟实数运算。
